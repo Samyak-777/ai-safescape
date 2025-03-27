@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -14,7 +13,8 @@ import {
   ArrowRight,
   Globe,
   Shield,
-  Database
+  Database,
+  Image
 } from 'lucide-react';
 
 const Documentation: React.FC = () => {
@@ -129,7 +129,6 @@ fetch('https://api.safescape.io/analyze/image', {
         
         <section className="section-container pt-0">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
             <AnimatedSection className="lg:col-span-1">
               <div className="glass-card rounded-2xl p-5 sticky top-24">
                 <h3 className="text-lg font-medium mb-4">Documentation</h3>
@@ -182,10 +181,8 @@ fetch('https://api.safescape.io/analyze/image', {
               </div>
             </AnimatedSection>
             
-            {/* Content */}
             <AnimatedSection className="lg:col-span-3" delay={0.2}>
               <div className="glass-card rounded-2xl p-6 sm:p-8">
-                {/* Overview Tab */}
                 {activeTab === 'overview' && (
                   <div className="space-y-8">
                     <div>
@@ -290,7 +287,6 @@ fetch('https://api.safescape.io/analyze/image', {
                   </div>
                 )}
                 
-                {/* API Reference Tab */}
                 {activeTab === 'api' && (
                   <div className="space-y-8">
                     <div>
@@ -470,7 +466,6 @@ fetch('https://api.safescape.io/analyze/image', {
                   </div>
                 )}
                 
-                {/* User Guide Tab */}
                 {activeTab === 'user-guide' && (
                   <div className="space-y-8">
                     <div>
@@ -510,7 +505,7 @@ fetch('https://api.safescape.io/analyze/image', {
                       <div className="bg-muted/50 p-5 rounded-xl">
                         <h3 className="text-xl font-medium mb-3 flex items-center gap-2">
                           <div className="bg-primary/10 p-2 rounded-full">
-                            <ImageIcon size={18} className="text-primary" />
+                            <Image size={18} className="text-primary" />
                           </div>
                           Image Analysis
                         </h3>
@@ -562,7 +557,6 @@ fetch('https://api.safescape.io/analyze/image', {
                   </div>
                 )}
                 
-                {/* Technologies Tab */}
                 {activeTab === 'technologies' && (
                   <div className="space-y-8">
                     <div>
