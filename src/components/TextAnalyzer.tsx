@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import Button from './Button';
-import { Check, AlertCircle, Ban, Search, Filter, Shield } from 'lucide-react';
+import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
 import { analyzeText, textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
 
@@ -49,6 +49,22 @@ const TextAnalyzer: React.FC = () => {
     }
   };
 
+  // Function to get the icon component based on the icon name
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case 'Ban':
+        return <Ban size={18} />;
+      case 'Search':
+        return <Search size={18} />;
+      case 'ShieldIcon':
+        return <ShieldIcon size={18} />;
+      case 'AlertCircle':
+        return <AlertCircle size={18} />;
+      default:
+        return <Check size={18} />;
+    }
+  };
+
   return (
     <div className="glass-card rounded-2xl p-6 sm:p-8">
       <h3 className="text-xl font-medium mb-6">Text Analysis</h3>
@@ -65,24 +81,21 @@ const TextAnalyzer: React.FC = () => {
       <div className="mb-6">
         <p className="text-sm font-medium mb-3">Analysis Options</p>
         <div className="flex flex-wrap gap-2">
-          {textAnalysisOptions.map((option) => {
-            const IconComponent = eval(option.icon);
-            return (
-              <button
-                key={option.id}
-                className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-                  selectedOptions.includes(option.id)
-                    ? 'bg-primary/15 text-primary'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/70'
-                }`}
-                onClick={() => handleOptionToggle(option.id)}
-                title={option.description}
-              >
-                <IconComponent size={18} />
-                <span className="hidden sm:inline">{option.label}</span>
-              </button>
-            );
-          })}
+          {textAnalysisOptions.map((option) => (
+            <button
+              key={option.id}
+              className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                selectedOptions.includes(option.id)
+                  ? 'bg-primary/15 text-primary'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/70'
+              }`}
+              onClick={() => handleOptionToggle(option.id)}
+              title={option.description}
+            >
+              {getIconComponent(option.icon)}
+              <span className="hidden sm:inline">{option.label}</span>
+            </button>
+          ))}
         </div>
       </div>
       
