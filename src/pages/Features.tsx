@@ -1,17 +1,16 @@
-
 import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AnimatedSection from '@/components/AnimatedSection';
 import Button from '@/components/Button';
 import { 
+  Code, 
   FileText, 
-  Image as ImageIcon, 
+  Image, 
   Search, 
   Shield, 
   Ban, 
   AlertCircle, 
-  Code, 
   Check, 
   Database,
   Globe,
@@ -20,6 +19,7 @@ import {
   BarChart,
   Lock
 } from 'lucide-react';
+import TechnologyLogos from '@/components/TechnologyLogos';
 
 const Features: React.FC = () => {
   useEffect(() => {
@@ -73,7 +73,7 @@ const Features: React.FC = () => {
                   size="sm" 
                   onClick={() => scrollToSection('image-analysis')}
                 >
-                  <ImageIcon size={16} />
+                  <Image size={16} />
                   Image Analysis
                 </Button>
                 <Button 
@@ -214,7 +214,7 @@ const Features: React.FC = () => {
             <AnimatedSection delay={0.1}>
               <div className="glass-card rounded-2xl p-6 h-full">
                 <div className="bg-green-500/10 text-green-600 dark:text-green-400 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                  <ImageIcon size={24} />
+                  <Image size={24} />
                 </div>
                 <h3 className="text-xl font-medium mb-3">Image Manipulation Check</h3>
                 <p className="text-muted-foreground mb-6">
@@ -314,118 +314,19 @@ const Features: React.FC = () => {
             </div>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatedSection className="glass-card rounded-2xl p-6 flex flex-col h-full" delay={0.1}>
-              <div className="bg-primary/10 text-primary w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Zap size={24} />
-              </div>
-              <h3 className="text-xl font-medium mb-2">Core Technologies</h3>
-              <div className="text-muted-foreground space-y-4 flex-grow">
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Google Cloud NLP</p>
-                    <p className="text-sm">For profanity, sentiment, and text classification</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Cloud Vision API</p>
-                    <p className="text-sm">For SafeSearch and explicit content detection</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Gemini Pro Vision</p>
-                    <p className="text-sm">For advanced text-visual integration analysis</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Fact Check API</p>
-                    <p className="text-sm">For verifying claims against trusted sources</p>
-                  </div>
-                </div>
-              </div>
-            </AnimatedSection>
-            
-            <AnimatedSection className="glass-card rounded-2xl p-6 flex flex-col h-full" delay={0.2}>
-              <div className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <RefreshCw size={24} />
-              </div>
-              <h3 className="text-xl font-medium mb-2">External Integrations</h3>
-              <div className="text-muted-foreground space-y-4 flex-grow">
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">IPQualityScore</p>
-                    <p className="text-sm">For fraud detection and bot identification</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Google Images & TinEye</p>
-                    <p className="text-sm">For reverse image search capabilities</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Arya.ai & Bolster AI</p>
-                    <p className="text-sm">For phishing and URL safety analysis</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">API League & Asciified</p>
-                    <p className="text-sm">For ASCII detection and processing</p>
-                  </div>
-                </div>
-              </div>
-            </AnimatedSection>
-            
-            <AnimatedSection className="glass-card rounded-2xl p-6 flex flex-col h-full" delay={0.3}>
-              <div className="bg-blue-500/10 text-blue-600 dark:text-blue-400 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                <Code size={24} />
-              </div>
-              <h3 className="text-xl font-medium mb-2">Development Stack</h3>
-              <div className="text-muted-foreground space-y-4 flex-grow">
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Vertex AI</p>
-                    <p className="text-sm">For scalable model deployment and training</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">OpenCV & OCR</p>
-                    <p className="text-sm">For image processing and text recognition</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">IDX</p>
-                    <p className="text-sm">For seamless cloud development integration</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">Modern Web Technologies</p>
-                    <p className="text-sm">React, Tailwind CSS, and TypeScript</p>
-                  </div>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
+          <AnimatedSection delay={0.1}>
+            <div className="glass-card p-8 rounded-2xl mb-8">
+              <h3 className="text-xl font-medium mb-6 text-center">Google Cloud Technologies</h3>
+              <TechnologyLogos variant="google" />
+            </div>
+          </AnimatedSection>
+          
+          <AnimatedSection delay={0.2}>
+            <div className="glass-card p-8 rounded-2xl">
+              <h3 className="text-xl font-medium mb-6 text-center">Partner Technologies</h3>
+              <TechnologyLogos variant="partners" />
+            </div>
+          </AnimatedSection>
         </section>
         
         <section className="section-container">
@@ -446,7 +347,7 @@ const Features: React.FC = () => {
                     setTimeout(() => window.location.href = '/#demo', 500);
                   }}
                 >
-                  <ImageIcon size={20} />
+                  <Image size={20} />
                   Try Demo
                 </Button>
                 <Button

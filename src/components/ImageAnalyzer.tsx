@@ -1,14 +1,9 @@
 
 import React, { useState, useRef } from 'react';
 import Button from './Button';
-import { Upload, Image as ImageIcon, AlertCircle, Check, Ban, Search } from 'lucide-react';
-
-interface AnalysisOption {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  description: string;
-}
+import { Upload, Image, AlertCircle, Check, Ban, Search, Shield } from 'lucide-react';
+import { analyzeImage, imageAnalysisOptions } from '@/services/api';
+import { toast } from 'sonner';
 
 const ImageAnalyzer: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -20,27 +15,6 @@ const ImageAnalyzer: React.FC = () => {
   }>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['manipulation', 'safe-search']);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const analysisOptions: AnalysisOption[] = [
-    { 
-      id: 'manipulation', 
-      label: 'Manipulation Check', 
-      icon: <Search size={18} />,
-      description: 'Detect edited images and deepfakes'
-    },
-    { 
-      id: 'safe-search', 
-      label: 'Content Safety', 
-      icon: <Shield size={18} />,
-      description: 'Check for inappropriate visual content'
-    },
-    { 
-      id: 'text-extract', 
-      label: 'Text Extraction', 
-      icon: <ImageIcon size={18} />,
-      description: 'Extract and analyze text from images'
-    },
-  ];
 
   const handleOptionToggle = (id: string) => {
     setSelectedOptions(prev => 
@@ -59,10 +33,11 @@ const ImageAnalyzer: React.FC = () => {
       reader.onload = () => {
         setImage(reader.result as string);
         setAnalysisResults(null);
+        toast.success('Image uploaded successfully');
       };
       reader.readAsDataURL(file);
     } else {
-      alert('Please upload an image file');
+      toast.error('Please upload an image file');
     }
     
     // Reset the file input
@@ -71,43 +46,30 @@ const ImageAnalyzer: React.FC = () => {
     }
   };
 
-  const handleAnalyze = () => {
-    if (!image) return;
+  const handleAnalyze = async () => {
+    if (!image || selectedOptions.length === 0) return;
     
     setIsAnalyzing(true);
     setAnalysisResults(null);
     
-    // Simulate analysis - in a real app this would call Vision API etc.
-    setTimeout(() => {
-      // Demo result based on random selection
-      const results = [
-        {
-          type: 'manipulation',
-          status: 'warning' as const,
-          message: 'This image shows potential signs of manipulation around the edges'
-        },
-        {
-          type: 'safe-search',
-          status: 'clean' as const,
-          message: 'No inappropriate content detected in this image'
-        },
-        {
-          type: 'text-extract',
-          status: 'clean' as const,
-          message: 'Text extracted and verified with no concerning content'
-        },
-        {
-          type: 'general',
-          status: 'clean' as const,
-          message: 'Image analysis complete - no issues detected'
-        }
-      ];
+    try {
+      const result = await analyzeImage(image, selectedOptions);
+      setAnalysisResults(result);
       
-      // Randomly select a result for demo purposes
-      const randomIndex = Math.floor(Math.random() * results.length);
-      setAnalysisResults(results[randomIndex]);
+      // Show toast notification based on result
+      if (result.status === 'clean') {
+        toast.success('Image analysis completed successfully');
+      } else if (result.status === 'warning') {
+        toast.warning('Potential issues detected in image');
+      } else {
+        toast.error('Issues detected in image');
+      }
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast.error('Error analyzing image');
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   const triggerFileInput = () => {
@@ -147,7 +109,10 @@ const ImageAnalyzer: React.FC = () => {
             />
             <button 
               className="absolute top-2 right-2 bg-white/80 dark:bg-black/50 p-1.5 rounded-lg hover:bg-white dark:hover:bg-black text-foreground transition-colors"
-              onClick={() => setImage(null)}
+              onClick={() => {
+                setImage(null);
+                setAnalysisResults(null);
+              }}
             >
               <Ban size={16} />
             </button>
@@ -158,21 +123,24 @@ const ImageAnalyzer: React.FC = () => {
       <div className="mb-6">
         <p className="text-sm font-medium mb-3">Analysis Options</p>
         <div className="flex flex-wrap gap-2">
-          {analysisOptions.map((option) => (
-            <button
-              key={option.id}
-              className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-                selectedOptions.includes(option.id)
-                  ? 'bg-primary/15 text-primary'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/70'
-              }`}
-              onClick={() => handleOptionToggle(option.id)}
-              title={option.description}
-            >
-              {option.icon}
-              <span className="hidden sm:inline">{option.label}</span>
-            </button>
-          ))}
+          {imageAnalysisOptions.map((option) => {
+            const IconComponent = eval(option.icon);
+            return (
+              <button
+                key={option.id}
+                className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                  selectedOptions.includes(option.id)
+                    ? 'bg-primary/15 text-primary'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/70'
+                }`}
+                onClick={() => handleOptionToggle(option.id)}
+                title={option.description}
+              >
+                <IconComponent size={18} />
+                <span className="hidden sm:inline">{option.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
       
@@ -181,15 +149,15 @@ const ImageAnalyzer: React.FC = () => {
         isLoading={isAnalyzing}
         disabled={!image || selectedOptions.length === 0}
       >
-        <ImageIcon size={18} />
+        <Image size={18} />
         Analyze Image
       </Button>
       
       {analysisResults && (
         <div className={`mt-6 p-4 rounded-xl animate-fade-in ${
-          analysisResults.status === 'clean' ? 'bg-green-500/10 text-green-700' :
-          analysisResults.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700' :
-          'bg-red-500/10 text-red-700'
+          analysisResults.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
+          analysisResults.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
+          'bg-red-500/10 text-red-700 dark:text-red-400'
         }`}>
           <div className="flex items-start gap-3">
             <div className={`mt-0.5 p-1.5 rounded-full ${
@@ -217,19 +185,3 @@ const ImageAnalyzer: React.FC = () => {
 };
 
 export default ImageAnalyzer;
-
-const Shield: React.FC<{ size: number }> = ({ size }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-  </svg>
-);
