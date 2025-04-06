@@ -4,7 +4,7 @@ import Button from './Button';
 import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
 import { textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
-import { analyzeTextWithService } from '@/services/apiClient';
+import { analyzeText } from '@/services/api';
 
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
@@ -35,8 +35,8 @@ const TextAnalyzer: React.FC = () => {
     
     try {
       console.log('Starting analysis with options:', selectedOptions);
-      // Call the serverless function via our client
-      const results = await analyzeTextWithService(text, selectedOptions);
+      // Use the mock API directly instead of the serverless function
+      const results = await analyzeText(text, selectedOptions);
       console.log('Analysis results:', results);
       setAnalysisResults(results);
       
