@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import Button from './Button';
 import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
-import { analyzeText, textAnalysisOptions } from '@/services/api';
+import { textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
+import { analyzeTextWithService } from '@/services/apiClient';
 
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
@@ -30,8 +30,8 @@ const TextAnalyzer: React.FC = () => {
     setAnalysisResults(null);
     
     try {
-      // Perform analysis for each selected option
-      const results = await analyzeText(text, selectedOptions);
+      // Call the serverless function via our client
+      const results = await analyzeTextWithService(text, selectedOptions);
       setAnalysisResults(results);
       
       // Determine overall status for toast notification
