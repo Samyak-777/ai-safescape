@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Button from './Button';
 import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
@@ -24,14 +25,19 @@ const TextAnalyzer: React.FC = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!text.trim() || selectedOptions.length === 0) return;
+    if (!text.trim() || selectedOptions.length === 0) {
+      toast.error('Please enter text and select at least one analysis option');
+      return;
+    }
     
     setIsAnalyzing(true);
     setAnalysisResults(null);
     
     try {
+      console.log('Starting analysis with options:', selectedOptions);
       // Call the serverless function via our client
       const results = await analyzeTextWithService(text, selectedOptions);
+      console.log('Analysis results:', results);
       setAnalysisResults(results);
       
       // Determine overall status for toast notification
@@ -68,6 +74,8 @@ const TextAnalyzer: React.FC = () => {
         return <ShieldIcon size={18} />;
       case 'AlertCircle':
         return <AlertCircle size={18} />;
+      case 'Check':
+        return <Check size={18} />;
       default:
         return <Check size={18} />;
     }
