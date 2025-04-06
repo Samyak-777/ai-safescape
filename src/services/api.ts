@@ -1,4 +1,3 @@
-
 // Simulated API service with free APIs where possible
 // In a production environment, these would connect to real endpoints
 
@@ -9,53 +8,179 @@ const mockApiResponse = <T>(data: T, delay = 1000): Promise<T> => {
   });
 };
 
+// API key management - In production, these should be stored in environment variables
+// or retrieved securely through a backend service
+const getApiKey = (service: string): string => {
+  // In a real application, you would retrieve this from a secure source
+  // For now, we're mocking this functionality
+  
+  // This is where you would typically load API keys from environment variables
+  // or a secure backend service, not hardcoded like this
+  const mockServiceKeys: Record<string, string> = {
+    'profanity': 'mock-profanity-api-key',
+    'fact-check': 'mock-factcheck-api-key',
+    'scam': 'mock-scam-detection-api-key',
+    'ethics': 'mock-ethical-analysis-api-key',
+    'ascii': 'mock-ascii-detection-api-key',
+  };
+  
+  return mockServiceKeys[service] || '';
+};
+
 // Text Analysis Services
-export const analyzeText = async (text: string, options: string[]): Promise<{
+export const analyzeText = async (text: string, options: string[]): Promise<Array<{
   type: string;
   status: 'clean' | 'warning' | 'danger';
   message: string;
-}> => {
-  // In a real app, this would call different API endpoints based on options
+}>> => {
   console.log(`Analyzing text with options: ${options.join(', ')}`);
   
-  // Simple analysis logic to simulate different API responses
-  if (text.toLowerCase().includes('fake news') && options.includes('fact-check')) {
-    return mockApiResponse({
-      type: 'fact-check',
-      status: 'warning',
-      message: 'This text contains unverified claims that may need fact-checking'
+  try {
+    // In a real implementation, we would make parallel API calls to different services
+    // For demonstration, we'll simulate responses for each selected option
+    
+    const analysisPromises = options.map(async (option) => {
+      // Simulate different API endpoints based on the option
+      switch(option) {
+        case 'profanity':
+          return analyzeProfanity(text);
+        case 'fact-check':
+          return analyzeFactCheck(text);
+        case 'scam':
+          return analyzeScam(text);
+        case 'ethics':
+          return analyzeEthics(text);
+        case 'ascii':
+          return analyzeAscii(text);
+        default:
+          return {
+            type: option,
+            status: 'clean' as const,
+            message: 'No issues detected'
+          };
+      }
     });
-  } else if (text.toLowerCase().includes('free money') && options.includes('scam')) {
+    
+    // Wait for all analyses to complete
+    const results = await Promise.all(analysisPromises);
+    return results;
+    
+  } catch (error) {
+    console.error('Error during text analysis:', error);
+    throw new Error('Analysis failed');
+  }
+};
+
+// Individual analysis functions that would connect to real APIs in production
+
+const analyzeProfanity = async (text: string) => {
+  // In production: Use an actual API like PurgoMalum, WebPurify, or Google Cloud Natural Language API
+  const apiKey = getApiKey('profanity');
+  
+  // Simulated API call
+  console.log(`Calling profanity API with key: ${apiKey.substring(0, 3)}***`);
+  
+  if (text.toLowerCase().includes('stupid') || text.toLowerCase().includes('damn')) {
     return mockApiResponse({
-      type: 'scam',
-      status: 'danger',
-      message: 'This text contains suspicious patterns typical of scams'
-    });
-  } else if (text.toLowerCase().includes('stupid') && options.includes('profanity')) {
-    return mockApiResponse({
-      type: 'profanity',
-      status: 'warning',
+      type: 'profanity check',
+      status: 'warning' as const,
       message: 'This text contains mild inappropriate language'
     });
-  } else if (text.includes('¯\\_(ツ)_/¯') && options.includes('ascii')) {
+  }
+  
+  return mockApiResponse({
+    type: 'profanity check',
+    status: 'clean' as const,
+    message: 'No inappropriate language detected'
+  });
+};
+
+const analyzeFactCheck = async (text: string) => {
+  // In production: Use an actual API like Google Fact Check API or Microsoft Bing Web Search API
+  const apiKey = getApiKey('fact-check');
+  
+  // Simulated API call
+  console.log(`Calling fact check API with key: ${apiKey.substring(0, 3)}***`);
+  
+  if (text.toLowerCase().includes('fake news') || text.toLowerCase().includes('conspiracy')) {
     return mockApiResponse({
-      type: 'ascii',
-      status: 'clean',
-      message: 'ASCII art detected but appears harmless'
-    });
-  } else if (text.toLowerCase().includes('hate') && options.includes('ethics')) {
-    return mockApiResponse({
-      type: 'ethics',
-      status: 'danger',
-      message: 'This text may contain content that violates ethical guidelines'
-    });
-  } else {
-    return mockApiResponse({
-      type: 'general',
-      status: 'clean',
-      message: 'No issues detected in the provided text'
+      type: 'fact check',
+      status: 'warning' as const,
+      message: 'This text contains claims that may need verification'
     });
   }
+  
+  return mockApiResponse({
+    type: 'fact check',
+    status: 'clean' as const,
+    message: 'No factual inaccuracies detected'
+  });
+};
+
+const analyzeScam = async (text: string) => {
+  // In production: Use an actual API like Scamadviser API or custom ML model
+  const apiKey = getApiKey('scam');
+  
+  // Simulated API call
+  console.log(`Calling scam detection API with key: ${apiKey.substring(0, 3)}***`);
+  
+  if (text.toLowerCase().includes('free money') || text.toLowerCase().includes('wire transfer')) {
+    return mockApiResponse({
+      type: 'scam detection',
+      status: 'danger' as const,
+      message: 'This text contains patterns typical of scam attempts'
+    });
+  }
+  
+  return mockApiResponse({
+    type: 'scam detection',
+    status: 'clean' as const,
+    message: 'No scam indicators detected'
+  });
+};
+
+const analyzeEthics = async (text: string) => {
+  // In production: Use an actual API like Perspective API or Azure Content Moderator
+  const apiKey = getApiKey('ethics');
+  
+  // Simulated API call
+  console.log(`Calling ethical analysis API with key: ${apiKey.substring(0, 3)}***`);
+  
+  if (text.toLowerCase().includes('hate') || text.toLowerCase().includes('threat')) {
+    return mockApiResponse({
+      type: 'ethical analysis',
+      status: 'danger' as const,
+      message: 'This text may contain content that violates ethical guidelines'
+    });
+  }
+  
+  return mockApiResponse({
+    type: 'ethical analysis',
+    status: 'clean' as const,
+    message: 'No ethical concerns detected'
+  });
+};
+
+const analyzeAscii = async (text: string) => {
+  // In production: Use custom detection logic or a specialized ASCII art API
+  const apiKey = getApiKey('ascii');
+  
+  // Simulated API call
+  console.log(`Calling ASCII detection API with key: ${apiKey.substring(0, 3)}***`);
+  
+  if (text.includes('¯\\_(ツ)_/¯') || text.match(/[^\x00-\x7F]+/)) {
+    return mockApiResponse({
+      type: 'ascii detection',
+      status: 'clean' as const,
+      message: 'ASCII art detected but appears harmless'
+    });
+  }
+  
+  return mockApiResponse({
+    type: 'ascii detection',
+    status: 'clean' as const,
+    message: 'No special ASCII patterns detected'
+  });
 };
 
 // Image Analysis Services
@@ -118,7 +243,7 @@ export const textAnalysisOptions = [
   { 
     id: 'ethics', 
     label: 'Ethical Analysis', 
-    icon: 'Shield',
+    icon: 'ShieldIcon',
     description: 'Check for hate speech or harmful content'
   },
   { 

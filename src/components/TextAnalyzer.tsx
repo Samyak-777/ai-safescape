@@ -8,11 +8,11 @@ import { toast } from 'sonner';
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<null | {
+  const [analysisResults, setAnalysisResults] = useState<null | Array<{
     type: string;
     status: 'clean' | 'warning' | 'danger';
     message: string;
-  }>(null);
+  }>>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity', 'fact-check']);
 
   const handleOptionToggle = (id: string) => {
@@ -30,13 +30,21 @@ const TextAnalyzer: React.FC = () => {
     setAnalysisResults(null);
     
     try {
-      const result = await analyzeText(text, selectedOptions);
-      setAnalysisResults(result);
+      // Perform analysis for each selected option
+      const results = await analyzeText(text, selectedOptions);
+      setAnalysisResults(results);
       
-      // Show toast notification based on result
-      if (result.status === 'clean') {
+      // Determine overall status for toast notification
+      const highestSeverity = results.reduce((highest, current) => {
+        if (current.status === 'danger') return 'danger';
+        if (current.status === 'warning' && highest !== 'danger') return 'warning';
+        return highest === 'danger' || highest === 'warning' ? highest : 'clean';
+      }, 'clean' as 'clean' | 'warning' | 'danger');
+      
+      // Show toast notification based on highest severity
+      if (highestSeverity === 'clean') {
         toast.success('Analysis completed successfully');
-      } else if (result.status === 'warning') {
+      } else if (highestSeverity === 'warning') {
         toast.warning('Potential issues detected');
       } else {
         toast.error('Issues detected in content');
@@ -117,31 +125,34 @@ const TextAnalyzer: React.FC = () => {
         </button>
       </div>
       
-      {analysisResults && (
-        <div className={`mt-6 p-4 rounded-xl animate-fade-in ${
-          analysisResults.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
-          analysisResults.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
-          'bg-red-500/10 text-red-700 dark:text-red-400'
-        }`}>
-          <div className="flex items-start gap-3">
-            <div className={`mt-0.5 p-1.5 rounded-full ${
-              analysisResults.status === 'clean' ? 'bg-green-500/20' :
-              analysisResults.status === 'warning' ? 'bg-yellow-500/20' :
-              'bg-red-500/20'
-            }`}>
-              {analysisResults.status === 'clean' ? <Check size={16} /> :
-               analysisResults.status === 'warning' ? <AlertCircle size={16} /> :
-               <Ban size={16} />}
+      {analysisResults && analysisResults.length > 0 && (
+        <div className="mt-6 space-y-4">
+          {analysisResults.map((result, index) => (
+            <div 
+              key={index}
+              className={`p-4 rounded-xl animate-fade-in ${
+                result.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
+                result.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
+                'bg-red-500/10 text-red-700 dark:text-red-400'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`mt-0.5 p-1.5 rounded-full ${
+                  result.status === 'clean' ? 'bg-green-500/20' :
+                  result.status === 'warning' ? 'bg-yellow-500/20' :
+                  'bg-red-500/20'
+                }`}>
+                  {result.status === 'clean' ? <Check size={16} /> :
+                  result.status === 'warning' ? <AlertCircle size={16} /> :
+                  <Ban size={16} />}
+                </div>
+                <div>
+                  <p className="font-medium capitalize">{result.type}</p>
+                  <p className="text-sm mt-1">{result.message}</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="font-medium">{
-                analysisResults.status === 'clean' ? 'All Clear' :
-                analysisResults.status === 'warning' ? 'Potential Issue Detected' :
-                'Issue Detected'
-              }</p>
-              <p className="text-sm mt-1">{analysisResults.message}</p>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
