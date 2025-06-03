@@ -232,7 +232,7 @@ export const analyzeTextWithResilientAPIs = async (
         const result = await detectASCIIPatterns(text);
         return {
           type: 'ascii detection',
-          status: result.hasASCII && result.confidence > 0.7 ? 'warning' : 'clean',
+          status: (result.hasASCII && result.confidence > 0.7 ? 'warning' : 'clean') as 'clean' | 'warning' | 'danger',
           message: result.hasASCII ? `ASCII art detected: ${result.patterns.join(', ')}` : 'No special ASCII patterns detected',
           confidence: result.confidence,
           processingTime: Date.now() - startTime,
