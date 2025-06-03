@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 // WCAG 2.2 Accessibility utilities and constants
 export const WCAG_COLORS = {
   // High contrast colors meeting WCAG AA standards (4.5:1 ratio)
