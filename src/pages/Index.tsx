@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import FeatureCard from '@/components/FeatureCard';
@@ -7,9 +7,16 @@ import AnalysisToolsEnhanced from '@/components/AnalysisToolsEnhanced';
 import TechnologyLogos from '@/components/TechnologyLogos';
 import Footer from '@/components/Footer';
 import AnimatedSection from '@/components/AnimatedSection';
-import { Shield, FileText, Image, Server, Search, Code } from 'lucide-react';
+import AnalyticsDashboard from '@/components/AnalyticsDashboard';
+import PerformanceMonitor from '@/components/PerformanceMonitor';
+import ServiceStatusIndicator from '@/components/ServiceStatusIndicator';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Shield, FileText, Image, Server, Search, Code, BarChart3 } from 'lucide-react';
 
 const Index: React.FC = () => {
+  const [showAnalytics, setShowAnalytics] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -17,6 +24,38 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      
+      {/* Analytics Dashboard Modal */}
+      <Dialog open={showAnalytics} onOpenChange={setShowAnalytics}>
+        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>System Analytics & Monitoring</DialogTitle>
+            <DialogDescription>
+              Real-time performance metrics and system health monitoring
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <AnalyticsDashboard />
+            </div>
+            <div>
+              <PerformanceMonitor />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Floating Analytics Button */}
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+        <ServiceStatusIndicator />
+        <Button
+          onClick={() => setShowAnalytics(true)}
+          size="sm"
+          className="h-12 w-12 rounded-full p-0 shadow-lg"
+        >
+          <BarChart3 className="h-5 w-5" />
+        </Button>
+      </div>
       
       <main className="flex-grow">
         <Hero />
@@ -66,9 +105,9 @@ const Index: React.FC = () => {
               delay={0.5}
             />
             <FeatureCard 
-              title="Developer API"
-              description="Integrate our analysis capabilities directly into your applications with our comprehensive API."
-              icon={<Code size={24} />}
+              title="Real-time Analytics"
+              description="Monitor system performance and API health with comprehensive analytics dashboard."
+              icon={<BarChart3 size={24} />}
               delay={0.6}
             />
           </div>
