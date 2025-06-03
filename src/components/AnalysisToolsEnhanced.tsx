@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Image, Zap, Clock } from 'lucide-react';
+import { FileText, Image, Zap, Clock, Sparkles } from 'lucide-react';
 import AsyncTextAnalyzer from './AsyncTextAnalyzer';
 import TextAnalyzer from './TextAnalyzer';
 import ImageAnalyzer from './ImageAnalyzer';
+import AdvancedTextAnalyzer from './AdvancedTextAnalyzer';
 import AnimatedSection from './AnimatedSection';
 
 const AnalysisToolsEnhanced: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('async-text');
+  const [activeTab, setActiveTab] = useState('advanced-ai');
 
   return (
     <section className="section-container bg-gradient-to-br from-blue-50 to-purple-50">
@@ -19,27 +20,33 @@ const AnalysisToolsEnhanced: React.FC = () => {
           <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
             Advanced Analysis Tools
           </span>
-          <h2 className="text-3xl font-bold mb-4">Real-Time Content Verification</h2>
+          <h2 className="text-3xl font-bold mb-4">Next-Generation AI Content Verification</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Experience our next-generation analysis engine with async processing, circuit breakers, and resilient API architecture.
+            Experience cutting-edge AI analysis with Google I/O 2025 technologies, featuring Gemini 2.5, 
+            structured outputs, streaming analysis, and advanced reasoning capabilities.
           </p>
         </div>
       </AnimatedSection>
 
       <div className="max-w-4xl mx-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-4">
+            <TabsTrigger value="advanced-ai" className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              <span className="hidden sm:inline">AI Advanced</span>
+              <span className="sm:hidden">AI</span>
+              <Badge variant="secondary" className="ml-1 text-xs">
+                2025
+              </Badge>
+            </TabsTrigger>
             <TabsTrigger value="async-text" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
-              <span className="hidden sm:inline">Async Text</span>
+              <span className="hidden sm:inline">Async</span>
               <span className="sm:hidden">Async</span>
-              <Badge variant="secondary" className="ml-1 text-xs">
-                New
-              </Badge>
             </TabsTrigger>
             <TabsTrigger value="sync-text" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              <span className="hidden sm:inline">Sync Text</span>
+              <span className="hidden sm:inline">Sync</span>
               <span className="sm:hidden">Sync</span>
             </TabsTrigger>
             <TabsTrigger value="image" className="flex items-center gap-2">
@@ -48,6 +55,31 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <span className="sm:hidden">Image</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="advanced-ai" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-purple-500" />
+                  Advanced AI Analysis
+                  <Badge variant="outline" className="ml-2">
+                    Gemini 2.5
+                  </Badge>
+                  <Badge variant="secondary" className="ml-1">
+                    Google I/O 2025
+                  </Badge>
+                </CardTitle>
+                <CardDescription>
+                  State-of-the-art content analysis using Gemini 2.5 with function calling, 
+                  structured outputs, streaming capabilities, and advanced reasoning for 
+                  context-aware safety detection.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdvancedTextAnalyzer />
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="async-text" className="mt-6">
             <Card>
@@ -111,15 +143,27 @@ const AnalysisToolsEnhanced: React.FC = () => {
       </div>
 
       <AnimatedSection className="mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
           <Card className="text-center">
             <CardHeader>
-              <Zap className="h-8 w-8 mx-auto text-blue-500 mb-2" />
-              <CardTitle className="text-lg">Async Processing</CardTitle>
+              <Sparkles className="h-8 w-8 mx-auto text-purple-500 mb-2" />
+              <CardTitle className="text-lg">Gemini 2.5</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Event-driven architecture with Pub/Sub messaging for scalable processing
+                Latest AI model with function calling and structured outputs
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center">
+            <CardHeader>
+              <Zap className="h-8 w-8 mx-auto text-blue-500 mb-2" />
+              <CardTitle className="text-lg">Real-time Streaming</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Live analysis results as they process for immediate feedback
               </p>
             </CardContent>
           </Card>
@@ -140,12 +184,12 @@ const AnalysisToolsEnhanced: React.FC = () => {
 
           <Card className="text-center">
             <CardHeader>
-              <Clock className="h-8 w-8 mx-auto text-purple-500 mb-2" />
-              <CardTitle className="text-lg">Auto Retry</CardTitle>
+              <Clock className="h-8 w-8 mx-auto text-orange-500 mb-2" />
+              <CardTitle className="text-lg">Context Awareness</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Exponential backoff retry mechanisms for transient failures
+                Advanced reasoning with cultural and contextual understanding
               </p>
             </CardContent>
           </Card>

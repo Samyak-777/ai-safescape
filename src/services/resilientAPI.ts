@@ -1,4 +1,3 @@
-
 // Resilient API service with circuit breakers and retry mechanisms
 import { circuitBreakers } from './circuitBreaker';
 import { retryService, isRetryableError } from './retryService';
@@ -8,6 +7,7 @@ import { checkUrlWithWebRisk } from './webRiskAPI';
 import { checkUrlWithIPQS } from './ipqsAPI';
 import { checkPhishingWithArya } from './aryaAPI';
 import { analyzeContentWithGemini } from './geminiAPI';
+import { analyzeContentWithGeminiAdvanced } from './geminiAdvanced';
 import { detectASCIIPatterns } from './asciiDetection';
 
 export interface AnalysisResult {
@@ -75,6 +75,16 @@ const resilientGemini = async (content: string, analysisType: string) => {
   return await circuitBreakers.gemini.execute(async () => {
     return await retryService.execute(
       () => analyzeContentWithGemini(content, analysisType),
+      isRetryableError
+    );
+  });
+};
+
+// Enhanced resilient wrapper for Gemini Advanced API
+const resilientGeminiAdvanced = async (content: string, analysisType: string) => {
+  return await circuitBreakers.gemini.execute(async () => {
+    return await retryService.execute(
+      () => analyzeContentWithGeminiAdvanced(content, analysisType, true),
       isRetryableError
     );
   });
@@ -159,8 +169,8 @@ const analyzeScamResilient = async (text: string): Promise<AnalysisResult> => {
       );
     }
 
-    // Analyze text content with Gemini
-    promises.push(resilientGemini(text, 'scam, phishing, and fraud detection').catch(() => null));
+    // Analyze text content with Advanced Gemini
+    promises.push(resilientGeminiAdvanced(text, 'scam, phishing, fraud detection, and financial manipulation with contextual analysis').catch(() => null));
 
     const results = await Promise.allSettled(promises);
     let status: 'clean' | 'warning' | 'danger' = 'clean';
@@ -182,9 +192,11 @@ const analyzeScamResilient = async (text: string): Promise<AnalysisResult> => {
               }
             });
           }
-          // Process Gemini analysis result
+          // Process Advanced Gemini analysis result
           else if (result.value?.isHarmful) {
-            const newStatus = result.value.confidence > 0.7 ? 'danger' : 'warning';
+            const riskLevel = result.value.riskLevel;
+            const newStatus = riskLevel === 'critical' || riskLevel === 'high' ? 'danger' : 
+                             riskLevel === 'medium' ? 'warning' : 'clean';
             if (status === 'clean' || (status === 'warning' && newStatus === 'danger')) {
               status = newStatus;
               message = result.value.explanation;
@@ -201,7 +213,7 @@ const analyzeScamResilient = async (text: string): Promise<AnalysisResult> => {
       message,
       confidence: maxConfidence,
       processingTime: Date.now() - startTime,
-      apiSource: 'web-risk + ipqs + arya + gemini',
+      apiSource: 'web-risk + ipqs + arya + gemini-advanced',
       details: { results },
     };
   } catch (error) {
@@ -210,6 +222,46 @@ const analyzeScamResilient = async (text: string): Promise<AnalysisResult> => {
       type: 'scam detection',
       status: 'clean',
       message: 'Scam detection service temporarily unavailable',
+      processingTime: Date.now() - startTime,
+    };
+  }
+};
+
+const analyzeFactCheckResilient = async (text: string): Promise<AnalysisResult> => {
+  const startTime = Date.now();
+  
+  try {
+    const result = await resilientGeminiAdvanced(text, 'fact-checking, misinformation detection, and claim verification with source analysis');
+
+    let status: 'clean' | 'warning' | 'danger' = 'clean';
+    let message = 'No factual inaccuracies detected';
+
+    if (result && result.isHarmful) {
+      const riskLevel = result.riskLevel;
+      if (riskLevel === 'critical' || riskLevel === 'high') {
+        status = 'danger';
+        message = 'Potential misinformation detected';
+      } else if (riskLevel === 'medium') {
+        status = 'warning';
+        message = 'Claims may need verification';
+      }
+    }
+
+    return {
+      type: 'fact check',
+      status,
+      message: result?.explanation || message,
+      confidence: result?.confidence || 0,
+      processingTime: Date.now() - startTime,
+      apiSource: 'gemini-advanced',
+      details: result,
+    };
+  } catch (error) {
+    console.error('Resilient fact check error:', error);
+    return {
+      type: 'fact check',
+      status: 'clean',
+      message: 'Fact-checking service temporarily unavailable',
       processingTime: Date.now() - startTime,
     };
   }
@@ -227,6 +279,8 @@ export const analyzeTextWithResilientAPIs = async (
         return analyzeProfanityResilient(text);
       case 'scam':
         return analyzeScamResilient(text);
+      case 'fact-check':
+        return analyzeFactCheckResilient(text);
       case 'ascii':
         const startTime = Date.now();
         const result = await detectASCIIPatterns(text);
