@@ -83,3 +83,34 @@ export const trackUserAction = (action: string, data?: any) => {
     ...data
   });
 };
+
+// Track security analysis events
+export const trackSecurityAnalysis = (
+  analysisType: 'threat_intelligence' | 'pattern_analysis' | 'security_scan',
+  result: {
+    riskLevel: string;
+    threatsFound: number;
+    patternsDetected: number;
+    overallScore: number;
+  }
+) => {
+  analyticsService.trackEvent('security_analysis', {
+    analysisType,
+    ...result,
+    timestamp: Date.now()
+  });
+
+  analyticsService.recordMetric(
+    'Security Score',
+    result.overallScore,
+    'score',
+    'security_metrics'
+  );
+
+  analyticsService.recordMetric(
+    'Threats Detected',
+    result.threatsFound,
+    'count',
+    'security_metrics'
+  );
+};

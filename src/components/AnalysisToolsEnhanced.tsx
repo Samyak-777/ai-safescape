@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Image, Zap, Clock, Sparkles } from 'lucide-react';
+import { FileText, Image, Zap, Clock, Sparkles, Shield } from 'lucide-react';
 import AsyncTextAnalyzer from './AsyncTextAnalyzer';
 import TextAnalyzer from './TextAnalyzer';
 import ImageAnalyzer from './ImageAnalyzer';
 import AdvancedTextAnalyzer from './AdvancedTextAnalyzer';
+import AdvancedSecurityAnalyzer from './AdvancedSecurityAnalyzer';
 import AnimatedSection from './AnimatedSection';
 
 const AnalysisToolsEnhanced: React.FC = () => {
@@ -23,20 +24,28 @@ const AnalysisToolsEnhanced: React.FC = () => {
           <h2 className="text-3xl font-bold mb-4">Next-Generation AI Content Verification</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Experience cutting-edge AI analysis with Google I/O 2025 technologies, featuring Gemini 2.5, 
-            structured outputs, streaming analysis, and advanced reasoning capabilities.
+            structured outputs, streaming analysis, and advanced threat intelligence capabilities.
           </p>
         </div>
       </AnimatedSection>
 
       <div className="max-w-4xl mx-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-5">
             <TabsTrigger value="advanced-ai" className="flex items-center gap-2">
               <Sparkles className="h-4 w-4" />
               <span className="hidden sm:inline">AI Advanced</span>
               <span className="sm:hidden">AI</span>
               <Badge variant="secondary" className="ml-1 text-xs">
                 2025
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">Security</span>
+              <span className="sm:hidden">Sec</span>
+              <Badge variant="destructive" className="ml-1 text-xs">
+                NEW
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="async-text" className="flex items-center gap-2">
@@ -77,6 +86,30 @@ const AnalysisToolsEnhanced: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <AdvancedTextAnalyzer />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="security" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-red-500" />
+                  Advanced Security Analysis
+                  <Badge variant="destructive" className="ml-2">
+                    Threat Intelligence
+                  </Badge>
+                  <Badge variant="outline" className="ml-1">
+                    NEW
+                  </Badge>
+                </CardTitle>
+                <CardDescription>
+                  Comprehensive security analysis with threat intelligence integration, 
+                  advanced pattern detection, social engineering identification, and risk scoring.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdvancedSecurityAnalyzer />
               </CardContent>
             </Card>
           </TabsContent>
@@ -143,7 +176,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
       </div>
 
       <AnimatedSection className="mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-w-6xl mx-auto">
           <Card className="text-center">
             <CardHeader>
               <Sparkles className="h-8 w-8 mx-auto text-purple-500 mb-2" />
@@ -152,6 +185,18 @@ const AnalysisToolsEnhanced: React.FC = () => {
             <CardContent>
               <p className="text-sm text-muted-foreground">
                 Latest AI model with function calling and structured outputs
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center">
+            <CardHeader>
+              <Shield className="h-8 w-8 mx-auto text-red-500 mb-2" />
+              <CardTitle className="text-lg">Threat Intel</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Advanced security analysis with real-time threat intelligence
               </p>
             </CardContent>
           </Card>
