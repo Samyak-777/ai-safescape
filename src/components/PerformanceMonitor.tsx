@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -43,9 +42,9 @@ const PerformanceMonitor: React.FC = () => {
         // Navigation timing
         const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
         const timing = {
-          navigation: navigation ? Math.round(navigation.loadEventEnd - navigation.navigationStart) : 0,
+          navigation: navigation ? Math.round(navigation.loadEventEnd - navigation.fetchStart) : 0,
           render: navigation ? Math.round(navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart) : 0,
-          domComplete: navigation ? Math.round(navigation.domComplete - navigation.navigationStart) : 0
+          domComplete: navigation ? Math.round(navigation.domComplete - navigation.fetchStart) : 0
         };
 
         // Network information
