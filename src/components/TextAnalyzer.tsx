@@ -4,7 +4,7 @@ import Button from './Button';
 import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
 import { textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
-import { analyzeText } from '@/services/api';
+import { analyzeTextWithRealAPIs } from '@/services/realAPI';
 
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
@@ -13,6 +13,7 @@ const TextAnalyzer: React.FC = () => {
     type: string;
     status: 'clean' | 'warning' | 'danger';
     message: string;
+    confidence?: number;
   }>>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity', 'fact-check']);
 
@@ -34,10 +35,9 @@ const TextAnalyzer: React.FC = () => {
     setAnalysisResults(null);
     
     try {
-      console.log('Starting analysis with options:', selectedOptions);
-      // Use the mock API directly instead of the serverless function
-      const results = await analyzeText(text, selectedOptions);
-      console.log('Analysis results:', results);
+      console.log('Starting real API analysis with options:', selectedOptions);
+      const results = await analyzeTextWithRealAPIs(text, selectedOptions);
+      console.log('Real API analysis results:', results);
       setAnalysisResults(results);
       
       // Determine overall status for toast notification
@@ -57,7 +57,7 @@ const TextAnalyzer: React.FC = () => {
       }
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Error analyzing text');
+      toast.error('Error analyzing text - some services may be temporarily unavailable');
     } finally {
       setIsAnalyzing(false);
     }
@@ -154,8 +154,15 @@ const TextAnalyzer: React.FC = () => {
                   result.status === 'warning' ? <AlertCircle size={16} /> :
                   <Ban size={16} />}
                 </div>
-                <div>
-                  <p className="font-medium capitalize">{result.type}</p>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium capitalize">{result.type}</p>
+                    {result.confidence && (
+                      <span className="text-xs opacity-70">
+                        {Math.round(result.confidence * 100)}% confidence
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm mt-1">{result.message}</p>
                 </div>
               </div>
