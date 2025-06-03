@@ -10,13 +10,17 @@ import { Loader2, CheckCircle, AlertTriangle, XCircle, Sparkles, Brain, Zap } fr
 import { useToast } from '@/hooks/use-toast';
 import { analyzeContentWithGeminiAdvanced, streamAnalyzeContent, GeminiAdvancedResult } from '@/services/geminiAdvanced';
 
+interface AnalysisResultWithType extends GeminiAdvancedResult {
+  type: string;
+}
+
 const AdvancedTextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity']);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [useStructuredOutput, setUseStructuredOutput] = useState(true);
   const [useStreaming, setUseStreaming] = useState(false);
-  const [results, setResults] = useState<GeminiAdvancedResult[]>([]);
+  const [results, setResults] = useState<AnalysisResultWithType[]>([]);
   const [streamingProgress, setStreamingProgress] = useState<Partial<GeminiAdvancedResult>[]>([]);
   const { toast } = useToast();
 
@@ -90,7 +94,6 @@ const AdvancedTextAnalyzer: React.FC = () => {
         if (!option) return null;
 
         if (useStreaming) {
-          const streamingResult: Partial<GeminiAdvancedResult>[] = [];
           setStreamingProgress(prev => [...prev, {}]);
 
           const result = await streamAnalyzeContent(
@@ -105,19 +108,19 @@ const AdvancedTextAnalyzer: React.FC = () => {
             }
           );
 
-          return { ...result, type: option.label };
+          return { ...result, type: option.label } as AnalysisResultWithType;
         } else {
           const result = await analyzeContentWithGeminiAdvanced(
             text,
             option.prompt,
             useStructuredOutput
           );
-          return { ...result, type: option.label };
+          return { ...result, type: option.label } as AnalysisResultWithType;
         }
       });
 
       const analysisResults = await Promise.all(analysisPromises);
-      const validResults = analysisResults.filter(result => result !== null) as (GeminiAdvancedResult & { type: string })[];
+      const validResults = analysisResults.filter(result => result !== null) as AnalysisResultWithType[];
       
       setResults(validResults);
       toast({
