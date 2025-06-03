@@ -1,7 +1,6 @@
-
 export interface AnalyticsEvent {
   id: string;
-  type: 'analysis_request' | 'analysis_complete' | 'api_error' | 'user_action';
+  type: 'analysis_request' | 'analysis_complete' | 'api_error' | 'user_action' | 'security_analysis';
   timestamp: number;
   data: any;
   userId?: string;
@@ -14,7 +13,7 @@ export interface PerformanceMetric {
   value: number;
   unit: string;
   timestamp: number;
-  category: 'response_time' | 'throughput' | 'error_rate' | 'availability';
+  category: 'response_time' | 'throughput' | 'error_rate' | 'availability' | 'security_metrics';
 }
 
 export interface APIHealthMetric {
