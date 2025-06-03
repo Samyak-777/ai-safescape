@@ -5,6 +5,7 @@
 
 @layer base {
   :root {
+    /* Updated colors for WCAG 2.2 compliance - 4.5:1 contrast ratios */
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
 
@@ -14,65 +15,68 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 210 100% 50%;
+    /* Enhanced primary colors for better contrast */
+    --primary: 210 100% 40%; /* Darker for better contrast */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 35%; /* Darker for 4.5:1 ratio */
 
     --accent: 210 40% 96%;
     --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 45%; /* Adjusted for better contrast */
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 85%; /* Higher contrast border */
+    --input: 214.3 31.8% 85%;
+    --ring: 210 100% 40%;
 
     --radius: 1rem;
 
+    /* Sidebar colors updated for contrast */
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-foreground: 240 5.3% 20%; /* Darker for contrast */
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 240 4.8% 92%; /* Better contrast */
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-border: 220 13% 85%; /* More visible border */
+    --sidebar-ring: 210 100% 40%;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    /* Dark mode colors with WCAG 2.2 compliance */
+    --background: 222 47% 8%; /* Darker background */
+    --foreground: 210 40% 95%; /* Lighter text */
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 95%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 95%;
 
-    --primary: 210 100% 50%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 210 100% 60%; /* Brighter for dark mode */
+    --primary-foreground: 222 47% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 15%; /* Better contrast */
+    --secondary-foreground: 210 40% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 217.2 32.6% 15%;
+    --muted-foreground: 215 20% 70%; /* Better contrast */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 217.2 32.6% 15%;
+    --accent-foreground: 210 40% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%; /* Brighter for visibility */
+    --destructive-foreground: 210 40% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 217.2 32.6% 20%; /* More visible in dark mode */
+    --input: 217.2 32.6% 20%;
+    --ring: 210 100% 60%;
   }
 }
 
@@ -90,6 +94,7 @@
     @apply bg-background text-foreground;
   }
 
+  /* Ensure proper heading hierarchy for screen readers */
   h1, h2, h3, h4, h5, h6 {
     @apply font-medium tracking-tight;
   }
@@ -110,22 +115,24 @@
     @apply leading-relaxed;
   }
 
+  /* Enhanced glass effects with better contrast */
   .glass {
-    @apply bg-white/80 backdrop-blur-lg dark:bg-black/50;
+    @apply bg-white/90 backdrop-blur-lg dark:bg-black/60 border border-white/30 dark:border-white/20;
   }
 
   .glass-card {
-    @apply bg-white/60 backdrop-blur-md shadow-lg border border-white/20 dark:bg-black/30 dark:border-white/10;
+    @apply bg-white/70 backdrop-blur-md shadow-lg border border-white/30 dark:bg-black/40 dark:border-white/20;
   }
 
   .glass-hover {
-    @apply transition-all duration-300 hover:bg-white/80 hover:shadow-xl dark:hover:bg-black/40;
+    @apply transition-all duration-300 hover:bg-white/85 hover:shadow-xl dark:hover:bg-black/50;
   }
 
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24;
   }
 
+  /* Accessibility improvements */
   .fade-in-section {
     opacity: 0;
     transform: translateY(20px);
@@ -135,5 +142,71 @@
   .fade-in-section.is-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .glass, .glass-card {
+      @apply bg-background border-foreground/50;
+    }
+    
+    .text-muted-foreground {
+      @apply text-foreground/80;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    .fade-in-section {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Focus styles for better accessibility */
+  .focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Enhanced touch targets for mobile */
+  button, a, input, select, textarea {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Better link visibility */
+  a:not(.no-underline) {
+    @apply underline underline-offset-4 decoration-2 decoration-primary/60 hover:decoration-primary;
   }
 }
