@@ -5,10 +5,14 @@ import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-reac
 import { textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
 import { analyzeTextWithRealAPIs } from '@/services/realAPI';
+import { errorHandler } from '@/services/errorHandling';
+import ServiceStatusIndicator from './ServiceStatusIndicator';
+import RetryButton from './RetryButton';
 
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<null | Array<{
     type: string;
     status: 'clean' | 'warning' | 'danger';
@@ -16,6 +20,7 @@ const TextAnalyzer: React.FC = () => {
     confidence?: number;
   }>>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity', 'fact-check']);
+  const [failedServices, setFailedServices] = useState<string[]>([]);
 
   const handleOptionToggle = (id: string) => {
     setSelectedOptions(prev => 
@@ -25,43 +30,77 @@ const TextAnalyzer: React.FC = () => {
     );
   };
 
-  const handleAnalyze = async () => {
+  const performAnalysis = async (isRetry: boolean = false) => {
     if (!text.trim() || selectedOptions.length === 0) {
       toast.error('Please enter text and select at least one analysis option');
       return;
     }
     
-    setIsAnalyzing(true);
+    if (isRetry) {
+      setIsRetrying(true);
+    } else {
+      setIsAnalyzing(true);
+    }
     setAnalysisResults(null);
+    setFailedServices([]);
     
     try {
-      console.log('Starting real API analysis with options:', selectedOptions);
+      console.log('Starting analysis with options:', selectedOptions);
       const results = await analyzeTextWithRealAPIs(text, selectedOptions);
-      console.log('Real API analysis results:', results);
+      console.log('Analysis results:', results);
+      
+      // Track failed services
+      const failed = results
+        .filter(result => result.message.includes('unavailable') || result.message.includes('failed'))
+        .map(result => result.type);
+      
+      setFailedServices(failed);
       setAnalysisResults(results);
       
-      // Determine overall status for toast notification
-      const highestSeverity = results.reduce((highest, current) => {
-        if (current.status === 'danger') return 'danger';
-        if (current.status === 'warning' && highest !== 'danger') return 'warning';
-        return highest === 'danger' || highest === 'warning' ? highest : 'clean';
-      }, 'clean' as 'clean' | 'warning' | 'danger');
-      
-      // Show toast notification based on highest severity
-      if (highestSeverity === 'clean') {
-        toast.success('Analysis completed successfully');
-      } else if (highestSeverity === 'warning') {
-        toast.warning('Potential issues detected');
+      // Use enhanced success messaging
+      const successfulServices = results.filter(r => !failed.includes(r.type)).length;
+      if (successfulServices > 0) {
+        errorHandler.showSuccessWithWarnings(
+          `Analysis completed for ${successfulServices} service${successfulServices > 1 ? 's' : ''}`,
+          [],
+          failed
+        );
       } else {
-        toast.error('Issues detected in content');
+        toast.warning('All services unavailable', {
+          description: 'Please check your API configuration or try again later',
+          duration: 6000,
+        });
       }
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Error analyzing text - some services may be temporarily unavailable');
+      
+      const enhancedError = errorHandler.handleAPIError(
+        error,
+        'Analysis Engine',
+        'text analysis',
+        false
+      );
+      
+      // Show user-friendly error message
+      if (enhancedError.context?.fallbackAvailable) {
+        toast.warning('Some services unavailable', {
+          description: 'Analysis completed with available services. Some features may be limited.',
+          duration: 5000,
+        });
+      } else {
+        toast.error('Analysis failed', {
+          description: enhancedError.context?.userMessage || 'Please try again later',
+          duration: 5000,
+        });
+      }
     } finally {
       setIsAnalyzing(false);
+      setIsRetrying(false);
     }
   };
+
+  const handleAnalyze = () => performAnalysis(false);
+  const handleRetry = () => performAnalysis(true);
 
   // Function to get the icon component based on the icon name
   const getIconComponent = (iconName: string) => {
@@ -83,7 +122,10 @@ const TextAnalyzer: React.FC = () => {
 
   return (
     <div className="glass-card rounded-2xl p-6 sm:p-8">
-      <h3 className="text-xl font-medium mb-6">Text Analysis</h3>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-medium">Text Analysis</h3>
+        <ServiceStatusIndicator />
+      </div>
       
       <div className="mb-6">
         <textarea
@@ -124,13 +166,22 @@ const TextAnalyzer: React.FC = () => {
           <Filter size={18} />
           Analyze Text
         </Button>
-        <button
-          className="text-sm text-muted-foreground hover:text-primary transition-colors"
-          onClick={() => setText('')}
-          disabled={!text.trim()}
-        >
-          Clear
-        </button>
+        <div className="flex items-center gap-3">
+          {failedServices.length > 0 && (
+            <RetryButton
+              onRetry={handleRetry}
+              isRetrying={isRetrying}
+              failedServices={failedServices}
+            />
+          )}
+          <button
+            className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => setText('')}
+            disabled={!text.trim()}
+          >
+            Clear
+          </button>
+        </div>
       </div>
       
       {analysisResults && analysisResults.length > 0 && (
@@ -164,6 +215,11 @@ const TextAnalyzer: React.FC = () => {
                     )}
                   </div>
                   <p className="text-sm mt-1">{result.message}</p>
+                  {result.message.includes('unavailable') && (
+                    <p className="text-xs mt-2 opacity-75">
+                      This service is temporarily unavailable. Results from other services are still shown.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

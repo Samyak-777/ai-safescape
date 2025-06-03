@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import FeatureCard from '@/components/FeatureCard';
-import AnalysisTools from '@/components/AnalysisTools';
+import AnalysisToolsEnhanced from '@/components/AnalysisToolsEnhanced';
 import TechnologyLogos from '@/components/TechnologyLogos';
 import Footer from '@/components/Footer';
 import AnimatedSection from '@/components/AnimatedSection';
@@ -74,7 +74,7 @@ const Index: React.FC = () => {
           </div>
         </section>
         
-        <AnalysisTools />
+        <AnalysisToolsEnhanced />
         
         <section className="section-container">
           <AnimatedSection>
