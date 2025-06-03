@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import Button from './Button';
+import PersonalizedAssistant from './PersonalizedAssistant';
 import { Check, AlertCircle, Ban, Search, Filter, ShieldIcon } from 'lucide-react';
 import { textAnalysisOptions } from '@/services/api';
 import { toast } from 'sonner';
@@ -21,6 +22,7 @@ const TextAnalyzer: React.FC = () => {
   }>>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity', 'fact-check']);
   const [failedServices, setFailedServices] = useState<string[]>([]);
+  const [showAssistant, setShowAssistant] = useState(false);
 
   const handleOptionToggle = (id: string) => {
     setSelectedOptions(prev => 
@@ -43,6 +45,7 @@ const TextAnalyzer: React.FC = () => {
     }
     setAnalysisResults(null);
     setFailedServices([]);
+    setShowAssistant(false);
     
     try {
       console.log('Starting analysis with options:', selectedOptions);
@@ -56,6 +59,12 @@ const TextAnalyzer: React.FC = () => {
       
       setFailedServices(failed);
       setAnalysisResults(results);
+      
+      // Show assistant if there are meaningful results
+      const meaningfulResults = results.filter(r => r.status !== 'clean' || r.confidence);
+      if (meaningfulResults.length > 0) {
+        setShowAssistant(true);
+      }
       
       // Use enhanced success messaging
       const successfulServices = results.filter(r => !failed.includes(r.type)).length;
@@ -121,110 +130,122 @@ const TextAnalyzer: React.FC = () => {
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 sm:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-medium">Text Analysis</h3>
-        <ServiceStatusIndicator />
-      </div>
-      
-      <div className="mb-6">
-        <textarea
-          className="w-full h-40 p-4 rounded-xl bg-white/50 dark:bg-black/20 border border-border resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-          placeholder="Enter text to analyze for potential misinformation, profanity, or fraud signals..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-      </div>
-      
-      <div className="mb-6">
-        <p className="text-sm font-medium mb-3">Analysis Options</p>
-        <div className="flex flex-wrap gap-2">
-          {textAnalysisOptions.map((option) => (
-            <button
-              key={option.id}
-              className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-                selectedOptions.includes(option.id)
-                  ? 'bg-primary/15 text-primary'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/70'
-              }`}
-              onClick={() => handleOptionToggle(option.id)}
-              title={option.description}
-            >
-              {getIconComponent(option.icon)}
-              <span className="hidden sm:inline">{option.label}</span>
-            </button>
-          ))}
+    <div className="space-y-6">
+      <div className="glass-card rounded-2xl p-6 sm:p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-medium">Text Analysis</h3>
+          <ServiceStatusIndicator />
         </div>
-      </div>
-      
-      <div className="flex justify-between items-center">
-        <Button
-          onClick={handleAnalyze}
-          isLoading={isAnalyzing}
-          disabled={!text.trim() || selectedOptions.length === 0}
-        >
-          <Filter size={18} />
-          Analyze Text
-        </Button>
-        <div className="flex items-center gap-3">
-          {failedServices.length > 0 && (
-            <RetryButton
-              onRetry={handleRetry}
-              isRetrying={isRetrying}
-              failedServices={failedServices}
-            />
-          )}
-          <button
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            onClick={() => setText('')}
-            disabled={!text.trim()}
+        
+        <div className="mb-6">
+          <textarea
+            className="w-full h-40 p-4 rounded-xl bg-white/50 dark:bg-black/20 border border-border resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Enter text to analyze for potential misinformation, profanity, or fraud signals..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
+        
+        <div className="mb-6">
+          <p className="text-sm font-medium mb-3">Analysis Options</p>
+          <div className="flex flex-wrap gap-2">
+            {textAnalysisOptions.map((option) => (
+              <button
+                key={option.id}
+                className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                  selectedOptions.includes(option.id)
+                    ? 'bg-primary/15 text-primary'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/70'
+                }`}
+                onClick={() => handleOptionToggle(option.id)}
+                title={option.description}
+              >
+                {getIconComponent(option.icon)}
+                <span className="hidden sm:inline">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <Button
+            onClick={handleAnalyze}
+            isLoading={isAnalyzing}
+            disabled={!text.trim() || selectedOptions.length === 0}
           >
-            Clear
-          </button>
-        </div>
-      </div>
-      
-      {analysisResults && analysisResults.length > 0 && (
-        <div className="mt-6 space-y-4">
-          {analysisResults.map((result, index) => (
-            <div 
-              key={index}
-              className={`p-4 rounded-xl animate-fade-in ${
-                result.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
-                result.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
-                'bg-red-500/10 text-red-700 dark:text-red-400'
-              }`}
+            <Filter size={18} />
+            Analyze Text
+          </Button>
+          <div className="flex items-center gap-3">
+            {failedServices.length > 0 && (
+              <RetryButton
+                onRetry={handleRetry}
+                isRetrying={isRetrying}
+                failedServices={failedServices}
+              />
+            )}
+            <button
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              onClick={() => setText('')}
+              disabled={!text.trim()}
             >
-              <div className="flex items-start gap-3">
-                <div className={`mt-0.5 p-1.5 rounded-full ${
-                  result.status === 'clean' ? 'bg-green-500/20' :
-                  result.status === 'warning' ? 'bg-yellow-500/20' :
-                  'bg-red-500/20'
-                }`}>
-                  {result.status === 'clean' ? <Check size={16} /> :
-                  result.status === 'warning' ? <AlertCircle size={16} /> :
-                  <Ban size={16} />}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium capitalize">{result.type}</p>
-                    {result.confidence && (
-                      <span className="text-xs opacity-70">
-                        {Math.round(result.confidence * 100)}% confidence
-                      </span>
+              Clear
+            </button>
+          </div>
+        </div>
+        
+        {analysisResults && analysisResults.length > 0 && (
+          <div className="mt-6 space-y-4">
+            {analysisResults.map((result, index) => (
+              <div 
+                key={index}
+                className={`p-4 rounded-xl animate-fade-in ${
+                  result.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
+                  result.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
+                  'bg-red-500/10 text-red-700 dark:text-red-400'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`mt-0.5 p-1.5 rounded-full ${
+                    result.status === 'clean' ? 'bg-green-500/20' :
+                    result.status === 'warning' ? 'bg-yellow-500/20' :
+                    'bg-red-500/20'
+                  }`}>
+                    {result.status === 'clean' ? <Check size={16} /> :
+                    result.status === 'warning' ? <AlertCircle size={16} /> :
+                    <Ban size={16} />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium capitalize">{result.type}</p>
+                      {result.confidence && (
+                        <span className="text-xs opacity-70">
+                          {Math.round(result.confidence * 100)}% confidence
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm mt-1">{result.message}</p>
+                    {result.message.includes('unavailable') && (
+                      <p className="text-xs mt-2 opacity-75">
+                        This service is temporarily unavailable. Results from other services are still shown.
+                      </p>
                     )}
                   </div>
-                  <p className="text-sm mt-1">{result.message}</p>
-                  {result.message.includes('unavailable') && (
-                    <p className="text-xs mt-2 opacity-75">
-                      This service is temporarily unavailable. Results from other services are still shown.
-                    </p>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Personalized AI Assistant */}
+      {showAssistant && analysisResults && (
+        <PersonalizedAssistant 
+          analysisResults={analysisResults}
+          onRecommendationsReady={(recommendations) => {
+            console.log('Personalized recommendations ready:', recommendations);
+          }}
+        />
       )}
     </div>
   );
