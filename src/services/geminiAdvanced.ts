@@ -1,4 +1,3 @@
-
 // Advanced Gemini 2.5 Flash/Pro API integration with Google I/O 2025 features
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyDBcnmhOWEcYtp2PMFuYvAnisKyXspMMPE';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
@@ -145,7 +144,15 @@ export const analyzeContentWithGeminiAdvanced = async (
     );
 
     if (!response.ok) {
-      throw new Error(`Gemini Advanced API error: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      
+      // Check if it's an API not enabled error
+      if (response.status === 403 && errorData?.error?.message?.includes('has not been used in project')) {
+        console.warn('Gemini API not enabled, providing fallback analysis');
+        return createFallbackAnalysis(content, analysisType);
+      }
+      
+      throw new Error(`Gemini Advanced API error: ${response.status} - ${errorData?.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
@@ -178,21 +185,73 @@ export const analyzeContentWithGeminiAdvanced = async (
         recommendations: result.recommendations || []
       };
     } catch {
-      return {
-        isHarmful: false,
-        harmCategories: [],
-        confidence: 0,
-        explanation: 'Unable to parse analysis result',
-        reasoning: ['Analysis parsing failed'],
-        contextualFactors: [],
-        riskLevel: 'low',
-        recommendations: ['Retry analysis with different parameters']
-      };
+      return createFallbackAnalysis(content, analysisType);
     }
   } catch (error) {
     console.error('Gemini Advanced API error:', error);
-    throw new Error('Advanced AI content analysis service unavailable');
+    
+    // Provide fallback analysis instead of throwing
+    return createFallbackAnalysis(content, analysisType);
   }
+};
+
+// Fallback analysis when Gemini API is unavailable
+const createFallbackAnalysis = (content: string, analysisType: string): GeminiAdvancedResult => {
+  // Basic pattern-based analysis as fallback
+  const lowerContent = content.toLowerCase();
+  
+  let isHarmful = false;
+  let harmCategories: string[] = [];
+  let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+  let confidence = 0.3; // Lower confidence for fallback analysis
+  
+  // Basic pattern detection based on analysis type
+  if (analysisType.includes('profanity') || analysisType.includes('toxicity')) {
+    const profanityPatterns = ['damn', 'hell', 'stupid', 'idiot', 'hate'];
+    const matches = profanityPatterns.filter(pattern => lowerContent.includes(pattern));
+    if (matches.length > 0) {
+      isHarmful = true;
+      harmCategories.push('potentially inappropriate language');
+      riskLevel = matches.length > 2 ? 'medium' : 'low';
+    }
+  }
+  
+  if (analysisType.includes('misinformation') || analysisType.includes('fact')) {
+    const suspiciousPatterns = ['secret', 'government conspiracy', 'they don\'t want you to know'];
+    const matches = suspiciousPatterns.filter(pattern => lowerContent.includes(pattern));
+    if (matches.length > 0) {
+      isHarmful = true;
+      harmCategories.push('potential misinformation indicators');
+      riskLevel = 'medium';
+    }
+  }
+  
+  if (analysisType.includes('bias') || analysisType.includes('discrimination')) {
+    // Very basic bias detection
+    if (lowerContent.includes('all ') || lowerContent.includes('never ') || lowerContent.includes('always ')) {
+      harmCategories.push('potential overgeneralization');
+      riskLevel = 'low';
+    }
+  }
+  
+  return {
+    isHarmful,
+    harmCategories,
+    confidence,
+    explanation: `Fallback analysis completed for ${analysisType}. Advanced AI analysis temporarily unavailable - please enable the Generative Language API in your Google Cloud project for more accurate results.`,
+    reasoning: [
+      'Basic pattern matching performed as fallback',
+      'Limited analysis due to API unavailability',
+      'Results may not reflect full content context'
+    ],
+    contextualFactors: ['API service temporarily unavailable'],
+    riskLevel,
+    recommendations: [
+      'Enable Generative Language API for comprehensive analysis',
+      'Consider manual review for important content',
+      'Use additional verification methods when possible'
+    ]
+  };
 };
 
 export const analyzeMultimodalContent = async (

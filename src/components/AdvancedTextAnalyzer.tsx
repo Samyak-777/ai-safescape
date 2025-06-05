@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, CheckCircle, AlertTriangle, XCircle, Sparkles, Brain, Zap } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, CheckCircle, AlertTriangle, XCircle, Sparkles, Brain, Zap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { analyzeContentWithGeminiAdvanced, streamAnalyzeContent, GeminiAdvancedResult } from '@/services/geminiAdvanced';
 
@@ -22,6 +22,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
   const [useStreaming, setUseStreaming] = useState(false);
   const [results, setResults] = useState<AnalysisResultWithType[]>([]);
   const [streamingProgress, setStreamingProgress] = useState<Partial<GeminiAdvancedResult>[]>([]);
+  const [apiWarning, setApiWarning] = useState<string | null>(null);
   const { toast } = useToast();
 
   const analysisOptions = [
@@ -87,35 +88,57 @@ const AdvancedTextAnalyzer: React.FC = () => {
     setIsAnalyzing(true);
     setResults([]);
     setStreamingProgress([]);
+    setApiWarning(null);
 
     try {
       const analysisPromises = selectedOptions.map(async (optionId, index) => {
         const option = analysisOptions.find(opt => opt.id === optionId);
         if (!option) return null;
 
-        if (useStreaming) {
-          setStreamingProgress(prev => [...prev, {}]);
+        try {
+          if (useStreaming) {
+            setStreamingProgress(prev => [...prev, {}]);
 
-          const result = await streamAnalyzeContent(
-            text,
-            option.prompt,
-            (partial) => {
-              setStreamingProgress(prev => {
-                const newProgress = [...prev];
-                newProgress[index] = partial;
-                return newProgress;
-              });
+            const result = await streamAnalyzeContent(
+              text,
+              option.prompt,
+              (partial) => {
+                setStreamingProgress(prev => {
+                  const newProgress = [...prev];
+                  newProgress[index] = partial;
+                  return newProgress;
+                });
+              }
+            );
+
+            return { ...result, type: option.label } as AnalysisResultWithType;
+          } else {
+            const result = await analyzeContentWithGeminiAdvanced(
+              text,
+              option.prompt,
+              useStructuredOutput
+            );
+            
+            // Check if this is a fallback result
+            if (result.explanation?.includes('Fallback analysis') || result.explanation?.includes('API temporarily unavailable')) {
+              setApiWarning('Gemini API is not enabled. Please enable the Generative Language API in your Google Cloud project for full functionality.');
             }
-          );
-
-          return { ...result, type: option.label } as AnalysisResultWithType;
-        } else {
-          const result = await analyzeContentWithGeminiAdvanced(
-            text,
-            option.prompt,
-            useStructuredOutput
-          );
-          return { ...result, type: option.label } as AnalysisResultWithType;
+            
+            return { ...result, type: option.label } as AnalysisResultWithType;
+          }
+        } catch (error) {
+          console.error(`Analysis error for ${option.label}:`, error);
+          return {
+            type: option.label,
+            isHarmful: false,
+            harmCategories: [],
+            confidence: 0,
+            explanation: `Analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            reasoning: ['Service temporarily unavailable'],
+            contextualFactors: [],
+            riskLevel: 'low' as const,
+            recommendations: ['Please try again later or check API configuration']
+          } as AnalysisResultWithType;
         }
       });
 
@@ -123,15 +146,25 @@ const AdvancedTextAnalyzer: React.FC = () => {
       const validResults = analysisResults.filter(result => result !== null) as AnalysisResultWithType[];
       
       setResults(validResults);
-      toast({
-        title: "Analysis Complete",
-        description: `Completed ${validResults.length} advanced analyses`,
-      });
+      
+      const fallbackCount = validResults.filter(r => r.explanation?.includes('Fallback analysis')).length;
+      if (fallbackCount > 0) {
+        toast({
+          title: "Analysis Complete (Limited)",
+          description: `Completed ${validResults.length} analyses. ${fallbackCount} used fallback due to API limitations.`,
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Analysis Complete",
+          description: `Completed ${validResults.length} advanced analyses`,
+        });
+      }
     } catch (error) {
       console.error('Advanced analysis error:', error);
       toast({
         title: "Error",
-        description: "Advanced analysis failed. Please try again.",
+        description: "Advanced analysis failed. Please check your API configuration.",
         variant: "destructive",
       });
     } finally {
@@ -184,6 +217,23 @@ const AdvancedTextAnalyzer: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {apiWarning && (
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {apiWarning}
+                <a 
+                  href="https://console.developers.google.com/apis/api/generativelanguage.googleapis.com/overview" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="ml-2 text-primary underline hover:no-underline"
+                >
+                  Enable API →
+                </a>
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
