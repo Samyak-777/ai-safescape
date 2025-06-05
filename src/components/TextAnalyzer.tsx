@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Button from './Button';
 import PersonalizedAssistant from './PersonalizedAssistant';
@@ -9,6 +8,7 @@ import { analyzeTextWithRealAPIs } from '@/services/realAPI';
 import { errorHandler } from '@/services/errorHandling';
 import ServiceStatusIndicator from './ServiceStatusIndicator';
 import RetryButton from './RetryButton';
+import AdvancedAnalysisPanel from './AdvancedAnalysisPanel';
 
 const TextAnalyzer: React.FC = () => {
   const [text, setText] = useState('');
@@ -236,6 +236,16 @@ const TextAnalyzer: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Add Advanced Analysis Panel */}
+      {text.trim() && (
+        <AdvancedAnalysisPanel 
+          text={text}
+          onResultsReady={(results) => {
+            console.log('Advanced analysis results:', results);
+          }}
+        />
+      )}
 
       {/* Personalized AI Assistant */}
       {showAssistant && analysisResults && (
