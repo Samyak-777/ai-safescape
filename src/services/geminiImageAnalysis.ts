@@ -93,13 +93,13 @@ const analyzeImageManipulation = async (imageData: string): Promise<ImageAnalysi
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     try {
-      const result = JSON.parse(text);
+      const result = JSON.parse(text.replace(/```json|```/g, ''));
       
       return {
-        type: 'manipulation check',
+        type: 'manipulation detection',
         status: result.isManipulated ? (result.confidence > 0.7 ? 'danger' : 'warning') : 'clean',
         message: result.isManipulated ? 
-          `Image manipulation detected: ${result.manipulationType}` : 
+          `Manipulation detected: ${result.manipulationType} (${Math.round(result.confidence * 100)}% confidence)` : 
           'No signs of manipulation detected',
         confidence: result.confidence,
         details: {
@@ -112,19 +112,15 @@ const analyzeImageManipulation = async (imageData: string): Promise<ImageAnalysi
       };
     } catch {
       return {
-        type: 'manipulation check',
+        type: 'manipulation detection',
         status: 'clean',
-        message: 'Image analysis completed - no manipulation detected',
+        message: 'Image manipulation analysis completed - no clear manipulation detected',
         confidence: 0.7
       };
     }
   } catch (error) {
     console.error('Image manipulation analysis error:', error);
-    return {
-      type: 'manipulation check',
-      status: 'clean',
-      message: 'Image manipulation analysis temporarily unavailable',
-    };
+    throw error;
   }
 };
 
@@ -203,15 +199,15 @@ const analyzeImageContentSafety = async (imageData: string): Promise<ImageAnalys
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     try {
-      const result = JSON.parse(text);
+      const result = JSON.parse(text.replace(/```json|```/g, ''));
       
       return {
         type: 'content safety',
         status: result.isInappropriate ? 
           (result.severity === 'high' ? 'danger' : 'warning') : 'clean',
         message: result.isInappropriate ? 
-          `Inappropriate content detected: ${result.categories.join(', ')}` : 
-          'Image content is safe',
+          `Inappropriate content detected: ${result.categories.join(', ')} (${result.severity} severity)` : 
+          'Image content is safe and appropriate',
         confidence: result.confidence,
         details: {
           contentSafety: {
@@ -225,17 +221,13 @@ const analyzeImageContentSafety = async (imageData: string): Promise<ImageAnalys
       return {
         type: 'content safety',
         status: 'clean',
-        message: 'Image content appears safe',
+        message: 'Image content safety analysis completed - appears safe',
         confidence: 0.8
       };
     }
   } catch (error) {
     console.error('Image content safety analysis error:', error);
-    return {
-      type: 'content safety',
-      status: 'clean',
-      message: 'Content safety analysis temporarily unavailable',
-    };
+    throw error;
   }
 };
 
@@ -295,16 +287,16 @@ const extractTextFromImage = async (imageData: string): Promise<ImageAnalysisRes
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     try {
-      const result = JSON.parse(text);
+      const result = JSON.parse(text.replace(/```json|```/g, ''));
       
       return {
         type: 'text extraction',
         status: result.isHarmful ? 'warning' : 'clean',
         message: result.hasText ? 
           (result.isHarmful ? 
-            `Text extracted with issues: ${result.harmfulCategories?.join(', ') || 'content concerns'}` : 
-            'Text extracted and analyzed - no issues found') :
-          'No text detected in image',
+            `Extracted text contains issues: ${result.harmfulCategories?.join(', ') || 'content concerns'}` : 
+            `Text extracted: "${result.extractedText.substring(0, 100)}${result.extractedText.length > 100 ? '...' : ''}" - No issues detected`) :
+          'No readable text detected in image',
         confidence: result.confidence,
         details: {
           textExtraction: {
@@ -318,17 +310,13 @@ const extractTextFromImage = async (imageData: string): Promise<ImageAnalysisRes
       return {
         type: 'text extraction',
         status: 'clean',
-        message: 'Text extraction completed',
+        message: 'Text extraction analysis completed',
         confidence: 0.7
       };
     }
   } catch (error) {
     console.error('Text extraction error:', error);
-    return {
-      type: 'text extraction',
-      status: 'clean',
-      message: 'Text extraction service temporarily unavailable',
-    };
+    throw error;
   }
 };
 
@@ -339,7 +327,6 @@ export const analyzeImageWithGemini = async (
   console.log('Analyzing image with Gemini AI, options:', options);
   
   try {
-    // Run different analyses based on selected options
     const analysisPromises: Promise<ImageAnalysisResult>[] = [];
     
     if (options.includes('manipulation')) {
@@ -354,39 +341,41 @@ export const analyzeImageWithGemini = async (
       analysisPromises.push(extractTextFromImage(imageData));
     }
 
-    // If no specific options, do a general analysis
     if (analysisPromises.length === 0) {
       analysisPromises.push(analyzeImageContentSafety(imageData));
     }
 
     const results = await Promise.all(analysisPromises);
+    console.log('Analysis results:', results);
     
-    // Combine results and return the most concerning one
+    // Return the first concerning result or the most detailed clean result
     const dangerResults = results.filter(r => r.status === 'danger');
     const warningResults = results.filter(r => r.status === 'warning');
+    const cleanResults = results.filter(r => r.status === 'clean');
     
     if (dangerResults.length > 0) {
       return dangerResults[0];
     } else if (warningResults.length > 0) {
       return warningResults[0];
     } else {
+      // Return the most informative clean result
+      const detailedResult = cleanResults.find(r => 
+        r.details?.textExtraction?.extractedText || 
+        r.details?.manipulation?.confidence || 
+        r.details?.contentSafety?.confidence
+      ) || cleanResults[0];
+      
       return {
-        type: 'comprehensive analysis',
-        status: 'clean',
-        message: 'Image analysis completed - no issues detected',
-        confidence: Math.min(...results.map(r => r.confidence || 0.8)),
-        details: results.reduce((acc, result) => ({
-          ...acc,
-          ...result.details
-        }), {})
+        ...detailedResult,
+        message: `Analysis completed (${options.join(', ')}): ${detailedResult.message}`
       };
     }
   } catch (error) {
     console.error('Gemini image analysis error:', error);
     return {
       type: 'image analysis',
-      status: 'clean',
-      message: 'Image analysis service temporarily unavailable',
+      status: 'warning',
+      message: 'Image analysis service temporarily unavailable - please try again',
     };
   }
 };
