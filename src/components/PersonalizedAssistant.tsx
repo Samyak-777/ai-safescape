@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Bot, AlertTriangle, CheckCircle, Clock, ExternalLink, Download, Lightbulb } from 'lucide-react';
+import { Bot, AlertTriangle, CheckCircle, Clock, ExternalLink, Download, Lightbulb, Heart, Shield, HelpCircle } from 'lucide-react';
 import { getPersonalizedRecommendations, generateSecurityReport, PersonalizedAssistantResult, AssistantRecommendation } from '@/services/personalizedAssistant';
 import { analyticsService } from '@/services/analyticsService';
 
@@ -34,7 +33,8 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
     try {
       analyticsService.trackEvent('user_action', {
         action: 'generate_personalized_recommendations',
-        analysisCount: analysisResults.length
+        analysisCount: analysisResults.length,
+        platform: 'AI-SafeScape'
       });
 
       const result = await getPersonalizedRecommendations(analysisResults, {
@@ -46,15 +46,15 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
       onRecommendationsReady?.(result);
 
       analyticsService.trackEvent('analysis_complete', {
-        type: 'personalized_recommendations',
+        type: 'personalized_harm_guidance',
         recommendationCount: result.recommendations.length,
         riskLevel: result.overallRiskAssessment
       });
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
       analyticsService.trackEvent('api_error', {
-        service: 'Personalized Assistant',
-        error: 'Failed to generate recommendations'
+        service: 'AI-SafeScape Personalized Assistant',
+        error: 'Failed to generate harm guidance'
       });
     } finally {
       setIsLoading(false);
@@ -99,16 +99,17 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-blue-500 animate-pulse" />
-            AI Security Assistant
+            <Heart className="h-5 w-5 text-pink-500 animate-pulse" />
+            AI-SafeScape Personal Assistant
           </CardTitle>
           <CardDescription>
-            Analyzing your content and generating personalized recommendations...
+            Analyzing your situation and preparing personalized support and guidance...
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="ml-3 text-sm text-muted-foreground">Preparing your personalized support...</span>
           </div>
         </CardContent>
       </Card>
@@ -124,49 +125,66 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-blue-500" />
-            AI Security Assistant
-            <Badge variant="secondary">Powered by Gemini 2.5 Pro</Badge>
+            <Shield className="h-5 w-5 text-blue-500" />
+            AI-SafeScape Personal Assistant
+            <Badge variant="secondary" className="bg-green-100 text-green-800">
+              Trained for Online Safety
+            </Badge>
           </CardTitle>
           <CardDescription>
-            Personalized analysis and recommendations based on detected threats
+            Empathetic AI guidance specifically designed to help you navigate online harms and stay safe
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Overall Risk Assessment */}
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h3 className="font-medium mb-2">Overall Risk Assessment</h3>
-            <p className="text-sm text-muted-foreground">{recommendations.overallRiskAssessment}</p>
+          {/* Empathetic Risk Assessment */}
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <Heart className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-blue-900 mb-2">Your Safety Assessment</h3>
+                <p className="text-sm text-blue-800">{recommendations.overallRiskAssessment}</p>
+                <p className="text-xs text-blue-600 mt-2 italic">
+                  Remember: You're not alone. AI-SafeScape is here to support you through this.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Priority Actions */}
+          {/* Immediate Safety Actions */}
           {recommendations.priorityActions.length > 0 && (
             <div>
               <h3 className="font-medium mb-3 flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
-                Immediate Actions Required
+                <AlertTriangle className="h-4 w-4 text-red-500" />
+                Immediate Safety Steps
+                <Badge variant="destructive" className="text-xs">Take Action Now</Badge>
               </h3>
-              <ul className="space-y-2">
+              <div className="space-y-3">
                 {recommendations.priorityActions.map((action, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
-                    <span className="w-5 h-5 rounded-full bg-orange-500/20 text-orange-600 text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <div key={index} className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <span className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0 font-bold">
                       {index + 1}
                     </span>
-                    {action}
-                  </li>
+                    <div>
+                      <p className="text-sm font-medium text-red-900">{action}</p>
+                      <p className="text-xs text-red-700 mt-1">Your safety is our priority. Please take this action immediately.</p>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
-          {/* Detailed Recommendations */}
+          {/* Personalized Harm Guidance */}
           {recommendations.recommendations.length > 0 && (
             <div>
-              <h3 className="font-medium mb-3">Detailed Recommendations</h3>
+              <h3 className="font-medium mb-3 flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-purple-500" />
+                Personalized Guidance & Support
+              </h3>
               <ScrollArea className="h-80">
                 <div className="space-y-4">
                   {recommendations.recommendations.map((rec, index) => (
-                    <Card key={index} className="p-4">
+                    <Card key={index} className="p-4 border-l-4 border-l-purple-400">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <Badge className={getSeverityColor(rec.severity)}>
@@ -180,22 +198,25 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
                         </div>
                       </div>
                       
-                      <p className="text-sm mb-3">{rec.summary}</p>
+                      <p className="text-sm mb-3 font-medium text-purple-900">{rec.summary}</p>
                       
                       {rec.detailedAnalysis && (
-                        <div className="mb-3">
-                          <h4 className="text-xs font-medium text-muted-foreground mb-1">Analysis</h4>
-                          <p className="text-xs text-muted-foreground">{rec.detailedAnalysis}</p>
+                        <div className="mb-3 p-3 bg-purple-50 rounded-lg">
+                          <h4 className="text-xs font-medium text-purple-700 mb-1">Understanding What Happened</h4>
+                          <p className="text-xs text-purple-800">{rec.detailedAnalysis}</p>
                         </div>
                       )}
 
                       {rec.actionSteps.length > 0 && (
                         <div className="mb-3">
-                          <h4 className="text-xs font-medium text-muted-foreground mb-1">Action Steps</h4>
+                          <h4 className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                            <CheckCircle className="h-3 w-3 text-green-500" />
+                            Recommended Actions
+                          </h4>
                           <ul className="text-xs space-y-1">
                             {rec.actionSteps.map((step, stepIndex) => (
-                              <li key={stepIndex} className="flex items-start gap-1">
-                                <span className="text-primary">•</span>
+                              <li key={stepIndex} className="flex items-start gap-2 p-2 bg-green-50 rounded">
+                                <span className="text-green-600 font-bold">•</span>
                                 {step}
                               </li>
                             ))}
@@ -205,11 +226,14 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
 
                       {rec.preventionTips.length > 0 && (
                         <div className="mb-3">
-                          <h4 className="text-xs font-medium text-muted-foreground mb-1">Prevention Tips</h4>
+                          <h4 className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                            <Shield className="h-3 w-3 text-blue-500" />
+                            Future Protection Tips
+                          </h4>
                           <ul className="text-xs space-y-1">
                             {rec.preventionTips.map((tip, tipIndex) => (
-                              <li key={tipIndex} className="flex items-start gap-1">
-                                <Lightbulb className="h-3 w-3 text-yellow-500 mt-0.5 flex-shrink-0" />
+                              <li key={tipIndex} className="flex items-start gap-2 p-2 bg-blue-50 rounded">
+                                <Lightbulb className="h-3 w-3 text-blue-500 mt-0.5 flex-shrink-0" />
                                 {tip}
                               </li>
                             ))}
@@ -219,13 +243,24 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
 
                       {rec.resources.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-medium text-muted-foreground mb-1">Resources</h4>
-                          <div className="space-y-1">
+                          <h4 className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                            <Heart className="h-3 w-3 text-pink-500" />
+                            Support Resources
+                          </h4>
+                          <div className="space-y-2">
                             {rec.resources.map((resource, resIndex) => (
-                              <div key={resIndex} className="flex items-center gap-2 text-xs">
-                                <ExternalLink className="h-3 w-3" />
-                                <span className="font-medium">{resource.title}</span>
-                                <span className="text-muted-foreground">- {resource.description}</span>
+                              <div key={resIndex} className="flex items-start gap-2 text-xs p-2 bg-pink-50 rounded">
+                                <ExternalLink className="h-3 w-3 text-pink-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <span className="font-medium text-pink-900">{resource.title}</span>
+                                  <p className="text-pink-700">{resource.description}</p>
+                                  {resource.url && (
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" 
+                                       className="text-pink-600 hover:text-pink-800 underline">
+                                      Visit Resource →
+                                    </a>
+                                  )}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -291,7 +326,7 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
           </div>
 
           {securityReport && (
-            <div className="p-4 bg-muted/30 rounded-lg">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
               <h4 className="font-medium mb-2">Security Report</h4>
               <ScrollArea className="h-40">
                 <p className="text-sm whitespace-pre-wrap">{securityReport}</p>
@@ -300,6 +335,19 @@ const PersonalizedAssistant: React.FC<PersonalizedAssistantProps> = ({
           )}
         </CardContent>
       </Card>
+
+      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+        <div className="flex items-start gap-3">
+          <Shield className="h-5 w-5 text-green-600 mt-1 flex-shrink-0" />
+          <div>
+            <h4 className="font-medium text-green-900 mb-1">You're Protected</h4>
+            <p className="text-xs text-green-800">
+              AI-SafeScape is continuously monitoring and learning to keep you safer online. 
+              If you need immediate help, please contact local authorities or crisis support services.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

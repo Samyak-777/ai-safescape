@@ -1,5 +1,5 @@
 // Advanced Gemini 2.5 Flash/Pro API integration with Google I/O 2025 features
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyDBcnmhOWEcYtp2PMFuYvAnisKyXspMMPE';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAvsHmUnfT1um4K9aysmuo_jlwl4_8B7xM';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
 export interface GeminiAdvancedResult {
@@ -84,7 +84,9 @@ export const analyzeContentWithGeminiAdvanced = async (
     - Intent and context
     - Potential for misinterpretation
     - Severity and immediacy of risk
-    - Mitigation strategies`;
+    - Mitigation strategies
+    
+    You are specifically trained for AI-SafeScape platform to protect users from online harms.`;
 
     const userPrompt = `Analyze this content for ${analysisType}:\n\n"${content}"`;
 

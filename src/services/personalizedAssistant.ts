@@ -1,6 +1,5 @@
-
 // Personalized AI Assistant using Gemini 2.5 Pro for intelligent recommendations
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyDBcnmhOWEcYtp2PMFuYvAnisKyXspMMPE';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAvsHmUnfT1um4K9aysmuo_jlwl4_8B7xM';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
 export interface AssistantRecommendation {
@@ -36,9 +35,18 @@ const generatePersonalizedRecommendations = async (
   }
 ): Promise<PersonalizedAssistantResult> => {
   try {
-    const contextPrompt = `You are an expert cybersecurity advisor and AI assistant. Analyze the following content analysis results and provide personalized, actionable recommendations.
+    const contextPrompt = `You are an expert AI-SafeScape assistant specifically trained to help users who have encountered online harms. You provide empathetic, actionable guidance while maintaining user safety and well-being.
+
+Your core responsibilities:
+- Analyze detected online harms with deep understanding
+- Provide immediate safety recommendations
+- Offer emotional support and coping strategies
+- Guide users to appropriate resources (mental health, legal aid, safety organizations)
+- Explain the nature of threats in understandable terms
+- Suggest evidence collection and reporting procedures
 
 User Context:
+- Platform: AI-SafeScape (content safety and harm detection)
 - User Type: ${userContext?.userType || 'individual'}
 - Risk Tolerance: ${userContext?.riskTolerance || 'medium'}
 - Previous Analyses: ${userContext?.previousAnalyses?.length || 0} past analyses
@@ -46,32 +54,35 @@ User Context:
 Analysis Results to Review:
 ${JSON.stringify(analysisResults, null, 2)}
 
-Please provide:
-1. Overall risk assessment in plain language
-2. Priority actions the user should take immediately
-3. Detailed recommendations for each detected issue
-4. Learning insights to help the user recognize threats in the future
-5. Follow-up suggestions for ongoing security
+Please provide personalized guidance that includes:
+1. Clear explanation of detected harms in empathetic language
+2. Immediate safety actions the user should take
+3. Detailed recommendations for each specific issue
+4. Coping strategies and emotional support guidance
+5. Resources for further help (mental health, legal, safety organizations)
+6. Evidence preservation and reporting guidance
+
+IMPORTANT: Always maintain an empathetic, supportive tone. Acknowledge the user's experience and validate their concerns.
 
 Format your response as valid JSON with this structure:
 {
-  "overallRiskAssessment": "Clear explanation of the overall situation",
-  "priorityActions": ["Action 1", "Action 2", "Action 3"],
+  "overallRiskAssessment": "Empathetic explanation of the situation",
+  "priorityActions": ["Immediate safety action 1", "Immediate safety action 2"],
   "recommendations": [
     {
       "severity": "high",
       "category": "Category name",
-      "summary": "Brief summary",
-      "detailedAnalysis": "Detailed explanation",
+      "summary": "Brief, supportive summary",
+      "detailedAnalysis": "Detailed, empathetic explanation",
       "actionSteps": ["Step 1", "Step 2"],
-      "preventionTips": ["Tip 1", "Tip 2"],
-      "resources": [{"title": "Resource", "description": "Description"}],
+      "preventionTips": ["Prevention tip 1", "Prevention tip 2"],
+      "resources": [{"title": "Resource", "description": "Description", "url": "https://example.com"}],
       "urgencyLevel": "immediate",
       "estimatedTime": "5-10 minutes"
     }
   ],
   "learningInsights": ["Insight 1", "Insight 2"],
-  "followUpSuggestions": ["Suggestion 1", "Suggestion 2"]
+  "followUpSuggestions": ["Follow-up suggestion 1", "Follow-up suggestion 2"]
 }`;
 
     const response = await fetch(
