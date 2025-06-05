@@ -69,11 +69,10 @@ const TextAnalyzer: React.FC = () => {
       // Use enhanced success messaging
       const successfulServices = results.filter(r => !failed.includes(r.type)).length;
       if (successfulServices > 0) {
-        errorHandler.showSuccessWithWarnings(
-          `Analysis completed for ${successfulServices} service${successfulServices > 1 ? 's' : ''}`,
-          [],
-          failed
-        );
+        toast.success(`Analysis completed for ${successfulServices} service${successfulServices > 1 ? 's' : ''}`, {
+          description: failed.length > 0 ? `${failed.length} service${failed.length > 1 ? 's' : ''} temporarily unavailable` : undefined,
+          duration: 4000,
+        });
       } else {
         toast.warning('All services unavailable', {
           description: 'Please check your API configuration or try again later',
@@ -133,14 +132,14 @@ const TextAnalyzer: React.FC = () => {
     <div className="space-y-6">
       <div className="glass-card rounded-2xl p-6 sm:p-8">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-medium">Text Analysis</h3>
+          <h3 className="text-xl font-medium">Real-Time Text Analysis</h3>
           <ServiceStatusIndicator />
         </div>
         
         <div className="mb-6">
           <textarea
             className="w-full h-40 p-4 rounded-xl bg-white/50 dark:bg-black/20 border border-border resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="Enter text to analyze for potential misinformation, profanity, or fraud signals..."
+            placeholder="Enter text to analyze for potential misinformation, profanity, or fraud signals using real AI APIs..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -174,7 +173,7 @@ const TextAnalyzer: React.FC = () => {
             disabled={!text.trim() || selectedOptions.length === 0}
           >
             <Filter size={18} />
-            Analyze Text
+            Analyze with Real APIs
           </Button>
           <div className="flex items-center gap-3">
             {failedServices.length > 0 && (

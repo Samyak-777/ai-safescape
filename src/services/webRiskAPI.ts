@@ -23,7 +23,8 @@ export const checkUrlWithWebRisk = async (url: string): Promise<WebRiskResult> =
     });
 
     if (!response.ok) {
-      throw new Error(`Web Risk API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Web Risk API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();

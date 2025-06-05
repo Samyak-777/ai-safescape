@@ -15,10 +15,14 @@ export const checkUrlWithIPQS = async (url: string): Promise<IPQSResult> => {
     const encodedUrl = encodeURIComponent(url);
     const response = await fetch(`${IPQS_BASE_URL}/url/${IPQS_API_KEY}/${encodedUrl}`, {
       method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`IPQS API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`IPQS API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();

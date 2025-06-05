@@ -34,7 +34,7 @@ export const moderateTextWithGoogleNLP = async (text: string): Promise<NLPModera
     });
 
     if (!response.ok) {
-      throw new Error(`Google NLP API error: ${response.status}`);
+      throw new Error(`Google NLP API error: ${response.status} - ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -64,7 +64,7 @@ export const analyzeSentimentWithGoogleNLP = async (text: string): Promise<NLPSe
     });
 
     if (!response.ok) {
-      throw new Error(`Google NLP API error: ${response.status}`);
+      throw new Error(`Google NLP API error: ${response.status} - ${response.statusText}`);
     }
 
     const data = await response.json();

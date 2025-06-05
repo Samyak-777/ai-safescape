@@ -34,7 +34,8 @@ export const analyzeToxicityWithPerspective = async (text: string): Promise<Pers
     });
 
     if (!response.ok) {
-      throw new Error(`Perspective API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Perspective API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
