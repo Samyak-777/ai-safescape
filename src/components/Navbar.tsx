@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { Github } from 'lucide-react';
 import Button from './Button';
 
 const Navbar: React.FC = () => {
@@ -65,6 +66,18 @@ const Navbar: React.FC = () => {
                 {link.name}
               </Link>
             ))}
+            
+            {/* GitHub Button */}
+            <a
+              href="https://github.com/Samyak-777/ai-safescape"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-lg transition-colors duration-300 text-foreground/80 hover:text-foreground hover:bg-muted flex items-center gap-2"
+            >
+              <Github size={16} />
+              GitHub
+            </a>
+
             <Link to="/auth">
               <Button 
                 variant="primary"
@@ -105,6 +118,18 @@ const Navbar: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
+              
+              {/* GitHub Button for Mobile */}
+              <a
+                href="https://github.com/Samyak-777/ai-safescape"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-3 rounded-lg transition-colors duration-300 text-foreground/80 hover:text-foreground hover:bg-muted flex items-center gap-2"
+              >
+                <Github size={16} />
+                GitHub
+              </a>
+
               <Link to="/auth">
                 <Button 
                   variant="primary"

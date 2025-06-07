@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -346,7 +345,7 @@ const Auth: React.FC = () => {
                         <Label htmlFor="firstName">First Name</Label>
                         <Input
                           id="firstName"
-                          placeholder="John"
+                          placeholder=""
                           className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                           {...registerForm.register('firstName')}
                         />
@@ -361,7 +360,7 @@ const Auth: React.FC = () => {
                         <Label htmlFor="lastName">Last Name</Label>
                         <Input
                           id="lastName"
-                          placeholder="Doe"
+                          placeholder=""
                           className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                           {...registerForm.register('lastName')}
                         />
