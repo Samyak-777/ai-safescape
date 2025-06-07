@@ -65,14 +65,15 @@ const Navbar: React.FC = () => {
                 {link.name}
               </Link>
             ))}
-            <Button 
-              variant="primary"
-              size="sm"
-              className="ml-4"
-              onClick={() => window.open('https://github.com/user/safescape', '_blank')}
-            >
-              GitHub
-            </Button>
+            <Link to="/auth">
+              <Button 
+                variant="primary"
+                size="sm"
+                className="ml-4"
+              >
+                Sign In
+              </Button>
+            </Link>
           </nav>
 
           {/* Mobile Navigation Toggle */}
@@ -104,13 +105,14 @@ const Navbar: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
-              <Button 
-                variant="primary"
-                className="mt-2"
-                onClick={() => window.open('https://github.com/user/safescape', '_blank')}
-              >
-                GitHub
-              </Button>
+              <Link to="/auth">
+                <Button 
+                  variant="primary"
+                  className="mt-2 w-full"
+                >
+                  Sign In
+                </Button>
+              </Link>
             </nav>
           </div>
         </div>

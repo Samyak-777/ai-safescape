@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -175,6 +174,8 @@ const AnalysisToolsEnhanced: React.FC = () => {
             </Card>
           </TabsContent>
 
+          
+
           <TabsContent value="async-text" className="mt-6">
             <Card className="border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-cyan-500/5">
               <CardHeader>
@@ -239,6 +240,8 @@ const AnalysisToolsEnhanced: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      
 
       <AnimatedSection className="mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
