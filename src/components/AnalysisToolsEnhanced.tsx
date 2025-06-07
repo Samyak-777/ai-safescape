@@ -123,7 +123,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <AdvancedAnalysisPanel />
+                <AdvancedAnalysisPanel text="" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -169,7 +169,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <PersonalizedAssistant />
+                <PersonalizedAssistant analysisResults={[]} />
               </CardContent>
             </Card>
           </TabsContent>
