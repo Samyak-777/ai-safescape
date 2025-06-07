@@ -1,3 +1,4 @@
+
 // Personalized AI Assistant using Gemini 2.5 Pro for intelligent recommendations
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAvsHmUnfT1um4K9aysmuo_jlwl4_8B7xM';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
@@ -45,6 +46,8 @@ Your core responsibilities:
 - Explain the nature of threats in understandable terms
 - Suggest evidence collection and reporting procedures
 
+IMPORTANT: Do NOT include any dates, timestamps, or time references in your response. Focus on timeless guidance and support.
+
 User Context:
 - Platform: AI-SafeScape (content safety and harm detection)
 - User Type: ${userContext?.userType || 'individual'}
@@ -62,11 +65,11 @@ Please provide personalized guidance that includes:
 5. Resources for further help (mental health, legal, safety organizations)
 6. Evidence preservation and reporting guidance
 
-IMPORTANT: Always maintain an empathetic, supportive tone. Acknowledge the user's experience and validate their concerns.
+IMPORTANT: Always maintain an empathetic, supportive tone. Acknowledge the user's experience and validate their concerns. Do not include any dates or timestamps in your response.
 
 Format your response as valid JSON with this structure:
 {
-  "overallRiskAssessment": "Empathetic explanation of the situation",
+  "overallRiskAssessment": "Empathetic explanation of the situation without any date references",
   "priorityActions": ["Immediate safety action 1", "Immediate safety action 2"],
   "recommendations": [
     {
@@ -192,16 +195,21 @@ export const generateSecurityReport = async (
   recommendations: PersonalizedAssistantResult
 ): Promise<string> => {
   try {
-    const reportPrompt = `Generate a concise security report based on this analysis:
+    const reportPrompt = `Generate a concise security report based on this analysis. 
+
+IMPORTANT: Do NOT include any dates, timestamps, creation dates, or time references in the report.
 
 Analysis Results: ${JSON.stringify(analysisResults, null, 2)}
 Recommendations: ${JSON.stringify(recommendations, null, 2)}
 
 Create a brief, professional security report (max 500 words) that:
-1. Summarizes findings clearly
+1. Summarizes findings clearly without any date references
 2. Highlights key risks
 3. Provides actionable next steps
-4. Uses non-technical language when possible`;
+4. Uses non-technical language when possible
+5. Focuses on timeless security guidance
+
+Do not include any dates, timestamps, or time-based references in the report.`;
 
     const response = await fetch(
       `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,

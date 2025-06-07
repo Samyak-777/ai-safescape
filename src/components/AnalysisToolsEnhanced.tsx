@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Image, Zap, Clock, Sparkles, Shield, MessageCircle, Brain, Target, Bot, Network, AlertTriangle } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { FileText, Image, Zap, Clock, Sparkles, Shield, MessageCircle, Brain, Target, Bot, Network, AlertTriangle, Mic, Upload, Send } from 'lucide-react';
 import AsyncTextAnalyzer from './AsyncTextAnalyzer';
 import TextAnalyzer from './TextAnalyzer';
 import ImageAnalyzer from './ImageAnalyzer';
@@ -14,6 +16,80 @@ import AnimatedSection from './AnimatedSection';
 
 const AnalysisToolsEnhanced: React.FC = () => {
   const [activeTab, setActiveTab] = useState('advanced-ai');
+  const [advancedThreatText, setAdvancedThreatText] = useState('');
+  const [assistantText, setAssistantText] = useState('');
+  const [analysisResults, setAnalysisResults] = useState<any[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+
+  const handleAudioUpload = (event: React.ChangeEvent<HTMLInputElement>, section: 'threat' | 'assistant') => {
+    const file = event.target.files?.[0];
+    if (file) {
+      console.log(`Audio file uploaded for ${section}:`, file.name);
+      // TODO: Process audio file for transcription
+    }
+  };
+
+  const startRecording = async (section: 'threat' | 'assistant') => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks: BlobPart[] = [];
+
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        console.log(`Audio recorded for ${section}:`, audioBlob);
+        // TODO: Process recorded audio for transcription
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setMediaRecorder(null);
+      setIsRecording(false);
+    }
+  };
+
+  const handleThreatAnalysis = () => {
+    if (advancedThreatText.trim()) {
+      // Process the text for advanced threat detection
+      const mockResult = {
+        text: advancedThreatText,
+        status: 'warning',
+        type: 'Advanced Threat Analysis',
+        confidence: 0.85
+      };
+      setAnalysisResults([mockResult]);
+      console.log('Advanced threat analysis initiated for:', advancedThreatText);
+    }
+  };
+
+  const handleAssistantAnalysis = () => {
+    if (assistantText.trim()) {
+      // Process the text for AI assistant analysis
+      const mockResult = {
+        text: assistantText,
+        status: 'info',
+        type: 'AI Assistant Analysis',
+        confidence: 0.90
+      };
+      setAnalysisResults([mockResult]);
+      console.log('AI assistant analysis initiated for:', assistantText);
+    }
+  };
 
   return (
     <section className="section-container bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
@@ -122,8 +198,74 @@ const AnalysisToolsEnhanced: React.FC = () => {
                   machine learning and behavioral analysis.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <AdvancedAnalysisPanel text="" />
+              <CardContent className="space-y-6">
+                {/* Text Input Section */}
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="threat-text" className="block text-sm font-medium mb-2">
+                      Enter Text for Analysis
+                    </label>
+                    <Textarea
+                      id="threat-text"
+                      placeholder="Paste or type the text content you want to analyze for threats, harassment patterns, or harmful content..."
+                      value={advancedThreatText}
+                      onChange={(e) => setAdvancedThreatText(e.target.value)}
+                      className="min-h-[100px] resize-none"
+                    />
+                  </div>
+                  
+                  {/* Audio Input Section */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium">Audio Input Options</label>
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => startRecording('threat')}
+                        disabled={isRecording}
+                        className="flex items-center gap-2"
+                      >
+                        <Mic className="h-4 w-4" />
+                        {isRecording ? 'Recording...' : 'Record Audio'}
+                      </Button>
+                      
+                      {isRecording && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={stopRecording}
+                          className="flex items-center gap-2"
+                        >
+                          Stop Recording
+                        </Button>
+                      )}
+                      
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          onChange={(e) => handleAudioUpload(e, 'threat')}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <Button variant="outline" size="sm" className="flex items-center gap-2">
+                          <Upload className="h-4 w-4" />
+                          Upload Audio
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleThreatAnalysis}
+                    disabled={!advancedThreatText.trim()}
+                    className="w-full flex items-center gap-2"
+                  >
+                    <Send className="h-4 w-4" />
+                    Analyze for Threats
+                  </Button>
+                </div>
+                
+                <AdvancedAnalysisPanel text={advancedThreatText} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -168,13 +310,77 @@ const AnalysisToolsEnhanced: React.FC = () => {
                   assessment, and culturally sensitive responses.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <PersonalizedAssistant analysisResults={[]} />
+              <CardContent className="space-y-6">
+                {/* Text Input Section */}
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="assistant-text" className="block text-sm font-medium mb-2">
+                      Describe Your Situation or Ask for Help
+                    </label>
+                    <Textarea
+                      id="assistant-text"
+                      placeholder="Share your concerns, describe what happened, or ask for guidance. Our AI assistant will provide personalized support and recommendations..."
+                      value={assistantText}
+                      onChange={(e) => setAssistantText(e.target.value)}
+                      className="min-h-[100px] resize-none"
+                    />
+                  </div>
+                  
+                  {/* Audio Input Section */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium">Voice Input Options</label>
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => startRecording('assistant')}
+                        disabled={isRecording}
+                        className="flex items-center gap-2"
+                      >
+                        <Mic className="h-4 w-4" />
+                        {isRecording ? 'Recording...' : 'Record Voice'}
+                      </Button>
+                      
+                      {isRecording && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={stopRecording}
+                          className="flex items-center gap-2"
+                        >
+                          Stop Recording
+                        </Button>
+                      )}
+                      
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          onChange={(e) => handleAudioUpload(e, 'assistant')}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <Button variant="outline" size="sm" className="flex items-center gap-2">
+                          <Upload className="h-4 w-4" />
+                          Upload Audio
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleAssistantAnalysis}
+                    disabled={!assistantText.trim()}
+                    className="w-full flex items-center gap-2"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Get AI Assistance
+                  </Button>
+                </div>
+                
+                <PersonalizedAssistant analysisResults={analysisResults} />
               </CardContent>
             </Card>
           </TabsContent>
-
-          
 
           <TabsContent value="async-text" className="mt-6">
             <Card className="border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-cyan-500/5">
@@ -240,8 +446,6 @@ const AnalysisToolsEnhanced: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-
-      
 
       <AnimatedSection className="mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
