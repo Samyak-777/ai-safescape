@@ -13,7 +13,16 @@ import {
   Globe,
   Shield,
   Database,
-  Image
+  Image,
+  Brain,
+  Users,
+  AlertTriangle,
+  Target,
+  Bot,
+  Network,
+  MessageCircle,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 import TechnologyLogos from '@/components/TechnologyLogos';
@@ -45,7 +54,7 @@ const Documentation: React.FC = () => {
               </span>
               <h1 className="text-4xl font-bold mb-4">API Documentation</h1>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Comprehensive guide to integrating our content analysis API into your applications.
+                Comprehensive guide to integrating our advanced AI-powered content analysis API into your applications.
               </p>
             </div>
           </AnimatedSection>
@@ -84,6 +93,18 @@ const Documentation: React.FC = () => {
                   <li>
                     <button
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        activeTab === 'advanced-features' 
+                          ? 'bg-primary/10 text-primary' 
+                          : 'text-muted-foreground hover:bg-muted/50'
+                      }`}
+                      onClick={() => setActiveTab('advanced-features')}
+                    >
+                      Advanced Features
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         activeTab === 'user-guide' 
                           ? 'bg-primary/10 text-primary' 
                           : 'text-muted-foreground hover:bg-muted/50'
@@ -111,6 +132,12 @@ const Documentation: React.FC = () => {
                   <h4 className="text-sm font-medium text-muted-foreground mb-3">Resources</h4>
                   <ul className="space-y-2">
                     <li>
+                      <a href="https://ai.google.dev/gemini/docs/model/gemini-pro" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
+                        <ArrowRight size={12} />
+                        Gemini AI
+                      </a>
+                    </li>
+                    <li>
                       <a href="https://cloud.google.com/natural-language" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
                         <ArrowRight size={12} />
                         Google Cloud NLP
@@ -128,12 +155,6 @@ const Documentation: React.FC = () => {
                         Fact Check API
                       </a>
                     </li>
-                    <li>
-                      <a href="https://ai.google.dev/gemini/docs/model/gemini-pro" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
-                        <ArrowRight size={12} />
-                        Gemini Pro
-                      </a>
-                    </li>
                   </ul>
                 </div>
               </div>
@@ -146,7 +167,8 @@ const Documentation: React.FC = () => {
                     <div>
                       <h2 className="text-2xl font-bold mb-4">Getting Started</h2>
                       <p className="text-muted-foreground mb-6">
-                        Our API provides comprehensive content analysis capabilities to help you protect your platform from harmful content, misinformation, and fraud.
+                        Our platform provides next-generation AI-powered content analysis capabilities including advanced threat detection, 
+                        behavioral pattern analysis, and personalized AI assistance for comprehensive digital safety.
                       </p>
                       
                       <div className="bg-muted/50 p-5 rounded-xl mb-6">
@@ -162,6 +184,10 @@ const Documentation: React.FC = () => {
                           </li>
                           <li className="flex items-start gap-2">
                             <span className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                            <span>Choose from basic analysis or advanced AI detection features</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
                             <span>Make requests to our endpoints as documented in the API Reference</span>
                           </li>
                         </ol>
@@ -182,54 +208,214 @@ const Documentation: React.FC = () => {
                     </div>
                     
                     <div>
-                      <h2 className="text-2xl font-bold mb-4">Features</h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-muted/50 p-5 rounded-xl">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="bg-primary/10 p-2 rounded-full">
-                              <FileText size={18} className="text-primary" />
+                      <h2 className="text-2xl font-bold mb-6">Core Features</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-muted/50 p-6 rounded-xl">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-primary/10 p-3 rounded-full">
+                              <FileText size={20} className="text-primary" />
                             </div>
-                            <h3 className="font-medium">Text Analysis</h3>
+                            <h3 className="font-semibold">Basic Text Analysis</h3>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            Analyze text for profanity, misinformation, hate speech, and potential scams.
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Fundamental content analysis for profanity, fact-checking, scam detection, and ethical compliance.
                           </p>
+                          <ul className="text-xs text-muted-foreground space-y-1">
+                            <li>• Profanity detection across 100+ languages</li>
+                            <li>• Real-time fact verification</li>
+                            <li>• Scam and phishing identification</li>
+                            <li>• Ethical content assessment</li>
+                          </ul>
                         </div>
                         
-                        <div className="bg-muted/50 p-5 rounded-xl">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="bg-primary/10 p-2 rounded-full">
-                              <Image size={18} className="text-primary" />
+                        <div className="bg-muted/50 p-6 rounded-xl">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-primary/10 p-3 rounded-full">
+                              <Image size={20} className="text-primary" />
                             </div>
-                            <h3 className="font-medium">Image Analysis</h3>
+                            <h3 className="font-semibold">Advanced Image Analysis</h3>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            Detect manipulated images, inappropriate content, and extract text from images.
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Powered by Gemini AI for comprehensive image verification and content safety.
                           </p>
+                          <ul className="text-xs text-muted-foreground space-y-1">
+                            <li>• Manipulation and deepfake detection</li>
+                            <li>• Content safety scanning</li>
+                            <li>• Multi-language text extraction</li>
+                            <li>• AI-generated content identification</li>
+                          </ul>
                         </div>
                         
-                        <div className="bg-muted/50 p-5 rounded-xl">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="bg-primary/10 p-2 rounded-full">
-                              <Globe size={18} className="text-primary" />
+                        <div className="bg-muted/50 p-6 rounded-xl">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-primary/10 p-3 rounded-full">
+                              <Brain size={20} className="text-primary" />
                             </div>
-                            <h3 className="font-medium">Multilingual Support</h3>
+                            <h3 className="font-semibold">Advanced AI Detection</h3>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            Support for 100+ languages with automatic language detection.
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Next-generation threat detection using sophisticated AI models and behavioral analysis.
                           </p>
+                          <ul className="text-xs text-muted-foreground space-y-1">
+                            <li>• Pattern-based harassment detection</li>
+                            <li>• AI-generated content source detection</li>
+                            <li>• Contextual harm analysis</li>
+                            <li>• Coordinated behavior identification</li>
+                          </ul>
                         </div>
                         
-                        <div className="bg-muted/50 p-5 rounded-xl">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="bg-primary/10 p-2 rounded-full">
-                              <Database size={18} className="text-primary" />
+                        <div className="bg-muted/50 p-6 rounded-xl">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-primary/10 p-3 rounded-full">
+                              <MessageCircle size={20} className="text-primary" />
                             </div>
-                            <h3 className="font-medium">Comprehensive Reports</h3>
+                            <h3 className="font-semibold">AI Assistant</h3>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            Detailed analysis reports with confidence scores and detected issues.
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Personalized AI support for users experiencing online harms with immediate guidance.
                           </p>
+                          <ul className="text-xs text-muted-foreground space-y-1">
+                            <li>• Multimodal input processing</li>
+                            <li>• Immediate harm assessment</li>
+                            <li>• Safety guidance and resources</li>
+                            <li>• Evidence collection support</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === 'advanced-features' && (
+                  <div className="space-y-8">
+                    <div>
+                      <h2 className="text-2xl font-bold mb-4">Advanced AI Detection Features</h2>
+                      <p className="text-muted-foreground mb-6">
+                        Our platform includes cutting-edge AI detection capabilities powered by Gemini AI for sophisticated threat analysis.
+                      </p>
+                      
+                      <div className="space-y-6">
+                        <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 p-6 rounded-xl border border-orange-500/20">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-orange-500/20 p-3 rounded-full">
+                              <Target size={24} className="text-orange-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold">Pattern-based Harassment Detection</h3>
+                              <span className="text-sm text-orange-600 font-medium">Endpoint: /analyze/harassment-patterns</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-4">
+                            Advanced detection of coordinated harassment campaigns, repeated targeting, and escalating cyberbullying patterns 
+                            across multiple interactions using temporal analysis and user behavior modeling.
+                          </p>
+                          <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                            <code className="text-sm whitespace-pre">{`{
+  "interactions": [
+    {"user_id": "user123", "content": "...", "timestamp": "..."},
+    {"user_id": "user456", "content": "...", "timestamp": "..."}
+  ],
+  "target_user": "victim_user_id",
+  "analysis_window": "24h"
+}`}</code>
+                            <button onClick={() => copyCode(`{
+  "interactions": [...],
+  "target_user": "victim_user_id", 
+  "analysis_window": "24h"
+}`)} className="text-gray-400 hover:text-white">
+                              <Copy size={16} />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-6 rounded-xl border border-cyan-500/20">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-cyan-500/20 p-3 rounded-full">
+                              <Bot size={24} className="text-cyan-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold">AI-Generated Content Detection</h3>
+                              <span className="text-sm text-cyan-600 font-medium">Endpoint: /analyze/ai-generated</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-4">
+                            Sophisticated detection of AI-generated text, images, and multimedia content using model fingerprinting, 
+                            SynthID watermark detection, and stylistic analysis.
+                          </p>
+                          <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                            <code className="text-sm whitespace-pre">{`{
+  "content": "Text or base64 image data",
+  "content_type": "text|image|audio",
+  "detection_methods": ["fingerprinting", "synthid", "stylistic"]
+}`}</code>
+                            <button onClick={() => copyCode(`{
+  "content": "Text or base64 image data",
+  "content_type": "text|image|audio",
+  "detection_methods": ["fingerprinting", "synthid", "stylistic"]
+}`)} className="text-gray-400 hover:text-white">
+                              <Copy size={16} />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 p-6 rounded-xl border border-red-500/20">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-red-500/20 p-3 rounded-full">
+                              <AlertTriangle size={24} className="text-red-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold">Contextual Harm Detection</h3>
+                              <span className="text-sm text-red-600 font-medium">Endpoint: /analyze/contextual-harm</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-4">
+                            Deep semantic analysis for detecting subtle forms of harm including self-harm indicators, grooming attempts, 
+                            and radicalization content using conversation context and behavioral patterns.
+                          </p>
+                          <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                            <code className="text-sm whitespace-pre">{`{
+  "conversation_thread": [...],
+  "user_profile": {"age_group": "minor", "risk_factors": [...]},
+  "harm_types": ["self_harm", "grooming", "radicalization"]
+}`}</code>
+                            <button onClick={() => copyCode(`{
+  "conversation_thread": [...],
+  "user_profile": {...},
+  "harm_types": ["self_harm", "grooming", "radicalization"]
+}`)} className="text-gray-400 hover:text-white">
+                              <Copy size={16} />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 p-6 rounded-xl border border-indigo-500/20">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-indigo-500/20 p-3 rounded-full">
+                              <Network size={24} className="text-indigo-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold">Coordinated Behavior Detection</h3>
+                              <span className="text-sm text-indigo-600 font-medium">Endpoint: /analyze/coordinated-behavior</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-4">
+                            Advanced network analysis to identify bot farms, sockpuppet networks, and coordinated inauthentic behavior 
+                            campaigns using graph neural networks and temporal pattern analysis.
+                          </p>
+                          <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                            <code className="text-sm whitespace-pre">{`{
+  "user_network": [{"user_id": "...", "connections": [...]}],
+  "content_propagation": [{"content_hash": "...", "amplifiers": [...]}],
+  "time_window": "7d"
+}`}</code>
+                            <button onClick={() => copyCode(`{
+  "user_network": [...],
+  "content_propagation": [...],
+  "time_window": "7d"
+}`)} className="text-gray-400 hover:text-white">
+                              <Copy size={16} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -266,6 +452,16 @@ const Documentation: React.FC = () => {
                           >
                             Image Analysis
                           </button>
+                          <button
+                            className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+                              activeAPIEndpoint === 'assistant' 
+                                ? 'bg-primary/15 text-primary' 
+                                : 'bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10'
+                            }`}
+                            onClick={() => setActiveAPIEndpoint('assistant')}
+                          >
+                            AI Assistant
+                          </button>
                         </div>
                         
                         {activeAPIEndpoint === 'text' && (
@@ -283,12 +479,22 @@ const Documentation: React.FC = () => {
                               <code className="text-sm whitespace-pre">{`{
   "text": "Text to analyze",
   "options": ["profanity", "fact-check", "scam", "ethics", "ascii"],
-  "language": "en" // Optional, auto-detected if not specified
+  "language": "en", // Optional, auto-detected if not specified
+  "advanced": {
+    "harassment_detection": true,
+    "ai_content_detection": true,
+    "contextual_harm": true
+  }
 }`}</code>
                               <button onClick={() => copyCode(`{
   "text": "Text to analyze",
   "options": ["profanity", "fact-check", "scam", "ethics", "ascii"],
-  "language": "en" // Optional, auto-detected if not specified
+  "language": "en",
+  "advanced": {
+    "harassment_detection": true,
+    "ai_content_detection": true,
+    "contextual_harm": true
+  }
 }`)} className="text-gray-400 hover:text-white">
                                 <Copy size={16} />
                               </button>
@@ -305,22 +511,18 @@ const Documentation: React.FC = () => {
       "confidence": 0.98,
       "message": "No inappropriate language detected",
       "details": {}
-    },
-    // Additional results for each requested option
-  ]
+    }
+  ],
+  "advanced_results": {
+    "harassment_patterns": {...},
+    "ai_generated_likelihood": 0.15,
+    "contextual_harm_indicators": [...]
+  }
 }`}</code>
                               <button onClick={() => copyCode(`{
   "status": "success",
-  "results": [
-    {
-      "type": "profanity",
-      "status": "clean", // or "warning", "danger"
-      "confidence": 0.98,
-      "message": "No inappropriate language detected",
-      "details": {}
-    },
-    // Additional results for each requested option
-  ]
+  "results": [...],
+  "advanced_results": {...}
 }`)} className="text-gray-400 hover:text-white">
                                 <Copy size={16} />
                               </button>
@@ -344,13 +546,15 @@ const Documentation: React.FC = () => {
   "image": "base64_encoded_image_data", // or
   "image_url": "https://example.com/image.jpg",
   "options": ["manipulation", "safe-search", "text-extract"],
-  "extract_text_language": "en" // Optional for OCR
+  "extract_text_language": "en", // Optional for OCR
+  "gemini_analysis": true // Use Gemini AI for enhanced analysis
 }`}</code>
                               <button onClick={() => copyCode(`{
-  "image": "base64_encoded_image_data", // or
+  "image": "base64_encoded_image_data",
   "image_url": "https://example.com/image.jpg",
   "options": ["manipulation", "safe-search", "text-extract"],
-  "extract_text_language": "en" // Optional for OCR
+  "extract_text_language": "en",
+  "gemini_analysis": true
 }`)} className="text-gray-400 hover:text-white">
                                 <Copy size={16} />
                               </button>
@@ -360,35 +564,97 @@ const Documentation: React.FC = () => {
                             <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center">
                               <code className="text-sm whitespace-pre">{`{
   "status": "success",
-  "results": [
-    {
-      "type": "manipulation",
-      "status": "warning", // or "clean", "danger"
-      "confidence": 0.85,
-      "message": "Potential image manipulation detected",
-      "details": {
-        "manipulated_regions": ["bottom-right"],
-        "manipulation_type": "splicing"
-      }
+  "type": "manipulation detection",
+  "status": "warning", // or "clean", "danger"
+  "confidence": 0.85,
+  "message": "Potential image manipulation detected",
+  "details": {
+    "manipulation": {
+      "isManipulated": true,
+      "manipulationType": "deepfake",
+      "confidence": 0.85
     },
-    // Additional results for each requested option
-  ]
+    "contentSafety": {...},
+    "textExtraction": {...}
+  }
 }`}</code>
                               <button onClick={() => copyCode(`{
   "status": "success",
-  "results": [
-    {
-      "type": "manipulation",
-      "status": "warning", // or "clean", "danger"
-      "confidence": 0.85,
-      "message": "Potential image manipulation detected",
-      "details": {
-        "manipulated_regions": ["bottom-right"],
-        "manipulation_type": "splicing"
-      }
-    },
-    // Additional results for each requested option
-  ]
+  "type": "manipulation detection",
+  "status": "warning",
+  "confidence": 0.85,
+  "message": "Potential image manipulation detected",
+  "details": {...}
+}`)} className="text-gray-400 hover:text-white">
+                                <Copy size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {activeAPIEndpoint === 'assistant' && (
+                          <div>
+                            <h3 className="text-lg font-medium mb-3">AI Assistant Endpoint</h3>
+                            <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                              <code className="text-sm">POST /assistant/analyze</code>
+                              <button onClick={() => copyCode("POST /assistant/analyze")} className="text-gray-400 hover:text-white">
+                                <Copy size={16} />
+                              </button>
+                            </div>
+                            
+                            <h4 className="font-medium mt-5 mb-2">Request Parameters</h4>
+                            <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center mb-3">
+                              <code className="text-sm whitespace-pre">{`{
+  "input": {
+    "text": "User's description of the situation",
+    "images": ["base64_image_1", "base64_image_2"],
+    "context": "harassment|misinformation|safety_concern"
+  },
+  "user_profile": {
+    "age_group": "adult|minor",
+    "vulnerability_indicators": [...],
+    "location": "country_code"
+  },
+  "urgency": "low|medium|high|critical"
+}`}</code>
+                              <button onClick={() => copyCode(`{
+  "input": {
+    "text": "User's description",
+    "images": [...],
+    "context": "harassment"
+  },
+  "user_profile": {...},
+  "urgency": "medium"
+}`)} className="text-gray-400 hover:text-white">
+                                <Copy size={16} />
+                              </button>
+                            </div>
+                            
+                            <h4 className="font-medium mt-5 mb-2">Response Format</h4>
+                            <div className="bg-black rounded-lg p-3 text-white flex justify-between items-center">
+                              <code className="text-sm whitespace-pre">{`{
+  "status": "success",
+  "assessment": {
+    "threat_level": "medium",
+    "harm_categories": ["cyberbullying", "privacy_violation"],
+    "confidence": 0.89
+  },
+  "guidance": {
+    "immediate_actions": [...],
+    "safety_recommendations": [...],
+    "documentation_advice": [...],
+    "resource_links": [...]
+  },
+  "follow_up": {
+    "recommended_check_in": "24h",
+    "escalation_triggers": [...]
+  }
+}`}</code>
+                              <button onClick={() => copyCode(`{
+  "status": "success",
+  "assessment": {...},
+  "guidance": {...},
+  "follow_up": {...}
 }`)} className="text-gray-400 hover:text-white">
                                 <Copy size={16} />
                               </button>
@@ -418,7 +684,7 @@ const Documentation: React.FC = () => {
                     <div>
                       <h2 className="text-2xl font-bold mb-4">User Guide</h2>
                       <p className="text-muted-foreground mb-6">
-                        Learn how to effectively use our content analysis tools and interpret the results.
+                        Learn how to effectively use our advanced content analysis tools and interpret the results.
                       </p>
                       
                       <div className="bg-muted/50 p-5 rounded-xl mb-6">
@@ -454,7 +720,7 @@ const Documentation: React.FC = () => {
                         </p>
                       </div>
                       
-                      <div className="bg-muted/50 p-5 rounded-xl">
+                      <div className="bg-muted/50 p-5 rounded-xl mb-6">
                         <h3 className="text-xl font-medium mb-3 flex items-center gap-2">
                           <div className="bg-primary/10 p-2 rounded-full">
                             <Image size={18} className="text-primary" />
@@ -467,7 +733,7 @@ const Documentation: React.FC = () => {
                         <ul className="space-y-3 text-sm text-muted-foreground mb-4">
                           <li className="flex items-start gap-2">
                             <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                            <span><strong>Manipulation Check:</strong> Detects edited images, deepfakes, and other alterations using metadata and pixel analysis</span>
+                            <span><strong>Manipulation Check:</strong> Detects edited images, deepfakes, and other alterations using Gemini AI analysis</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
@@ -482,6 +748,39 @@ const Documentation: React.FC = () => {
                           For optimal image analysis, upload high-resolution images without previous compressions or filters.
                         </p>
                       </div>
+                      
+                      <div className="bg-muted/50 p-5 rounded-xl">
+                        <h3 className="text-xl font-medium mb-3 flex items-center gap-2">
+                          <div className="bg-primary/10 p-2 rounded-full">
+                            <Sparkles size={18} className="text-primary" />
+                          </div>
+                          Advanced Features
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Our advanced AI detection capabilities provide comprehensive threat analysis:
+                        </p>
+                        <ul className="space-y-3 text-sm text-muted-foreground mb-4">
+                          <li className="flex items-start gap-2">
+                            <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
+                            <span><strong>Pattern-based Harassment:</strong> Identifies coordinated attacks and escalating patterns across interactions</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
+                            <span><strong>AI Content Detection:</strong> Identifies AI-generated content using model fingerprinting and SynthID</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
+                            <span><strong>Contextual Harm:</strong> Detects subtle indicators of self-harm, grooming, and radicalization</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
+                            <span><strong>Coordinated Behavior:</strong> Identifies bot networks and inauthentic amplification campaigns</span>
+                          </li>
+                        </ul>
+                        <p className="text-sm text-muted-foreground">
+                          These features require additional context and may have longer processing times for comprehensive analysis.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -491,7 +790,7 @@ const Documentation: React.FC = () => {
                     <div>
                       <h2 className="text-2xl font-bold mb-4">Our Technology Stack</h2>
                       <p className="text-muted-foreground mb-6">
-                        We use a combination of Google Cloud technologies and specialized partner services to provide comprehensive content analysis.
+                        We use a combination of Google Cloud technologies, Gemini AI, and specialized partner services to provide comprehensive content analysis.
                       </p>
                       
                       <h3 className="text-xl font-medium mb-4">Google Cloud Technologies</h3>
@@ -502,6 +801,34 @@ const Documentation: React.FC = () => {
                       <h3 className="text-xl font-medium mb-4">Partner Technologies</h3>
                       <div className="glass-card">
                         <TechnologyLogos variant="partners" />
+                      </div>
+                      
+                      <div className="mt-8 bg-gradient-to-r from-primary/10 to-blue-500/10 p-6 rounded-xl">
+                        <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                          <Sparkles className="text-primary" size={24} />
+                          Powered by Gemini AI
+                        </h3>
+                        <p className="text-muted-foreground mb-4">
+                          Our platform leverages Google's most advanced AI model for sophisticated content analysis and threat detection.
+                        </p>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                          <li className="flex items-center gap-2">
+                            <Zap size={14} className="text-primary" />
+                            Advanced reasoning and contextual understanding
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Zap size={14} className="text-primary" />
+                            Multimodal analysis (text, images, audio)
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Zap size={14} className="text-primary" />
+                            Real-time safety assessment and guidance
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Zap size={14} className="text-primary" />
+                            Cultural sensitivity and language support
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -516,7 +843,7 @@ const Documentation: React.FC = () => {
             <div className="glass-card p-8 rounded-2xl">
               <h2 className="text-2xl font-bold mb-4">Need Help?</h2>
               <p className="text-muted-foreground mb-6">
-                Our support team is available to help you integrate and use our API effectively.
+                Our support team is available to help you integrate and use our advanced AI-powered API effectively.
               </p>
               <Button
                 size="lg"
