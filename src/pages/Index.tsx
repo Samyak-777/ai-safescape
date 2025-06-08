@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -9,14 +10,12 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 import ServiceStatusIndicator from '@/components/ServiceStatusIndicator';
-import SocialImpactDashboard from '@/components/SocialImpactDashboard';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Shield, FileText, Image, Server, Search, Code, BarChart3, Heart } from 'lucide-react';
+import { Shield, FileText, Image, Server, Search, Code, BarChart3 } from 'lucide-react';
 
 const Index: React.FC = () => {
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showImpactDashboard, setShowImpactDashboard] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,35 +45,13 @@ const Index: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Social Impact Dashboard Modal */}
-      <Dialog open={showImpactDashboard} onOpenChange={setShowImpactDashboard}>
-        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Social Impact Metrics</DialogTitle>
-            <DialogDescription>
-              Comprehensive visualization of our platform's real-world impact on online safety
-            </DialogDescription>
-          </DialogHeader>
-          <SocialImpactDashboard />
-        </DialogContent>
-      </Dialog>
-
-      {/* Floating Action Buttons */}
+      {/* Floating Analytics Button */}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
         <ServiceStatusIndicator />
-        <Button
-          onClick={() => setShowImpactDashboard(true)}
-          size="sm"
-          className="h-12 w-12 rounded-full p-0 shadow-lg bg-green-600 hover:bg-green-700"
-          title="View Social Impact Metrics"
-        >
-          <Heart className="h-5 w-5" />
-        </Button>
         <Button
           onClick={() => setShowAnalytics(true)}
           size="sm"
           className="h-12 w-12 rounded-full p-0 shadow-lg"
-          title="View System Analytics"
         >
           <BarChart3 className="h-5 w-5" />
         </Button>
