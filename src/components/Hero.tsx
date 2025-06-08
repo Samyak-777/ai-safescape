@@ -8,15 +8,21 @@ const Hero: React.FC = () => {
 
   const scrollToAnalysisSection = () => {
     // First try to find the analysis section on the current page
-    const analysisSection = document.getElementById('demo');
+    const analysisSection = document.getElementById('gemini-analysis');
     if (analysisSection) {
       analysisSection.scrollIntoView({ 
         behavior: 'smooth',
         block: 'start'
       });
     } else {
-      // If not found, navigate to features page which has the main analysis tools
-      navigate('/features');
+      // If not found, scroll to the analysis tools section
+      const analysisTools = document.getElementById('analysis-tools');
+      if (analysisTools) {
+        analysisTools.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
   };
 
