@@ -6,6 +6,20 @@ import Button from './Button';
 const Hero: React.FC = () => {
   const navigate = useNavigate();
 
+  const scrollToAnalysisSection = () => {
+    // First try to find the analysis section on the current page
+    const analysisSection = document.getElementById('demo');
+    if (analysisSection) {
+      analysisSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    } else {
+      // If not found, navigate to features page which has the main analysis tools
+      navigate('/features');
+    }
+  };
+
   return (
     <section className="relative min-h-screen pt-24 pb-16 flex items-center">
       {/* Background elements */}
@@ -40,12 +54,9 @@ const Hero: React.FC = () => {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => {
-                  const demoSection = document.getElementById('demo');
-                  if (demoSection) {
-                    demoSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                onClick={scrollToAnalysisSection}
+                id="demo-button"
+                aria-label="Try the AI analysis demo"
               >
                 Try Demo
               </Button>
