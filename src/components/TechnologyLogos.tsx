@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AnimatedSection from './AnimatedSection';
 
@@ -15,7 +16,7 @@ const googleCloudLogos: TechnologyLogo[] = [
   },
   {
     name: 'Cloud NLP',
-    url: '/lovable-uploads/89ce47cd-adf6-45bc-8184-c78bb068311f.png',
+    url: '/lovable-uploads/16bb0c98-3d2d-40f4-b218-49261a87f20f.png',
     altText: 'Cloud Natural Language Processing'
   },
   {
@@ -43,7 +44,7 @@ const partnerLogos: TechnologyLogo[] = [
   },
   {
     name: 'Arya.ai',
-    url: '/lovable-uploads/42caa6ba-72ce-49a2-bbe7-feb9b756f4c0.png',
+    url: '/lovable-uploads/9e451d3a-9cc4-49ef-b090-2a3dd8dd0421.png',
     altText: 'Arya AI'
   },
   {
