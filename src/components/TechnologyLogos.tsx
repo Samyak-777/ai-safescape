@@ -39,7 +39,7 @@ const googleCloudLogos: TechnologyLogo[] = [
 const partnerLogos: TechnologyLogo[] = [
   {
     name: 'IPQS',
-    url: 'https://avatars.githubusercontent.com/u/68890251?s=200&v=4',
+    url: '/lovable-uploads/3b03cb34-1d8b-4f89-ac29-56ad5549e953.png',
     altText: 'IP Quality Score'
   },
   {
