@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -92,7 +93,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
   };
 
   return (
-    <section className="section-container bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+    <section className="section-container bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20" id="demo">
       <AnimatedSection>
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary/20 to-purple-500/20 text-primary mb-6">
@@ -111,7 +112,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-7 lg:grid-cols-7 mb-8">
-            <TabsTrigger value="advanced-ai" className="flex items-center gap-2">
+            <TabsTrigger value="advanced-ai" className="flex items-center gap-2" data-tab="advanced-ai">
               <Sparkles className="h-4 w-4" />
               <span className="hidden sm:inline">Gemini AI</span>
               <span className="sm:hidden">AI</span>
@@ -429,14 +430,14 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Image className="h-5 w-5 text-indigo-500" />
-                  Advanced Image Analysis
+                  Advanced Image Analysis with Vertex AI
                   <Badge variant="outline" className="ml-2">
-                    Gemini Powered
+                    Vertex AI Powered
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Comprehensive image analysis powered by Gemini AI for manipulation detection, 
-                  content safety verification, and intelligent text extraction with multi-language support.
+                  Comprehensive image analysis powered by Vertex AI for manipulation detection, 
+                  content safety verification, object detection, text extraction, and detailed contextual analysis.
                 </CardDescription>
               </CardHeader>
               <CardContent>

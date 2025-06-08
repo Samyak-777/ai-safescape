@@ -6,6 +6,36 @@ import Button from './Button';
 const Hero: React.FC = () => {
   const navigate = useNavigate();
 
+  const scrollToGeminiAnalysis = () => {
+    // First navigate to home page if not already there
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation to complete then scroll
+      setTimeout(() => {
+        const geminiSection = document.querySelector('[data-tab="advanced-ai"]');
+        if (geminiSection) {
+          geminiSection.scrollIntoView({ behavior: 'smooth' });
+          // Click the advanced-ai tab to ensure it's active
+          const advancedTab = document.querySelector('[value="advanced-ai"]') as HTMLButtonElement;
+          if (advancedTab) {
+            advancedTab.click();
+          }
+        }
+      }, 100);
+    } else {
+      // Already on home page, just scroll to the section
+      const geminiSection = document.querySelector('[data-tab="advanced-ai"]');
+      if (geminiSection) {
+        geminiSection.scrollIntoView({ behavior: 'smooth' });
+        // Click the advanced-ai tab to ensure it's active
+        const advancedTab = document.querySelector('[value="advanced-ai"]') as HTMLButtonElement;
+        if (advancedTab) {
+          advancedTab.click();
+        }
+      }
+    }
+  };
+
   return (
     <section className="relative min-h-screen pt-24 pb-16 flex items-center">
       {/* Background elements */}
@@ -40,12 +70,7 @@ const Hero: React.FC = () => {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => {
-                  const demoSection = document.getElementById('demo');
-                  if (demoSection) {
-                    demoSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                onClick={scrollToGeminiAnalysis}
               >
                 Try Demo
               </Button>
