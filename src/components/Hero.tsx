@@ -6,33 +6,17 @@ import Button from './Button';
 const Hero: React.FC = () => {
   const navigate = useNavigate();
 
-  const scrollToGeminiAnalysis = () => {
-    // First navigate to home page if not already there
-    if (window.location.pathname !== '/') {
-      navigate('/');
-      // Wait for navigation to complete then scroll
-      setTimeout(() => {
-        const geminiSection = document.querySelector('[data-tab="advanced-ai"]');
-        if (geminiSection) {
-          geminiSection.scrollIntoView({ behavior: 'smooth' });
-          // Click the advanced-ai tab to ensure it's active
-          const advancedTab = document.querySelector('[value="advanced-ai"]') as HTMLButtonElement;
-          if (advancedTab) {
-            advancedTab.click();
-          }
-        }
-      }, 100);
+  const scrollToAnalysisSection = () => {
+    // First try to find the analysis section on the current page
+    const analysisSection = document.getElementById('demo');
+    if (analysisSection) {
+      analysisSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
     } else {
-      // Already on home page, just scroll to the section
-      const geminiSection = document.querySelector('[data-tab="advanced-ai"]');
-      if (geminiSection) {
-        geminiSection.scrollIntoView({ behavior: 'smooth' });
-        // Click the advanced-ai tab to ensure it's active
-        const advancedTab = document.querySelector('[value="advanced-ai"]') as HTMLButtonElement;
-        if (advancedTab) {
-          advancedTab.click();
-        }
-      }
+      // If not found, navigate to features page which has the main analysis tools
+      navigate('/features');
     }
   };
 
@@ -70,7 +54,9 @@ const Hero: React.FC = () => {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={scrollToGeminiAnalysis}
+                onClick={scrollToAnalysisSection}
+                id="demo-button"
+                aria-label="Try the AI analysis demo"
               >
                 Try Demo
               </Button>
