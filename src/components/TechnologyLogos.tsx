@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AnimatedSection from './AnimatedSection';
 
@@ -16,12 +15,12 @@ const googleCloudLogos: TechnologyLogo[] = [
   },
   {
     name: 'Cloud NLP',
-    url: 'https://cloud.google.com/static/images/cloud-logo.svg',
+    url: '/lovable-uploads/89ce47cd-adf6-45bc-8184-c78bb068311f.png',
     altText: 'Cloud Natural Language Processing'
   },
   {
     name: 'Vision API',
-    url: 'https://www.gstatic.com/devrel-devsite/prod/v2210deb8920cd4a55bd580441aa58e7853acdde86ecadb99d06d6ce562ea4dfe6/cloud/images/favicons/onecloud/super_cloud.png',
+    url: '/lovable-uploads/9c4a5859-27ed-4799-8d02-8b97676d6241.png',
     altText: 'Vision API'
   },
   {
@@ -31,7 +30,7 @@ const googleCloudLogos: TechnologyLogo[] = [
   },
   {
     name: 'Vertex AI',
-    url: 'https://cloud.google.com/_static/cloud/images/social-icon-google-cloud-1200-630.png',
+    url: '/lovable-uploads/9d20d5c9-edc7-432b-9b97-d462f6217cec.png',
     altText: 'Vertex AI'
   }
 ];
@@ -39,22 +38,22 @@ const googleCloudLogos: TechnologyLogo[] = [
 const partnerLogos: TechnologyLogo[] = [
   {
     name: 'IPQS',
-    url: '/lovable-uploads/3b03cb34-1d8b-4f89-ac29-56ad5549e953.png',
+    url: '/lovable-uploads/423f5029-0b2f-424e-ad74-c44c8a38280a.png',
     altText: 'IP Quality Score'
   },
   {
     name: 'Arya.ai',
-    url: 'https://media.licdn.com/dms/image/C4D0BAQHxTZG9qQZ8jw/company-logo_200_200/0/1630457263043/arya_ai_logo?e=2147483647&v=beta&t=k3Jk7bQGNGPKr4vQWJX8cTKyQWs2Q5J5j1Tz8K4nB2s',
+    url: '/lovable-uploads/42caa6ba-72ce-49a2-bbe7-feb9b756f4c0.png',
     altText: 'Arya AI'
   },
   {
     name: 'Bolster',
-    url: 'https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1474471585/gkzhnhpzgxpv4vvkrp7e.png',
+    url: '/lovable-uploads/02769c05-96eb-4ba3-b4b3-2191da95546d.png',
     altText: 'Bolster AI'
   },
   {
     name: 'TinEye',
-    url: 'https://tineye.com/images/widgets/tineye_logo.png',
+    url: '/lovable-uploads/e6d6eaa9-a0bf-4cf3-a3d0-6b9dd8dd08cf.png',
     altText: 'TinEye Reverse Image Search'
   },
   {
