@@ -11,27 +11,27 @@ interface TechnologyLogo {
 const googleCloudLogos: TechnologyLogo[] = [
   {
     name: 'Google Cloud',
-    url: 'https://www.gstatic.com/devrel-devsite/prod/va65162e8ce9aacc75e4d3c0cd6d166fc6ceaaf184fea0ff0eac1d9b62c0480be/cloud/images/cloud-logo.svg',
+    url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg',
     altText: 'Google Cloud'
   },
   {
     name: 'Cloud NLP',
-    url: 'https://lh3.googleusercontent.com/YMTL5mX7SMGZatN8g-WDx4QnrDEQQ_DrVgB72b9nQRcFP9OvNR-WQ7-fI1T-u8-C4kFFlwBU7kRVvjlh5gMd7uTVlTGZUHQ',
+    url: 'https://cloud.google.com/static/images/cloud-logo.svg',
     altText: 'Cloud Natural Language Processing'
   },
   {
     name: 'Vision API',
-    url: 'https://lh3.googleusercontent.com/jH-kZQhA69FWc6L5Shl0fgNB-jFYCZv7-RH8CYl-im1CYGWxV18uMTTtNZwuWDm87rz9nGgKYZ5F84KxlJxEWA-5pZMNzAoO',
+    url: 'https://www.gstatic.com/devrel-devsite/prod/v2210deb8920cd4a55bd580441aa58e7853acdde86ecadb99d06d6ce562ea4dfe6/cloud/images/favicons/onecloud/super_cloud.png',
     altText: 'Vision API'
   },
   {
     name: 'Gemini Pro',
-    url: 'https://lh3.googleusercontent.com/XGJWRU2fO7HrLKZTm50hN5GfBnQhZPenxn9jTvwuW7s6qLJJEmX9LKMxdC_LXG5zDRvpNcOGKbhLfQ2wLHmo81Y-4ZbUqc8',
+    url: 'https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png',
     altText: 'Gemini Pro'
   },
   {
     name: 'Vertex AI',
-    url: 'https://lh3.googleusercontent.com/Nu7vDDZnKhbV-GLRW04c04B4Qye1v8iRPR9YHjBck5-QcvzxkV6BQJiL0eJQkbK3zA2LY_kMHG-LP43kkbWx-vMTbl9Wy_S3',
+    url: 'https://cloud.google.com/_static/cloud/images/social-icon-google-cloud-1200-630.png',
     altText: 'Vertex AI'
   }
 ];
@@ -39,27 +39,27 @@ const googleCloudLogos: TechnologyLogo[] = [
 const partnerLogos: TechnologyLogo[] = [
   {
     name: 'IPQS',
-    url: 'https://www.ipqualityscore.com/templates/simple/img/logo/ipqs.svg',
+    url: 'https://avatars.githubusercontent.com/u/68890251?s=200&v=4',
     altText: 'IP Quality Score'
   },
   {
     name: 'Arya.ai',
-    url: 'https://arya.ai/hubfs/Aryaai_April2021/Images/arya-logo.svg',
+    url: 'https://media.licdn.com/dms/image/C4D0BAQHxTZG9qQZ8jw/company-logo_200_200/0/1630457263043/arya_ai_logo?e=2147483647&v=beta&t=k3Jk7bQGNGPKr4vQWJX8cTKyQWs2Q5J5j1Tz8K4nB2s',
     altText: 'Arya AI'
   },
   {
     name: 'Bolster',
-    url: 'https://bolster.ai/assets/images/logo.svg',
+    url: 'https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1474471585/gkzhnhpzgxpv4vvkrp7e.png',
     altText: 'Bolster AI'
   },
   {
     name: 'TinEye',
-    url: 'https://tineye.com/images/press/tineye-color.png',
+    url: 'https://tineye.com/images/widgets/tineye_logo.png',
     altText: 'TinEye Reverse Image Search'
   },
   {
     name: 'OpenCV',
-    url: 'https://opencv.org/wp-content/uploads/2020/07/OpenCV_logo_white_600x.png',
+    url: 'https://opencv.org/wp-content/uploads/2022/05/logo.png',
     altText: 'OpenCV'
   }
 ];
@@ -84,6 +84,11 @@ const TechnologyLogos: React.FC<TechnologyLogosProps> = ({ variant = 'all' }) =>
               src={logo.url} 
               alt={logo.altText} 
               className="max-w-full max-h-full object-contain" 
+              onError={(e) => {
+                // Fallback to a placeholder if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.src = `https://via.placeholder.com/64x64/6366f1/ffffff?text=${logo.name.charAt(0)}`;
+              }}
             />
           </div>
           <h3 className="text-sm font-medium">{logo.name}</h3>
