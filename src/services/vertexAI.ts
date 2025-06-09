@@ -56,6 +56,8 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Vertex AI API error:', response.status, response.statusText, errorText);
       throw new Error(`Vertex AI API error: ${response.status} ${response.statusText}`);
     }
 
@@ -64,6 +66,12 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
 
     if (data.responses && data.responses[0]) {
       const result = data.responses[0];
+      
+      // Check for errors in the response
+      if (result.error) {
+        console.error('Vertex AI response error:', result.error);
+        throw new Error(`Vertex AI analysis error: ${result.error.message}`);
+      }
       
       // Extract objects and labels
       const labels = result.labelAnnotations || [];
@@ -87,7 +95,6 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
         : 'No text detected';
 
       // Safety assessment
-      const safetyLevels = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
       const contentSafety = `Adult: ${safeSearch.adult || 'UNKNOWN'}, Violence: ${safeSearch.violence || 'UNKNOWN'}, Medical: ${safeSearch.medical || 'UNKNOWN'}`;
       
       // Manipulation check (simplified heuristic)

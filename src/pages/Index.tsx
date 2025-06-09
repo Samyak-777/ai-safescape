@@ -10,6 +10,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 import ServiceStatusIndicator from '@/components/ServiceStatusIndicator';
+import UNSDGAlignment from '@/components/UNSDGAlignment';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Shield, FileText, Image, Server, Search, Code, BarChart3 } from 'lucide-react';
@@ -115,6 +116,12 @@ const Index: React.FC = () => {
         </section>
         
         <AnalysisToolsEnhanced />
+        
+        <section className="section-container">
+          <AnimatedSection>
+            <UNSDGAlignment />
+          </AnimatedSection>
+        </section>
         
         <section className="section-container">
           <AnimatedSection>
