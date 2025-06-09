@@ -1,6 +1,6 @@
 
 // Vertex AI Image Analysis Service
-const VERTEX_AI_API_KEY = 'AIzaSyDgLbLuKlkWxjSlR_hQBcFBqF0Xp7xp6JE';
+const VERTEX_AI_API_KEY = 'AIzaSyAaKDLM0jnyZoY9UMXZVkXD6_JMVkVFIVM';
 const VERTEX_AI_ENDPOINT = 'https://vision.googleapis.com/v1/images:annotate';
 
 export interface VertexAIImageResult {
