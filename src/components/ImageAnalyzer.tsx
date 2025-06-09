@@ -1,8 +1,9 @@
 
 import React, { useState, useRef } from 'react';
 import Button from './Button';
-import { Upload, Image, AlertCircle, Check, Ban, Search, Shield } from 'lucide-react';
+import { Upload, Image, AlertCircle, Check, Ban, Search, Shield, Brain } from 'lucide-react';
 import { analyzeImage, imageAnalysisOptions } from '@/services/api';
+import { analyzeImageWithVertexAI, VertexAIResponse } from '@/services/vertexAI';
 import { toast } from 'sonner';
 
 const ImageAnalyzer: React.FC = () => {
@@ -13,7 +14,9 @@ const ImageAnalyzer: React.FC = () => {
     status: 'clean' | 'warning' | 'danger';
     message: string;
   }>(null);
+  const [vertexResults, setVertexResults] = useState<VertexAIResponse | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['manipulation', 'safe-search']);
+  const [useVertexAI, setUseVertexAI] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleOptionToggle = (id: string) => {
@@ -33,6 +36,7 @@ const ImageAnalyzer: React.FC = () => {
       reader.onload = () => {
         setImage(reader.result as string);
         setAnalysisResults(null);
+        setVertexResults(null);
         toast.success('Image uploaded successfully');
       };
       reader.readAsDataURL(file);
@@ -47,22 +51,34 @@ const ImageAnalyzer: React.FC = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!image || selectedOptions.length === 0) return;
+    if (!image) return;
     
     setIsAnalyzing(true);
     setAnalysisResults(null);
+    setVertexResults(null);
     
     try {
-      const result = await analyzeImage(image, selectedOptions);
-      setAnalysisResults(result);
-      
-      // Show toast notification based on result
-      if (result.status === 'clean') {
-        toast.success('Image analysis completed successfully');
-      } else if (result.status === 'warning') {
-        toast.warning('Potential issues detected in image');
+      if (useVertexAI) {
+        const result = await analyzeImageWithVertexAI(image);
+        setVertexResults(result);
+        toast.success('Vertex AI analysis completed successfully');
       } else {
-        toast.error('Issues detected in image');
+        if (selectedOptions.length === 0) {
+          toast.error('Please select at least one analysis option');
+          return;
+        }
+        
+        const result = await analyzeImage(image, selectedOptions);
+        setAnalysisResults(result);
+        
+        // Show toast notification based on result
+        if (result.status === 'clean') {
+          toast.success('Image analysis completed successfully');
+        } else if (result.status === 'warning') {
+          toast.warning('Potential issues detected in image');
+        } else {
+          toast.error('Issues detected in image');
+        }
       }
     } catch (error) {
       console.error('Analysis error:', error);
@@ -132,6 +148,7 @@ const ImageAnalyzer: React.FC = () => {
               onClick={() => {
                 setImage(null);
                 setAnalysisResults(null);
+                setVertexResults(null);
               }}
             >
               <Ban size={16} />
@@ -141,36 +158,67 @@ const ImageAnalyzer: React.FC = () => {
       </div>
       
       <div className="mb-6">
-        <p className="text-sm font-medium mb-3">Analysis Options</p>
-        <div className="flex flex-wrap gap-2">
-          {imageAnalysisOptions.map((option) => (
-            <button
-              key={option.id}
-              className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
-                selectedOptions.includes(option.id)
-                  ? 'bg-primary/15 text-primary'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/70'
-              }`}
-              onClick={() => handleOptionToggle(option.id)}
-              title={option.description}
-            >
-              {getIconComponent(option.icon)}
-              <span className="hidden sm:inline">{option.label}</span>
-            </button>
-          ))}
+        <p className="text-sm font-medium mb-3">Analysis Engine</p>
+        <div className="flex gap-3 mb-4">
+          <button
+            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors ${
+              !useVertexAI
+                ? 'bg-primary/15 text-primary'
+                : 'bg-muted text-muted-foreground hover:bg-muted/70'
+            }`}
+            onClick={() => setUseVertexAI(false)}
+          >
+            <Shield size={18} />
+            Standard Analysis
+          </button>
+          <button
+            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors ${
+              useVertexAI
+                ? 'bg-primary/15 text-primary'
+                : 'bg-muted text-muted-foreground hover:bg-muted/70'
+            }`}
+            onClick={() => setUseVertexAI(true)}
+          >
+            <Brain size={18} />
+            Vertex AI Analysis
+          </button>
         </div>
+        
+        {!useVertexAI && (
+          <>
+            <p className="text-sm font-medium mb-3">Analysis Options</p>
+            <div className="flex flex-wrap gap-2">
+              {imageAnalysisOptions.map((option) => (
+                <button
+                  key={option.id}
+                  className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                    selectedOptions.includes(option.id)
+                      ? 'bg-primary/15 text-primary'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/70'
+                  }`}
+                  onClick={() => handleOptionToggle(option.id)}
+                  title={option.description}
+                >
+                  {getIconComponent(option.icon)}
+                  <span className="hidden sm:inline">{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       
       <Button
         onClick={handleAnalyze}
         isLoading={isAnalyzing}
-        disabled={!image || selectedOptions.length === 0}
+        disabled={!image || (!useVertexAI && selectedOptions.length === 0)}
       >
         <Image size={18} />
-        Analyze Image
+        {useVertexAI ? 'Analyze with Vertex AI' : 'Analyze Image'}
       </Button>
       
-      {analysisResults && (
+      {/* Standard Analysis Results */}
+      {analysisResults && !useVertexAI && (
         <div className={`mt-6 p-4 rounded-xl animate-fade-in ${
           analysisResults.status === 'clean' ? 'bg-green-500/10 text-green-700 dark:text-green-400' :
           analysisResults.status === 'warning' ? 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' :
@@ -193,6 +241,60 @@ const ImageAnalyzer: React.FC = () => {
                 'Issue Detected'
               }</p>
               <p className="text-sm mt-1">{analysisResults.message}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Vertex AI Results */}
+      {vertexResults && useVertexAI && (
+        <div className="mt-6 space-y-6 animate-fade-in">
+          {/* Analysis Results */}
+          <div className="bg-blue-500/10 text-blue-700 dark:text-blue-400 p-4 rounded-xl">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 p-1.5 rounded-full bg-blue-500/20">
+                <Brain size={16} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium mb-3">Vertex AI Analysis Results</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium">Manipulation Check:</p>
+                    <p>{vertexResults.analyzeImage.results.manipulationCheck}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Content Safety:</p>
+                    <p>{vertexResults.analyzeImage.results.contentSafety}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Objects Detected:</p>
+                    <p>{vertexResults.analyzeImage.results.objectsDetected.slice(0, 5).join(', ')}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Text Extracted:</p>
+                    <p>{vertexResults.analyzeImage.results.textExtracted}</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <p className="font-medium">Additional Context:</p>
+                  <p>{vertexResults.analyzeImage.results.additionalContext}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Analysis Explanation */}
+          <div className="bg-purple-500/10 text-purple-700 dark:text-purple-400 p-4 rounded-xl">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 p-1.5 rounded-full bg-purple-500/20">
+                <Search size={16} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium mb-3">Analysis Explanation</p>
+                <div className="text-sm whitespace-pre-line">
+                  {vertexResults.analysisExplanation.detailedBreakdown}
+                </div>
+              </div>
             </div>
           </div>
         </div>

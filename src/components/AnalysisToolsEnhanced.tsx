@@ -92,7 +92,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
   };
 
   return (
-    <section className="section-container bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+    <section id="analysis-tools" className="section-container bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
       <AnimatedSection>
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary/20 to-purple-500/20 text-primary mb-6">

@@ -7,21 +7,34 @@ const Hero: React.FC = () => {
   const navigate = useNavigate();
 
   const scrollToAnalysisSection = () => {
-    // First try to find the analysis section on the current page
-    const analysisSection = document.getElementById('gemini-analysis');
-    if (analysisSection) {
-      analysisSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    } else {
-      // If not found, scroll to the analysis tools section
-      const analysisTools = document.getElementById('analysis-tools');
-      if (analysisTools) {
-        analysisTools.scrollIntoView({ 
+    // First try to find the Gemini AI advanced analysis section on the current page
+    const advancedAITab = document.querySelector('[data-state="active"][value="advanced-ai"]');
+    if (advancedAITab) {
+      // If already on advanced-ai tab, just scroll to it
+      const analysisSection = document.getElementById('analysis-tools');
+      if (analysisSection) {
+        analysisSection.scrollIntoView({ 
           behavior: 'smooth',
           block: 'start'
         });
+      }
+    } else {
+      // Find the analysis tools section and switch to advanced-ai tab
+      const analysisSection = document.getElementById('analysis-tools');
+      if (analysisSection) {
+        // Scroll to the section first
+        analysisSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        // Then switch to the advanced-ai tab after a short delay
+        setTimeout(() => {
+          const advancedAIButton = document.querySelector('[data-value="advanced-ai"]') as HTMLButtonElement;
+          if (advancedAIButton) {
+            advancedAIButton.click();
+          }
+        }, 500);
       }
     }
   };
@@ -62,7 +75,7 @@ const Hero: React.FC = () => {
                 size="lg"
                 onClick={scrollToAnalysisSection}
                 id="demo-button"
-                aria-label="Try the AI analysis demo"
+                aria-label="Try the Gemini AI analysis demo"
               >
                 Try Demo
               </Button>
