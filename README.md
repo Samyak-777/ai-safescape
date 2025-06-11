@@ -1,8 +1,6 @@
 
 # `AI SafeSpace`
----
 **Next Generation content safety platform powered by advanced AI technologies**
-
 ---
 
 ## 📋 Table of Contents
@@ -15,10 +13,10 @@
 - [🛠️ Technology Stack](#️-technology-stack)
 - [📊 Analytics & Monitoring](#-analytics--monitoring)
 - [🌍 Global Impact](#-global-impact)
+- [📸 Screenshots](#-screenshots)
 - [⚡ Getting Started](#-getting-started)
   - [Quick Setup](#quick-setup)
   - [Local Development](#local-development)
-- [📸 Screenshots](#-screenshots)
 - [🔧 Configuration](#-configuration)
 
 ---
@@ -123,6 +121,15 @@ Create a safer digital environment through intelligent content moderation and re
 
 ---
 
+## 📸 Screenshots
+![image](https://github.com/user-attachments/assets/82df2fee-32f1-4d2b-a8b0-cbbc68df82c0)
+![image](https://github.com/user-attachments/assets/7792945b-ad0d-4d14-b76d-b25300c8e93e)
+![image](https://github.com/user-attachments/assets/45c51e7b-b464-485e-86b6-bd0dce07105c)
+![image](https://github.com/user-attachments/assets/e9a63610-9b0b-42a9-998f-aa3d93595bbb)
+![image](https://github.com/user-attachments/assets/e0c00d9c-24a5-4dc4-9bd6-45bb186f1c3b)
+
+
+---
 ## ⚡ Getting Started
 
 ### Quick Setup
@@ -174,12 +181,6 @@ npm run preview
 # Lint code
 npm run lint
 ```
-
----
-
-## 📸 Screenshots
-This section will showcase screenshots of the AI SafeSpace application in action.
-
 ---
 
 ## 🔧 Configuration
