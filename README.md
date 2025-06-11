@@ -1,7 +1,7 @@
 
-# AI SafeSpace
-
-**Next-generation content safety platform powered by advanced AI technologies**
+# `AI SafeSpace`
+---
+**Next Generation content safety platform powered by advanced AI technologies**
 
 ---
 
@@ -13,7 +13,6 @@
   - [Advanced AI Analysis](#advanced-ai-analysis)
   - [Real-time Monitoring](#real-time-monitoring)
 - [🛠️ Technology Stack](#️-technology-stack)
-- [🎯 Use Cases](#-use-cases)
 - [📊 Analytics & Monitoring](#-analytics--monitoring)
 - [🌍 Global Impact](#-global-impact)
 - [⚡ Getting Started](#-getting-started)
@@ -40,31 +39,22 @@ Create a safer digital environment through intelligent content moderation and re
 #### 📝 **Advanced Text Analysis**
 - **Real-time profanity detection** with cultural context awareness
 - **Misinformation identification** with fact-checking capabilities
-- **Bias detection** across cultural, gender, and social dimensions
-- **Manipulation tactics recognition** including psychological pressure
-- **Privacy violation detection** to protect personal data
 - **Multi-language support** for 75+ global languages and 15+ Indian dialects
 
 #### 🖼️ **Intelligent Image Analysis**
 - **Deepfake detection** using advanced computer vision
 - **Inappropriate content scanning** with SafeSearch integration
 - **Text extraction from images** for comprehensive analysis
-- **Digital manipulation identification** including fake screenshots
 - **Object recognition** for context-aware moderation
 
 #### 🔍 **Fact-Checking & Verification**
 - **Real-time claim validation** against trusted sources
 - **Confidence scoring** with evidence links
-- **Source credibility assessment**
-- **Historical fact-checking** database integration
 
 ### Advanced AI Analysis
 
 #### 🧠 **Gemini 2.5 Integration**
-- **Structured output analysis** using function calling
 - **Advanced reasoning capabilities** with step-by-step explanations
-- **Contextual harm detection** with cultural sensitivity
-- **Risk assessment scoring** from low to critical levels
 - **Personalized recommendations** based on analysis results
 
 #### ⚡ **Performance Optimization**
@@ -79,103 +69,57 @@ Create a safer digital environment through intelligent content moderation and re
 - **Performance metrics** dashboard
 - **API health monitoring** with status indicators
 - **Usage analytics** and trend analysis
-- **Error tracking** and alerting
-- **Service uptime** monitoring
 
 #### 🔔 **Intelligent Alerts**
 - **Real-time notifications** for critical threats
-- **Customizable alert thresholds**
 - **Multi-channel alerting** (email, SMS, webhook)
-- **Incident management** workflow
 
 ---
 
 ## 🛠️ Technology Stack
 
-### **Frontend Technologies**
-- **React 18** with TypeScript for type safety
-- **Vite** for lightning-fast development
-- **Tailwind CSS** for responsive design
-- **shadcn/ui** for consistent UI components
-- **Lucide React** for modern iconography
+### 🔹`Frontend Technologies`
+- **React 18** 
+- **Vite** 
+- **Tailwind CSS** 
+- **shadcn/ui** 
+- **Lucide React**
 
-### **AI & Machine Learning**
-- **Google Gemini 2.5** for advanced text analysis
-- **Google Cloud Vision API** for image processing
-- **Google Cloud NLP** for natural language understanding
-- **Perspective API** for toxicity detection
-- **Custom ML models** for specialized detection
+### 🔹`AI & Machine Learning`
+- **Google Gemini 2.5** 
+- **Google Cloud Vision API** 
+- **Google Cloud NLP** 
+- **Perspective API** 
 
-### **Backend & Infrastructure**
-- **Supabase** for authentication and database
+### 🔹`Backend & Infrastructure`
+- **Google Cloud Services** for authentication and database
 - **Google Cloud Platform** for scalable infrastructure
 - **Edge Functions** for serverless computing
 - **Real-time subscriptions** for live updates
 
 ---
 
-## 🎯 Use Cases
-
-### **Content Moderation**
-- Social media platforms
-- Online forums and communities
-- Educational platforms
-- Corporate communications
-
-### **Media Verification**
-- News organizations
-- Fact-checking agencies
-- Research institutions
-- Journalism platforms
-
-### **Enterprise Security**
-- Corporate email filtering
-- Document security scanning
-- Internal communications monitoring
-- Compliance verification
-
-### **Educational Technology**
-- Safe learning environments
-- Anti-bullying protection
-- Academic integrity verification
-- Student safety monitoring
-
----
-
 ## 📊 Analytics & Monitoring
 
-### **Real-time Dashboard**
-- Live analysis metrics
-- System performance indicators
-- API response times
-- Error rates and patterns
+- ### **Real-time Dashboard**
+- ### **Historical Analytics**
+- ### **Custom Reports**
 
-### **Historical Analytics**
-- Usage trends over time
-- Threat detection patterns
-- Performance optimization insights
-- Capacity planning data
-
-### **Custom Reports**
-- Executive summaries
-- Technical performance reports
-- Security incident reports
-- Compliance documentation
 
 ---
 
 ## 🌍 Global Impact
 
-### **UN Sustainable Development Goals Alignment**
-- **SDG 4**: Quality Education through safe online learning
-- **SDG 16**: Peace and Justice through reduced online harm
-- **SDG 17**: Partnerships for responsible AI development
+- ### **UN Sustainable Development Goals Alignment**
+  - **SDG 4**: Quality Education through safe online learning
+  - **SDG 16**: Peace and Justice through reduced online harm
+  - **SDG 17**: Partnerships for responsible AI development
 
-### **Social Impact Metrics**
-- Harmful content prevented
-- Communities protected
-- Educational safety enhanced
-- Digital literacy improved
+- ### **Social Impact Metrics**
+  - Harmful content prevented
+  - Communities protected
+  - Educational safety enhanced
+  - Digital literacy improved
 
 ---
 
@@ -241,7 +185,7 @@ This section will showcase screenshots of the AI SafeSpace application in action
 ## 🔧 Configuration
 
 ### **Environment Variables**
-Set up the following in your Supabase project secrets:
+Set up the following in your env project file:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
@@ -252,16 +196,8 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ### **API Configuration**
 - Enable Google Cloud APIs in your GCP project
-- Configure Supabase authentication
 - Set up rate limiting rules
 - Configure security headers
 
 ---
 
-<div align="center">
-
-**Built with ❤️ for a safer digital world**
-
-[Website](https://ai-safespace.com)
-
-</div>
