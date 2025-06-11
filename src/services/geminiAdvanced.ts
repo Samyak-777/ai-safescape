@@ -1,3 +1,4 @@
+
 // Advanced Gemini 2.5 Flash/Pro API integration with Google I/O 2025 features
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAvsHmUnfT1um4K9aysmuo_jlwl4_8B7xM';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
@@ -340,79 +341,5 @@ export const analyzeMultimodalContent = async (
   } catch (error) {
     console.error('Gemini Multimodal API error:', error);
     throw new Error('Advanced multimodal analysis service unavailable');
-  }
-};
-
-// Real-time streaming analysis for large content
-export const streamAnalyzeContent = async (
-  content: string,
-  analysisType: string,
-  onPartialResult: (partial: Partial<GeminiAdvancedResult>) => void
-): Promise<GeminiAdvancedResult> => {
-  try {
-    const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:streamGenerateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `Analyze this content for ${analysisType} and provide streaming updates:\n\n"${content}"`
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 1000,
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Gemini Streaming API error: ${response.status}`);
-    }
-
-    const reader = response.body?.getReader();
-    let fullText = '';
-    let partialResult: Partial<GeminiAdvancedResult> = {};
-
-    if (reader) {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = new TextDecoder().decode(value);
-        const lines = chunk.split('\n').filter(line => line.trim());
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              const newText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-              fullText += newText;
-              
-              // Try to parse partial result and notify
-              try {
-                partialResult = JSON.parse(fullText);
-                onPartialResult(partialResult);
-              } catch {
-                // Not yet complete JSON, continue
-              }
-            } catch (e) {
-              console.warn('Failed to parse streaming chunk:', e);
-            }
-          }
-        }
-      }
-    }
-
-    // Return final result
-    return partialResult as GeminiAdvancedResult;
-  } catch (error) {
-    console.error('Gemini Streaming API error:', error);
-    throw new Error('Streaming analysis service unavailable');
   }
 };

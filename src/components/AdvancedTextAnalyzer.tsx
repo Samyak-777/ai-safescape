@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, CheckCircle, AlertTriangle, XCircle, Sparkles, Brain, Zap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { analyzeContentWithGeminiAdvanced, streamAnalyzeContent, GeminiAdvancedResult } from '@/services/geminiAdvanced';
+import { analyzeContentWithGeminiAdvanced, GeminiAdvancedResult } from '@/services/geminiAdvanced';
 
 interface AnalysisResultWithType extends GeminiAdvancedResult {
   type: string;
@@ -19,9 +20,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['profanity']);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [useStructuredOutput, setUseStructuredOutput] = useState(true);
-  const [useStreaming, setUseStreaming] = useState(false);
   const [results, setResults] = useState<AnalysisResultWithType[]>([]);
-  const [streamingProgress, setStreamingProgress] = useState<Partial<GeminiAdvancedResult>[]>([]);
   const [apiWarning, setApiWarning] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -87,45 +86,26 @@ const AdvancedTextAnalyzer: React.FC = () => {
 
     setIsAnalyzing(true);
     setResults([]);
-    setStreamingProgress([]);
     setApiWarning(null);
 
     try {
-      const analysisPromises = selectedOptions.map(async (optionId, index) => {
+      const analysisPromises = selectedOptions.map(async (optionId) => {
         const option = analysisOptions.find(opt => opt.id === optionId);
         if (!option) return null;
 
         try {
-          if (useStreaming) {
-            setStreamingProgress(prev => [...prev, {}]);
-
-            const result = await streamAnalyzeContent(
-              text,
-              option.prompt,
-              (partial) => {
-                setStreamingProgress(prev => {
-                  const newProgress = [...prev];
-                  newProgress[index] = partial;
-                  return newProgress;
-                });
-              }
-            );
-
-            return { ...result, type: option.label } as AnalysisResultWithType;
-          } else {
-            const result = await analyzeContentWithGeminiAdvanced(
-              text,
-              option.prompt,
-              useStructuredOutput
-            );
-            
-            // Check if this is a fallback result
-            if (result.explanation?.includes('Fallback analysis') || result.explanation?.includes('API temporarily unavailable')) {
-              setApiWarning('Gemini API is not enabled. Please enable the Generative Language API in your Google Cloud project for full functionality.');
-            }
-            
-            return { ...result, type: option.label } as AnalysisResultWithType;
+          const result = await analyzeContentWithGeminiAdvanced(
+            text,
+            option.prompt,
+            useStructuredOutput
+          );
+          
+          // Check if this is a fallback result
+          if (result.explanation?.includes('Fallback analysis') || result.explanation?.includes('API temporarily unavailable')) {
+            setApiWarning('Gemini API is not enabled. Please enable the Generative Language API in your Google Cloud project for full functionality.');
           }
+          
+          return { ...result, type: option.label } as AnalysisResultWithType;
         } catch (error) {
           console.error(`Analysis error for ${option.label}:`, error);
           return {
@@ -169,9 +149,8 @@ const AdvancedTextAnalyzer: React.FC = () => {
       });
     } finally {
       setIsAnalyzing(false);
-      setStreamingProgress([]);
     }
-  }, [text, selectedOptions, useStructuredOutput, useStreaming, toast]);
+  }, [text, selectedOptions, useStructuredOutput, toast]);
 
   const getStatusIcon = (riskLevel: string) => {
     switch (riskLevel) {
@@ -213,7 +192,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
             <Badge variant="outline" className="ml-2">Gemini 2.5</Badge>
           </CardTitle>
           <CardDescription>
-            Next-generation content analysis with structured outputs, streaming, and advanced reasoning
+            Next-generation content analysis with structured outputs and advanced reasoning
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -243,17 +222,6 @@ const AdvancedTextAnalyzer: React.FC = () => {
               <Switch
                 checked={useStructuredOutput}
                 onCheckedChange={setUseStructuredOutput}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <label className="text-sm font-medium">Streaming Analysis</label>
-                <p className="text-xs text-muted-foreground">Real-time results as they process</p>
-              </div>
-              <Switch
-                checked={useStreaming}
-                onCheckedChange={setUseStreaming}
               />
             </div>
           </div>
@@ -298,7 +266,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
             {isAnalyzing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {useStreaming ? 'Streaming Analysis...' : 'Processing...'}
+                Processing...
               </>
             ) : (
               <>
@@ -309,47 +277,6 @@ const AdvancedTextAnalyzer: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
-
-      {/* Streaming Progress */}
-      {useStreaming && streamingProgress.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Streaming Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {streamingProgress.map((progress, index) => (
-                <div key={index} className="border rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                    <span className="font-medium">{analysisOptions[index]?.label}</span>
-                  </div>
-                  {progress.explanation && (
-                    <p className="text-sm text-muted-foreground">{progress.explanation}</p>
-                  )}
-                  {progress.confidence !== undefined && (
-                    <div className="mt-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs">Confidence:</span>
-                        <div className="flex-1 bg-gray-200 rounded-full h-1">
-                          <div
-                            className="bg-blue-500 h-1 rounded-full transition-all duration-300"
-                            style={{ width: `${progress.confidence * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-xs">{Math.round((progress.confidence || 0) * 100)}%</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Results */}
       {results.length > 0 && (
