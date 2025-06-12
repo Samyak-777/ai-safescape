@@ -1,6 +1,6 @@
 
 // Gemini 2.5 Flash/Pro API integration
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyDBcnmhOWEcYtp2PMFuYvAnisKyXspMMPE';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'your api key here';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export interface GeminiResult {
