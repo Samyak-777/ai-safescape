@@ -18,6 +18,7 @@
   - [Quick Setup](#quick-setup)
   - [Local Development](#local-development)
 - [🔧 Configuration](#-configuration)
+- [🙌 Contibutors of Code](#-contributors-of-code) 
 
 ---
 
@@ -201,4 +202,13 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 - Configure security headers
 
 ---
+## 🙌 Contributors of Code       
+
+- `Arjun Jainshankar`
+- `Heet Sutariya`
+- `Daksh Rathore`
+- `Samyak Borkar`
+- `Jules (Google's Own Coding Agent) `
+- `lovable ai`  
+
 
