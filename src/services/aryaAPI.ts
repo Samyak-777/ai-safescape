@@ -1,6 +1,6 @@
 
 // Arya.ai Phishing Detection API integration
-const ARYA_API_KEY = import.meta.env.VITE_ARYA_API_KEY || '9b77a9c9a7303a90a478e1bf49d1fd49';
+const ARYA_API_KEY = import.meta.env.VITE_ARYA_API_KEY || 'your api key here';
 const ARYA_BASE_URL = 'https://ping.arya.ai/api/v1';
 
 export interface AryaResult {
