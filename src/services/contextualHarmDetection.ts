@@ -1,6 +1,6 @@
 
 // Contextual Harm Detection for Self-Harm, Grooming, and Radicalization
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAvsHmUnfT1um4K9aysmuo_jlwl4_8B7xM';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'your api key here';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
 export interface ContextualHarmResult {
