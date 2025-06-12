@@ -204,11 +204,11 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 ---
 ## 🙌 Contributors of Code       
 
-- `Arjun Jainshankar`
-- `Heet Sutariya`
-- `Daksh Rathore`
-- `Samyak Borkar`
-- `Jules (Google's Own Coding Agent) `
-- `lovable ai`  
+- ### `Arjun Jainshankar`
+- ### `Heet Sutariya`
+- ### `Daksh Rathore`
+- ### `Samyak Borkar`
+- ### `Jules (Google's Own Coding Agent) `
+- ### `lovable ai`  
 
 
