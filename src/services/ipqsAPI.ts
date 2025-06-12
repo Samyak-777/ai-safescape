@@ -1,6 +1,6 @@
 
 // IPQuality Score API integration
-const IPQS_API_KEY = import.meta.env.VITE_IPQS_API_KEY || 'tMBOYuYWEm2VBHJmVH4lEirFwennjC5J';
+const IPQS_API_KEY = import.meta.env.VITE_IPQS_API_KEY || 'your api key here';
 const IPQS_BASE_URL = 'https://www.ipqualityscore.com/api/json';
 
 export interface IPQSResult {
