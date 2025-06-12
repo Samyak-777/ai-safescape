@@ -1,6 +1,6 @@
 
 // Google Jigsaw Perspective API integration
-const PERSPECTIVE_API_KEY = import.meta.env.VITE_PERSPECTIVE_API_KEY || 'AIzaSyCt7S50GPmaPC89dRNNQLycFGPL2E5o_sE';
+const PERSPECTIVE_API_KEY = import.meta.env.VITE_PERSPECTIVE_API_KEY || 'your api key here';
 const PERSPECTIVE_BASE_URL = 'https://commentanalyzer.googleapis.com/v1alpha1';
 
 export interface PerspectiveResult {
