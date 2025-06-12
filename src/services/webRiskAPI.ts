@@ -1,6 +1,6 @@
 
 // Google Safe Browsing (Web Risk) API integration
-const WEB_RISK_API_KEY = import.meta.env.VITE_WEB_RISK_API_KEY || 'AIzaSyDXyZ0BViMMS7m9M8lxoz9lxlIFosC2x3U';
+const WEB_RISK_API_KEY = import.meta.env.VITE_WEB_RISK_API_KEY || 'your api key here';
 const WEB_RISK_BASE_URL = 'https://webrisk.googleapis.com/v1';
 
 export interface WebRiskResult {
