@@ -1,6 +1,6 @@
 
 // Google Cloud Natural Language API integration
-const GOOGLE_NLP_API_KEY = import.meta.env.VITE_GOOGLE_NLP_API_KEY || 'AIzaSyCRGOlIWYuHW5JGai0i_5t3Jhck0jNu_Mk';
+const GOOGLE_NLP_API_KEY = import.meta.env.VITE_GOOGLE_NLP_API_KEY || 'your api key here';
 const GOOGLE_NLP_BASE_URL = 'https://language.googleapis.com/v2';
 
 export interface NLPModerationResult {
