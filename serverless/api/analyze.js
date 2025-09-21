@@ -1,4 +1,3 @@
-
 // This file would be deployed as a serverless function
 // Sample implementation for AWS Lambda, Vercel, or Netlify Functions
 
