@@ -23,6 +23,11 @@
 ---
 
 ## Introduction
+## 🎯 **The Problem We Solve**
+
+Misinformation spreads 6x faster than facts on social media, causing social unrest, health crises, and financial scams across India. Existing solutions analyze content in isolation, missing sophisticated manipulation techniques that combine text, images, and context.
+
+## 💡 **Our Solution**
 
 **AI SafeSpace** is a cutting-edge web application that ensures safer interactions with AI by proactively identifying and mitigating harmful or misleading content across multiple formats. Designed to protect users from risks such as profanity, misinformation, scams, and visual deception, the platform promotes trust, safety, and responsible AI use.
 
@@ -204,6 +209,7 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 ---
 ## 🙌 Contributors of Code       
 
+- ### `Anupam Ayush`
 - ### `Arjun Jainshankar`
 - ### `Heet Sutariya`
 - ### `Daksh Rathore`
