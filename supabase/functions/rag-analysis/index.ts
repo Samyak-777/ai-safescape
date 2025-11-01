@@ -177,6 +177,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           analysisType: 'rag-match',
+          source: 'REAL-TIME_DATABASE',
           isKnownMisinformation: true,
           confidence: ragResult.similarity,
           matchedDocument: {
@@ -245,7 +246,10 @@ Format your response as JSON with keys: credibility_score (0-100), verdict, anal
       return new Response(
         JSON.stringify({
           analysisType: 'paywall-limited',
+          source: 'DEEP_AI_ANALYSIS',
           isPaywalled: true,
+          fallback: true,
+          fallback_reason: 'Paywall Detected',
           aiAnalysis,
           urlMetadata,
           warning: 'Limited Analysis: This page is behind a paywall. Assessment is based on public metadata only.'
@@ -304,10 +308,11 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
     return new Response(
       JSON.stringify({
         analysisType: 'full-gemini',
+        source: 'DEEP_AI_ANALYSIS',
         isKnownMisinformation: false,
         aiAnalysis: deepAnalysis,
         urlMetadata,
-        message: 'Full AI analysis completed using Gemini 2.5 Flash'
+        message: 'Full AI analysis completed using Gemini 2.5 Pro'
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

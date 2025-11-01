@@ -4,14 +4,19 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { AlertCircle, CheckCircle, Shield, Zap, Database, AlertTriangle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Shield, Zap, Database, AlertTriangle, Phone, Brain } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface AnalysisResult {
   analysisType: 'rag-match' | 'paywall-limited' | 'full-gemini';
+  source?: 'REAL-TIME_DATABASE' | 'DEEP_AI_ANALYSIS';
   isKnownMisinformation?: boolean;
   isPaywalled?: boolean;
+  fallback?: boolean;
+  fallback_reason?: string;
   confidence?: number;
   matchedDocument?: {
     id: string;
@@ -36,6 +41,7 @@ const MisinformationRadar: React.FC = () => {
   const [text, setText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [showHelpDialog, setShowHelpDialog] = useState(false);
 
   const handleAnalyze = async (inputType: 'url' | 'text') => {
     const input = inputType === 'url' ? url : text;
@@ -86,26 +92,57 @@ const MisinformationRadar: React.FC = () => {
     return (
       <Card className="p-6 mt-6 animate-fade-in">
         <div className="space-y-4">
-          {/* Analysis Type Badge */}
-          <div className="flex items-center gap-2">
-            {result.analysisType === 'rag-match' && (
-              <>
-                <Database className="w-5 h-5 text-primary" />
-                <span className="text-sm font-medium">RAG Database Match</span>
-                <Zap className="w-4 h-4 text-yellow-500" />
-              </>
-            )}
-            {result.analysisType === 'paywall-limited' && (
-              <>
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
-                <span className="text-sm font-medium">Limited Analysis (Paywall)</span>
-              </>
-            )}
-            {result.analysisType === 'full-gemini' && (
-              <>
-                <Shield className="w-5 h-5 text-blue-500" />
-                <span className="text-sm font-medium">Full AI Analysis</span>
-              </>
+          {/* Edge Case Visualizer - Warning Banner for Paywall */}
+          {result.fallback && result.fallback_reason && (
+            <div className="w-full bg-orange-500/20 border-2 border-orange-500/50 rounded-lg p-4 mb-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-orange-700 dark:text-orange-300 text-lg mb-1">
+                    ⚠️ Limited Analysis: {result.fallback_reason}
+                  </h3>
+                  <p className="text-sm text-orange-600 dark:text-orange-400">
+                    The assessment below is based on public metadata only and may not be fully accurate.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Source of Truth Indicator */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-lg font-semibold">Analysis Results</h3>
+            {result.source && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-help ${
+                      result.source === 'REAL-TIME_DATABASE' 
+                        ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' 
+                        : 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30'
+                    }`}>
+                      {result.source === 'REAL-TIME_DATABASE' ? (
+                        <>
+                          <Database className="w-3.5 h-3.5" />
+                          Verified by Real-Time Database
+                        </>
+                      ) : (
+                        <>
+                          <Brain className="w-3.5 h-3.5" />
+                          Analyzed by Gemini 2.5 Pro
+                        </>
+                      )}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-sm">
+                      {result.source === 'REAL-TIME_DATABASE'
+                        ? 'This result was instantly verified against our curated database of known misinformation for maximum speed and accuracy.'
+                        : "This novel content was analyzed using Google's advanced Gemini 2.5 Pro model for a deep, contextual understanding."}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </div>
 
@@ -306,6 +343,90 @@ const MisinformationRadar: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Urgent Help Button */}
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setShowHelpDialog(true)}
+          variant="destructive"
+          className="gap-2"
+        >
+          <Phone className="w-4 h-4" />
+          Urgent Help
+        </Button>
+      </div>
+
+      {/* Urgent Help Dialog */}
+      <Dialog open={showHelpDialog} onOpenChange={setShowHelpDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <Phone className="w-5 h-5" />
+              Immediate Support Resources
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              Emergency helpline numbers and resources for immediate assistance
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <p className="text-sm font-semibold text-red-700 dark:text-red-400">
+                If you or someone you know is in immediate danger, please contact the authorities.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="border rounded-lg p-3">
+                <h4 className="font-semibold mb-1">Cyber Crime Helpline</h4>
+                <a
+                  href="tel:1930"
+                  className="text-primary hover:underline font-medium text-lg"
+                >
+                  📞 Dial 1930
+                </a>
+                <p className="text-xs text-muted-foreground mt-1">
+                  National helpline for reporting cybercrime
+                </p>
+              </div>
+
+              <div className="border rounded-lg p-3">
+                <h4 className="font-semibold mb-1">National Commission for Women</h4>
+                <a
+                  href="tel:7827170170"
+                  className="text-primary hover:underline font-medium text-lg"
+                >
+                  📞 Dial 7827170170
+                </a>
+                <p className="text-xs text-muted-foreground mt-1">
+                  24x7 helpline for women in distress
+                </p>
+              </div>
+
+              <div className="border rounded-lg p-3">
+                <h4 className="font-semibold mb-1">Government Fact-Checker</h4>
+                <a
+                  href="https://factcheck.pib.gov.in/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline text-sm"
+                >
+                  🔗 PIB Fact Check
+                </a>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Official government fact-checking service
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => setShowHelpDialog(false)}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-bold">🎯 Misinformation Radar</h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
