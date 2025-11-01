@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
           <div className="lg:w-1/2 space-y-6 mb-12 lg:mb-0 animate-fade-in">
             <div>
               <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
-                Google Solution Challenge
+                Gen AI Exchange Hackathon
               </span>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
                 Combat Online <span className="text-primary">Misinformation</span> with AI

@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li>
                 <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Google Solution Challenge
+                  Gen AI Exchange Hackathon
                 </a>
               </li>
               <li>
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>© {currentYear} SafeScape. All rights reserved.</p>
-          <p className="mt-4 md:mt-0">Created for Google Solution Challenge</p>
+          <p className="mt-4 md:mt-0">Created for Gen AI Exchange Hackathon</p>
         </div>
       </div>
     </footer>
