@@ -238,10 +238,10 @@ const MisinformationRadar: React.FC = () => {
                           Red Flags
                         </h3>
                         <ul className="space-y-1">
-                          {parsed.red_flags.map((flag: string, idx: number) => (
+                          {parsed.red_flags.map((flag: any, idx: number) => (
                             <li key={idx} className="text-sm flex items-start gap-2">
                               <span className="text-red-500 mt-1">•</span>
-                              <span>{flag}</span>
+                              <span>{typeof flag === 'object' ? JSON.stringify(flag) : flag}</span>
                             </li>
                           ))}
                         </ul>
@@ -252,7 +252,9 @@ const MisinformationRadar: React.FC = () => {
                     {parsed.analysis && (
                       <div className="bg-muted/50 rounded-lg p-4">
                         <h3 className="font-semibold mb-2">Detailed Analysis</h3>
-                        <p className="text-sm leading-relaxed">{parsed.analysis}</p>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {typeof parsed.analysis === 'object' ? JSON.stringify(parsed.analysis, null, 2) : parsed.analysis}
+                        </p>
                       </div>
                     )}
 
@@ -260,7 +262,9 @@ const MisinformationRadar: React.FC = () => {
                     {parsed.recommendation && (
                       <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
                         <h3 className="font-semibold mb-2 text-primary">Recommendation</h3>
-                        <p className="text-sm leading-relaxed">{parsed.recommendation}</p>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {typeof parsed.recommendation === 'object' ? JSON.stringify(parsed.recommendation, null, 2) : parsed.recommendation}
+                        </p>
                       </div>
                     )}
                   </div>
