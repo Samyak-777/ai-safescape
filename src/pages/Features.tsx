@@ -651,6 +651,92 @@ const Features: React.FC = () => {
               </div>
             </AnimatedSection>
           </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <AnimatedSection className="glass-card rounded-2xl p-8 border border-cyan-500/10" delay={0.4}>
+              <div className="bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                <Activity size={32} />
+              </div>
+              <h3 className="text-2xl font-semibold mb-4">RAG-Powered "Misinformation Radar"</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Hybrid AI system combining Retrieval-Augmented Generation with advanced LLM analysis for instant, accurate verification.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Database size={18} className="text-cyan-500" />
+                    Vector Database Search
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Instant lookup in curated misinformation database using advanced embedding similarity
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Brain size={18} className="text-purple-500" />
+                    Gemini 2.5 Pro Fallback
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Novel content analyzed with deep contextual AI when database match isn't found
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Zap size={18} className="text-green-500" />
+                    Hybrid Architecture
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Best of both worlds: speed of database lookup with intelligence of AI analysis
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+            
+            <AnimatedSection className="glass-card rounded-2xl p-8 border border-orange-500/10" delay={0.5}>
+              <div className="bg-orange-500/10 text-orange-600 dark:text-orange-400 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                <Lock size={32} />
+              </div>
+              <h3 className="text-2xl font-semibold mb-4">"Paywall" Edge Case & Fallback</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Robust handling of restricted content with transparent fallback to metadata-based analysis when full content is unavailable.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <AlertCircle size={18} className="text-orange-500" />
+                    Automatic Detection
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Identifies paywalls, login requirements, and content restrictions automatically
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Globe size={18} className="text-blue-500" />
+                    Metadata Analysis
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Analyzes URL structure, domain reputation, and public metadata for credibility assessment
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Eye size={18} className="text-purple-500" />
+                    Transparent Communication
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Clear warnings inform users when analysis is limited and explain the alternative approach
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
         </section>
         
         <section id="ai-assistant" className="section-container">
