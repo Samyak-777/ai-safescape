@@ -4,10 +4,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Github } from 'lucide-react';
 import Button from './Button';
+import MissionModal from './MissionModal';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMissionModalOpen, setIsMissionModalOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -67,6 +69,14 @@ const Navbar: React.FC = () => {
               </Link>
             ))}
             
+            {/* Our Mission Button */}
+            <button
+              onClick={() => setIsMissionModalOpen(true)}
+              className="px-4 py-2 rounded-lg transition-colors duration-300 text-foreground/80 hover:text-foreground hover:bg-muted"
+            >
+              Our Mission
+            </button>
+            
             {/* GitHub Button */}
             <a
               href="https://github.com/Samyak-777/ai-safescape"
@@ -88,6 +98,8 @@ const Navbar: React.FC = () => {
               </Button>
             </Link>
           </nav>
+
+      <MissionModal open={isMissionModalOpen} onOpenChange={setIsMissionModalOpen} />
 
           {/* Mobile Navigation Toggle */}
           <button
@@ -118,6 +130,14 @@ const Navbar: React.FC = () => {
                   {link.name}
                 </Link>
               ))}
+              
+              {/* Our Mission Button for Mobile */}
+              <button
+                onClick={() => setIsMissionModalOpen(true)}
+                className="px-4 py-3 rounded-lg transition-colors duration-300 text-foreground/80 hover:text-foreground hover:bg-muted text-left"
+              >
+                Our Mission
+              </button>
               
               {/* GitHub Button for Mobile */}
               <a

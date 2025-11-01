@@ -29,7 +29,8 @@ import {
   Layers,
   Bot,
   UserCheck,
-  Activity
+  Activity,
+  Phone
 } from 'lucide-react';
 import TechnologyLogos from '@/components/TechnologyLogos';
 
@@ -504,6 +505,148 @@ const Features: React.FC = () => {
                 <div className="bg-muted/50 rounded-lg p-3">
                   <h4 className="font-medium text-sm mb-1">Handwriting Recognition</h4>
                   <p className="text-xs text-muted-foreground">Advanced handwritten text detection</p>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </section>
+        
+        <section className="section-container bg-gradient-to-br from-primary/5 via-background to-blue-500/5">
+          <AnimatedSection>
+            <div className="mb-20">
+              <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary/20 to-blue-500/20 text-primary mb-6">
+                New Features
+              </span>
+              <h2 className="text-4xl font-bold mb-6">Advanced User Experience Features</h2>
+              <p className="text-muted-foreground max-w-3xl text-lg leading-relaxed">
+                Cutting-edge features designed to provide transparency, handle edge cases, and prioritize user safety.
+              </p>
+            </div>
+          </AnimatedSection>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <AnimatedSection className="glass-card rounded-2xl p-8 border border-primary/10" delay={0.1}>
+              <div className="bg-primary/10 text-primary w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                <Database size={32} />
+              </div>
+              <h3 className="text-2xl font-semibold mb-4">Source of Truth Indicator</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Every analysis now displays its source, showing whether the result came from our real-time database verification or deep AI analysis.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Database size={18} className="text-blue-500" />
+                    Real-Time Database
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Instant verification against our curated database of known misinformation for maximum speed and accuracy
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Brain size={18} className="text-purple-500" />
+                    Gemini AI Analysis
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Novel content analyzed using Google's Gemini 2.5 Pro for deep, contextual understanding
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Eye size={18} className="text-green-500" />
+                    Transparent Process
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Visual indicators and tooltips explain the verification method used for each analysis
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+            
+            <AnimatedSection className="glass-card rounded-2xl p-8 border border-yellow-500/10" delay={0.2}>
+              <div className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                <AlertCircle size={32} />
+              </div>
+              <h3 className="text-2xl font-semibold mb-4">Edge Case Visualizer</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Clear visual indicators when analysis is limited due to paywalls or access restrictions, with transparent fallback explanations.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Lock size={18} className="text-yellow-600" />
+                    Paywall Detection
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically identifies when content is behind a paywall and switches to metadata analysis
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <AlertCircle size={18} className="text-orange-500" />
+                    Warning Banner
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Prominent visual warning explains limitations and provides context for restricted analysis
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Check size={18} className="text-green-500" />
+                    Fallback Strategy
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Graceful degradation ensures users still receive useful insights even with limited access
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+            
+            <AnimatedSection className="glass-card rounded-2xl p-8 border border-red-500/10" delay={0.3}>
+              <div className="bg-red-500/10 text-red-600 dark:text-red-400 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                <Shield size={32} />
+              </div>
+              <h3 className="text-2xl font-semibold mb-4">Urgent Help Button</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                One-click access to critical support resources for users facing immediate digital threats or safety concerns.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Phone size={18} className="text-red-500" />
+                    Emergency Contacts
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Direct access to cyber crime helpline (1930) and support organizations
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Users size={18} className="text-blue-500" />
+                    Support Resources
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Curated list of verified helplines and government fact-checking services
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Zap size={18} className="text-purple-500" />
+                    Instant Access
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Always-visible button ensures help is available when users need it most
+                  </p>
                 </div>
               </div>
             </AnimatedSection>
