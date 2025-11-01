@@ -175,15 +175,112 @@ const MisinformationRadar: React.FC = () => {
           )}
 
           {/* AI Analysis */}
-          {result.aiAnalysis && (
-            <div className="bg-muted/50 rounded-lg p-4">
-              <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                AI Analysis
-              </h3>
-              <pre className="text-sm whitespace-pre-wrap">{result.aiAnalysis}</pre>
-            </div>
-          )}
+          {result.aiAnalysis && (() => {
+            try {
+              // Try to parse JSON from the AI response
+              const jsonMatch = result.aiAnalysis.match(/\{[\s\S]*\}/);
+              if (jsonMatch) {
+                const parsed = JSON.parse(jsonMatch[0]);
+                
+                return (
+                  <div className="space-y-4">
+                    {/* Credibility Score */}
+                    <div className="bg-muted/50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
+                          Credibility Score
+                        </h3>
+                        <span className={`text-2xl font-bold ${
+                          parsed.credibility_score >= 70 ? 'text-green-500' :
+                          parsed.credibility_score >= 40 ? 'text-yellow-500' :
+                          'text-red-500'
+                        }`}>
+                          {parsed.credibility_score}/100
+                        </span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2 mt-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all ${
+                            parsed.credibility_score >= 70 ? 'bg-green-500' :
+                            parsed.credibility_score >= 40 ? 'bg-yellow-500' :
+                            'bg-red-500'
+                          }`}
+                          style={{ width: `${parsed.credibility_score}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Risk Level & Verdict */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-muted/50 rounded-lg p-4">
+                        <p className="text-sm text-muted-foreground mb-1">Risk Level</p>
+                        <p className={`font-semibold uppercase ${
+                          parsed.risk_level === 'critical' ? 'text-red-600' :
+                          parsed.risk_level === 'high' ? 'text-orange-600' :
+                          parsed.risk_level === 'medium' ? 'text-yellow-600' :
+                          'text-green-600'
+                        }`}>
+                          {parsed.risk_level}
+                        </p>
+                      </div>
+                      <div className="bg-muted/50 rounded-lg p-4">
+                        <p className="text-sm text-muted-foreground mb-1">Verdict</p>
+                        <p className="font-semibold capitalize">{parsed.verdict}</p>
+                      </div>
+                    </div>
+
+                    {/* Red Flags */}
+                    {parsed.red_flags && parsed.red_flags.length > 0 && (
+                      <div className="bg-muted/50 rounded-lg p-4">
+                        <h3 className="font-semibold mb-2 flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4" />
+                          Red Flags
+                        </h3>
+                        <ul className="space-y-1">
+                          {parsed.red_flags.map((flag: string, idx: number) => (
+                            <li key={idx} className="text-sm flex items-start gap-2">
+                              <span className="text-red-500 mt-1">•</span>
+                              <span>{flag}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Analysis */}
+                    {parsed.analysis && (
+                      <div className="bg-muted/50 rounded-lg p-4">
+                        <h3 className="font-semibold mb-2">Detailed Analysis</h3>
+                        <p className="text-sm leading-relaxed">{parsed.analysis}</p>
+                      </div>
+                    )}
+
+                    {/* Recommendation */}
+                    {parsed.recommendation && (
+                      <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+                        <h3 className="font-semibold mb-2 text-primary">Recommendation</h3>
+                        <p className="text-sm leading-relaxed">{parsed.recommendation}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            } catch (e) {
+              console.error('Error parsing AI response:', e);
+            }
+            
+            // Fallback to raw text if parsing fails
+            return (
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h3 className="font-semibold mb-2 flex items-center gap-2">
+                  <Shield className="w-4 h-4" />
+                  AI Analysis
+                </h3>
+                <p className="text-sm whitespace-pre-wrap">{result.aiAnalysis}</p>
+              </div>
+            );
+          })()}
 
           {/* Clean Result */}
           {!result.isKnownMisinformation && !result.isPaywalled && result.message && (
