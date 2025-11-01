@@ -1,1 +1,7 @@
 project_id = "lrlexnirncdnygfsptfp"
+
+[functions.rag-ingest]
+verify_jwt = false
+
+[functions.rag-analysis]
+verify_jwt = false

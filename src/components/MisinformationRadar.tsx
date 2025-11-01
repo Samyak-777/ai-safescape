@@ -1,0 +1,305 @@
+import React, { useState } from 'react';
+import { Card } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { AlertCircle, CheckCircle, Shield, Zap, Database, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
+interface AnalysisResult {
+  analysisType: 'rag-match' | 'paywall-limited' | 'full-gemini';
+  isKnownMisinformation?: boolean;
+  isPaywalled?: boolean;
+  confidence?: number;
+  matchedDocument?: {
+    id: string;
+    category: string;
+    explanation: string;
+    tags: string[];
+  };
+  verdict?: string;
+  message?: string;
+  recommendation?: string;
+  aiAnalysis?: string;
+  urlMetadata?: {
+    domain: string;
+    title: string;
+    isPaywalled: boolean;
+  };
+  warning?: string;
+}
+
+const MisinformationRadar: React.FC = () => {
+  const [url, setUrl] = useState('');
+  const [text, setText] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+
+  const handleAnalyze = async (inputType: 'url' | 'text') => {
+    const input = inputType === 'url' ? url : text;
+    
+    if (!input.trim()) {
+      toast.error('Please provide a URL or text to analyze');
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setResult(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('rag-analysis', {
+        body: inputType === 'url' ? { url: input } : { text: input }
+      });
+
+      if (error) throw error;
+
+      setResult(data);
+      
+      if (data.isKnownMisinformation) {
+        toast.error('Known Misinformation Detected!', {
+          description: 'This matches a verified piece of misinformation in our database.',
+        });
+      } else if (data.isPaywalled) {
+        toast.warning('Paywall Detected', {
+          description: 'Analysis is limited to public metadata only.',
+        });
+      } else {
+        toast.success('Analysis Complete', {
+          description: 'Deep AI analysis finished.',
+        });
+      }
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast.error('Analysis Failed', {
+        description: error instanceof Error ? error.message : 'Please try again later.',
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const renderResult = () => {
+    if (!result) return null;
+
+    return (
+      <Card className="p-6 mt-6 animate-fade-in">
+        <div className="space-y-4">
+          {/* Analysis Type Badge */}
+          <div className="flex items-center gap-2">
+            {result.analysisType === 'rag-match' && (
+              <>
+                <Database className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">RAG Database Match</span>
+                <Zap className="w-4 h-4 text-yellow-500" />
+              </>
+            )}
+            {result.analysisType === 'paywall-limited' && (
+              <>
+                <AlertTriangle className="w-5 h-5 text-orange-500" />
+                <span className="text-sm font-medium">Limited Analysis (Paywall)</span>
+              </>
+            )}
+            {result.analysisType === 'full-gemini' && (
+              <>
+                <Shield className="w-5 h-5 text-blue-500" />
+                <span className="text-sm font-medium">Full AI Analysis</span>
+              </>
+            )}
+          </div>
+
+          {/* Known Misinformation Alert */}
+          {result.isKnownMisinformation && result.matchedDocument && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-red-700 dark:text-red-400 mb-2">
+                    ⚠️ KNOWN MISINFORMATION DETECTED
+                  </h3>
+                  <p className="text-sm text-red-600 dark:text-red-300 mb-3">
+                    {result.matchedDocument.explanation}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {result.matchedDocument.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-red-500/20 text-red-700 dark:text-red-300 text-xs rounded-full"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                    Category: {result.matchedDocument.category}
+                  </p>
+                  {result.confidence && (
+                    <p className="text-xs text-red-600 dark:text-red-300 mt-2">
+                      Match Confidence: {Math.round(result.confidence * 100)}%
+                    </p>
+                  )}
+                </div>
+              </div>
+              {result.recommendation && (
+                <div className="mt-4 pt-4 border-t border-red-500/20">
+                  <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                    Recommended Action:
+                  </p>
+                  <p className="text-sm text-red-600 dark:text-red-300 mt-1">
+                    {result.recommendation}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Paywall Warning */}
+          {result.isPaywalled && result.urlMetadata && (
+            <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-orange-700 dark:text-orange-400 mb-2">
+                    {result.warning || 'Paywall Detected'}
+                  </h3>
+                  <p className="text-sm text-orange-600 dark:text-orange-300 mb-2">
+                    Domain: {result.urlMetadata.domain}
+                  </p>
+                  <p className="text-sm text-orange-600 dark:text-orange-300">
+                    Title: {result.urlMetadata.title}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* AI Analysis */}
+          {result.aiAnalysis && (
+            <div className="bg-muted/50 rounded-lg p-4">
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                AI Analysis
+              </h3>
+              <pre className="text-sm whitespace-pre-wrap">{result.aiAnalysis}</pre>
+            </div>
+          )}
+
+          {/* Clean Result */}
+          {!result.isKnownMisinformation && !result.isPaywalled && result.message && (
+            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm text-green-700 dark:text-green-300">
+                    {result.message}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center space-y-2">
+        <h2 className="text-3xl font-bold">🎯 Misinformation Radar</h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          RAG-powered misinformation detection with instant matching against known false claims
+          and intelligent paywall handling
+        </p>
+        <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground pt-2">
+          <span className="flex items-center gap-1">
+            <Database className="w-4 h-4" /> 15+ Known Patterns
+          </span>
+          <span className="flex items-center gap-1">
+            <Zap className="w-4 h-4" /> Instant Detection
+          </span>
+          <span className="flex items-center gap-1">
+            <Shield className="w-4 h-4" /> AI-Powered
+          </span>
+        </div>
+      </div>
+
+      <Card className="p-6">
+        <Tabs defaultValue="url" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="url">Analyze URL</TabsTrigger>
+            <TabsTrigger value="text">Analyze Text</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="url" className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                Enter URL to analyze
+              </label>
+              <Input
+                type="url"
+                placeholder="https://example.com/article"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="mb-4"
+              />
+            </div>
+            <Button
+              onClick={() => handleAnalyze('url')}
+              disabled={isAnalyzing || !url.trim()}
+              className="w-full"
+            >
+              {isAnalyzing ? (
+                <>
+                  <span className="animate-spin mr-2">⚡</span>
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Analyze URL
+                </>
+              )}
+            </Button>
+          </TabsContent>
+
+          <TabsContent value="text" className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                Paste text to analyze
+              </label>
+              <Textarea
+                placeholder="Enter text, message, or claim to check for misinformation..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                rows={6}
+                className="mb-4"
+              />
+            </div>
+            <Button
+              onClick={() => handleAnalyze('text')}
+              disabled={isAnalyzing || !text.trim()}
+              className="w-full"
+            >
+              {isAnalyzing ? (
+                <>
+                  <span className="animate-spin mr-2">⚡</span>
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Analyze Text
+                </>
+              )}
+            </Button>
+          </TabsContent>
+        </Tabs>
+
+        {renderResult()}
+      </Card>
+    </div>
+  );
+};
+
+export default MisinformationRadar;

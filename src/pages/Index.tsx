@@ -11,6 +11,7 @@ import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 import ServiceStatusIndicator from '@/components/ServiceStatusIndicator';
 import UNSDGAlignment from '@/components/UNSDGAlignment';
+import MisinformationRadar from '@/components/MisinformationRadar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Shield, FileText, Image, Server, Search, Code, BarChart3 } from 'lucide-react';
@@ -113,6 +114,13 @@ const Index: React.FC = () => {
               delay={0.6}
             />
           </div>
+        </section>
+
+        {/* Priority Feature: RAG-Powered Misinformation Radar */}
+        <section className="section-container bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+          <AnimatedSection>
+            <MisinformationRadar />
+          </AnimatedSection>
         </section>
         
         <AnalysisToolsEnhanced />
