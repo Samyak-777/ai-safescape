@@ -161,14 +161,14 @@ const AnalysisToolsEnhanced: React.FC = () => {
                   <Sparkles className="h-5 w-5 text-purple-500" />
                   Gemini AI Advanced Analysis
                   <Badge variant="outline" className="ml-2">
-                    Gemini 2.5
+                    Gemini 2.5 Pro
                   </Badge>
                   <Badge variant="secondary" className="ml-1">
-                    Google I/O 2025
+                    2025
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  State-of-the-art content analysis using Gemini 2.5 with function calling, 
+                  State-of-the-art content analysis using Gemini 2.5 Pro with function calling, 
                   structured outputs, streaming capabilities, and advanced reasoning for 
                   context-aware safety detection and real-time threat assessment.
                 </CardDescription>
@@ -193,8 +193,8 @@ const AnalysisToolsEnhanced: React.FC = () => {
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Sophisticated AI-powered detection of harassment patterns, AI-generated content, 
-                  contextual harm indicators, and coordinated inauthentic behavior using advanced 
+                  Advanced threat detection with sophisticated pattern analysis. AI-powered detection of harassment patterns, 
+                  AI-generated content, contextual harm indicators, and coordinated inauthentic behavior using advanced 
                   machine learning and behavioral analysis.
                 </CardDescription>
               </CardHeader>
@@ -275,13 +275,13 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-red-500" />
-                  Advanced Security Analysis
+                  Security
                   <Badge variant="destructive" className="ml-2">
-                    Threat Intelligence
+                    Advanced Security Analysis
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Comprehensive security analysis with threat intelligence integration, 
+                  Advanced security analysis with threat intelligence integration, 
                   advanced pattern detection, social engineering identification, and comprehensive risk scoring.
                 </CardDescription>
               </CardHeader>
@@ -296,18 +296,18 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageCircle className="h-5 w-5 text-pink-500" />
-                  Personalized AI Assistant
+                  Assistant
                   <Badge variant="outline" className="ml-2">
-                    Empathetic AI
+                    Personalized AI Assistant
                   </Badge>
                   <Badge variant="secondary" className="ml-1">
-                    Support
+                    Empathetic AI
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Intelligent AI assistant providing personalized support and guidance for users 
-                  experiencing online harms. Features multimodal input processing, immediate harm 
-                  assessment, and culturally sensitive responses.
+                  Personalized AI Assistant with empathetic AI capabilities. Intelligent assistant providing 
+                  personalized support and guidance for users experiencing online harms. Features multimodal 
+                  input processing, immediate harm assessment, and culturally sensitive responses.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -387,13 +387,13 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Zap className="h-5 w-5 text-blue-500" />
-                  Asynchronous Text Analysis
+                  Async
                   <Badge variant="outline" className="ml-2">
-                    Production Ready
+                    Asynchronous Text Analysis
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Experience scalable, resilient text analysis with event-driven architecture, 
+                  Asynchronous text analysis with scalable, resilient event-driven architecture, 
                   circuit breakers, and automatic retry mechanisms for high-volume processing.
                 </CardDescription>
               </CardHeader>
@@ -408,13 +408,13 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-green-500" />
-                  Synchronous Text Analysis
+                  Sync
                   <Badge variant="outline" className="ml-2">
-                    Legacy Mode
+                    Synchronous Text Analysis
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Traditional synchronous processing for immediate results. 
+                  Synchronous text analysis with traditional processing for immediate results. 
                   Uses the same resilient APIs but with blocking operations for simpler integration.
                 </CardDescription>
               </CardHeader>
@@ -429,13 +429,13 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Image className="h-5 w-5 text-indigo-500" />
-                  Advanced Image Analysis
+                  Image
                   <Badge variant="outline" className="ml-2">
-                    Gemini Powered
+                    Image Analysis
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Comprehensive image analysis powered by Gemini AI for manipulation detection, 
+                  Image analysis powered by Gemini AI. Comprehensive analysis for manipulation detection, 
                   content safety verification, and intelligent text extraction with multi-language support.
                 </CardDescription>
               </CardHeader>
