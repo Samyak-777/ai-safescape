@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Features from "./pages/Features";
 import Documentation from "./pages/Documentation";
 import Auth from "./pages/Auth";
+import ThreatIntel from "./pages/ThreatIntel";
+import Simulator from "./pages/Simulator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/features" element={<Features />} />
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/threat-intel" element={<ThreatIntel />} />
+          <Route path="/simulator" element={<Simulator />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

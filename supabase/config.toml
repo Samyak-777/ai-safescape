@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.rag-analysis]
 verify_jwt = false
+
+[functions.generate-simulation]
+verify_jwt = false

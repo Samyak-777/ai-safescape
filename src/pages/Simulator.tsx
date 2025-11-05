@@ -1,0 +1,186 @@
+import { useState } from "react";
+import { Brain, RefreshCw, CheckCircle2, XCircle, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { toast } from "sonner";
+
+const Simulator = () => {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [redFlags, setRedFlags] = useState<string[]>([]);
+  const [correctAnswer, setCorrectAnswer] = useState<string>("");
+  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  const generateSimulation = async () => {
+    setLoading(true);
+    setMessage(null);
+    setSelectedAnswer("");
+    setShowFeedback(false);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-simulation');
+
+      if (error) throw error;
+
+      setMessage(data.message);
+      setRedFlags(data.redFlags || []);
+      setCorrectAnswer(data.correctAnswer || "All of the above");
+    } catch (error) {
+      console.error('Error generating simulation:', error);
+      toast.error('Failed to generate simulation. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = () => {
+    setShowFeedback(true);
+  };
+
+  const isCorrect = selectedAnswer === correctAnswer;
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <Brain className="h-8 w-8 text-primary" />
+            <div>
+              <h1 className="text-3xl font-bold">Misinformation Simulator</h1>
+              <p className="text-muted-foreground">
+                Train your skills to identify scams and misinformation
+              </p>
+            </div>
+          </div>
+
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>How It Works</CardTitle>
+              <CardDescription>
+                We'll show you realistic but fake scam messages. Your job is to identify the red flags.
+                This is a safe environment to practice your critical thinking skills.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={generateSimulation} 
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Shield className="mr-2 h-4 w-4" />
+                    {message ? 'Generate New Simulation' : 'Start New Simulation'}
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {message && (
+            <>
+              <Card className="mb-6 border-2 border-orange-500/20 bg-orange-50/50 dark:bg-orange-950/20">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <span className="text-orange-500">⚠️</span> You've Just Received This Message
+                  </CardTitle>
+                  <CardDescription>Can you spot the red flags?</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border">
+                    <div className="flex gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="font-medium mb-1">Unknown Sender</div>
+                        <div className="bg-green-100 dark:bg-green-900 rounded-lg rounded-tl-none p-3 text-sm">
+                          {message}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">Just now</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>What is the biggest red flag here?</CardTitle>
+                  <CardDescription>Choose the most suspicious element</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
+                    {redFlags.map((flag, index) => (
+                      <div key={index} className="flex items-center space-x-2 mb-3">
+                        <RadioGroupItem value={flag} id={`flag-${index}`} />
+                        <Label htmlFor={`flag-${index}`} className="cursor-pointer">
+                          {String.fromCharCode(65 + index)}. {flag}
+                        </Label>
+                      </div>
+                    ))}
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="All of the above" id="flag-all" />
+                      <Label htmlFor="flag-all" className="cursor-pointer">
+                        {String.fromCharCode(65 + redFlags.length)}. All of the above
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  <Button 
+                    onClick={handleSubmit} 
+                    disabled={!selectedAnswer || showFeedback}
+                    className="w-full mt-6"
+                  >
+                    Submit Answer
+                  </Button>
+
+                  {showFeedback && (
+                    <div className={`mt-6 p-4 rounded-lg ${
+                      isCorrect 
+                        ? 'bg-green-100 dark:bg-green-900/20 border border-green-500' 
+                        : 'bg-red-100 dark:bg-red-900/20 border border-red-500'
+                    }`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        {isCorrect ? (
+                          <>
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                            <span className="font-semibold text-green-600">Correct!</span>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="h-5 w-5 text-red-600" />
+                            <span className="font-semibold text-red-600">Not Quite</span>
+                          </>
+                        )}
+                      </div>
+                      <p className="text-sm">
+                        {isCorrect 
+                          ? "Great job! You identified the red flags correctly. These are common tactics used by scammers to manipulate victims."
+                          : `The correct answer is: ${correctAnswer}. All the elements mentioned are red flags that indicate this is a scam. Stay vigilant!`
+                        }
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Simulator;
