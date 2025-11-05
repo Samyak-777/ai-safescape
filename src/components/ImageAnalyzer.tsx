@@ -3,6 +3,9 @@ import React, { useState, useRef } from 'react';
 import Button from './Button';
 import { Upload, Image, AlertCircle, Check, Ban, Search, Shield } from 'lucide-react';
 import { analyzeImage, imageAnalysisOptions } from '@/services/api';
+import { performComprehensiveImageAnalysis } from '@/services/comprehensiveImageAnalysis';
+import ComprehensiveImageReport from './ComprehensiveImageReport';
+import type { ComprehensiveImageReport as ReportType } from '@/services/comprehensiveImageAnalysis';
 import { toast } from 'sonner';
 
 const ImageAnalyzer: React.FC = () => {
@@ -13,6 +16,7 @@ const ImageAnalyzer: React.FC = () => {
     status: 'clean' | 'warning' | 'danger';
     message: string;
   }>(null);
+  const [comprehensiveReport, setComprehensiveReport] = useState<ReportType | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(['manipulation', 'safe-search']);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +55,7 @@ const ImageAnalyzer: React.FC = () => {
     
     setIsAnalyzing(true);
     setAnalysisResults(null);
+    setComprehensiveReport(null);
     
     try {
       if (selectedOptions.length === 0) {
@@ -58,20 +63,28 @@ const ImageAnalyzer: React.FC = () => {
         return;
       }
       
-      const result = await analyzeImage(image, selectedOptions);
-      setAnalysisResults(result);
+      // Perform both quick analysis and comprehensive report
+      toast.info('Starting comprehensive image analysis...');
+      
+      const [quickResult, detailedReport] = await Promise.all([
+        analyzeImage(image, selectedOptions),
+        performComprehensiveImageAnalysis(image)
+      ]);
+      
+      setAnalysisResults(quickResult);
+      setComprehensiveReport(detailedReport);
       
       // Show toast notification based on result
-      if (result.status === 'clean') {
-        toast.success('Image analysis completed successfully');
-      } else if (result.status === 'warning') {
-        toast.warning('Potential issues detected in image');
+      if (quickResult.status === 'clean' && detailedReport.overallAssessment.riskLevel === 'low') {
+        toast.success('Comprehensive analysis completed - Image appears safe');
+      } else if (detailedReport.overallAssessment.riskLevel === 'high' || detailedReport.overallAssessment.riskLevel === 'critical') {
+        toast.error('Critical issues detected in image');
       } else {
-        toast.error('Issues detected in image');
+        toast.warning('Analysis completed - Review the detailed report');
       }
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Error analyzing image');
+      toast.error('Error analyzing image - Please try again');
     } finally {
       setIsAnalyzing(false);
     }
@@ -202,6 +215,11 @@ const ImageAnalyzer: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Comprehensive Report */}
+      {comprehensiveReport && (
+        <ComprehensiveImageReport report={comprehensiveReport} />
       )}
     </div>
   );
