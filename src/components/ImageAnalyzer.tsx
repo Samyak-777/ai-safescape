@@ -7,6 +7,7 @@ import { performComprehensiveImageAnalysis } from '@/services/comprehensiveImage
 import ComprehensiveImageReport from './ComprehensiveImageReport';
 import type { ComprehensiveImageReport as ReportType } from '@/services/comprehensiveImageAnalysis';
 import { toast } from 'sonner';
+import { reportThreat } from '@/services/threatReporting';
 
 const ImageAnalyzer: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -73,6 +74,26 @@ const ImageAnalyzer: React.FC = () => {
       
       setAnalysisResults(quickResult);
       setComprehensiveReport(detailedReport);
+      
+      // Auto-report high-risk image threats to community intelligence
+      if (detailedReport.overallAssessment.riskLevel === 'high' || 
+          detailedReport.overallAssessment.riskLevel === 'critical') {
+        
+        const categories: string[] = [];
+        if (detailedReport.manipulationAnalysis.isManipulated) {
+          categories.push(`Image Manipulation: ${detailedReport.manipulationAnalysis.manipulationType}`);
+        }
+        if (detailedReport.contentSafety.isInappropriate) {
+          categories.push(...detailedReport.contentSafety.categories);
+        }
+        
+        await reportThreat({
+          threatType: 'Malicious Image Detected',
+          threatCategory: categories[0] || 'Image Threat',
+          description: `High-risk image: ${detailedReport.overallAssessment.summary}`,
+          severity: detailedReport.overallAssessment.riskLevel as 'high' | 'critical',
+        });
+      }
       
       // Show toast notification based on result
       if (quickResult.status === 'clean' && detailedReport.overallAssessment.riskLevel === 'low') {

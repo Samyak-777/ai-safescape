@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, CheckCircle, AlertTriangle, XCircle, Sparkles, Brain, Zap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { analyzeContentWithGeminiAdvanced, GeminiAdvancedResult } from '@/services/geminiAdvanced';
+import { reportThreat, determineThreatCategory, extractDomain } from '@/services/threatReporting';
 
 interface AnalysisResultWithType extends GeminiAdvancedResult {
   type: string;
@@ -126,6 +127,31 @@ const AdvancedTextAnalyzer: React.FC = () => {
       const validResults = analysisResults.filter(result => result !== null) as AnalysisResultWithType[];
       
       setResults(validResults);
+      
+      // Auto-report high-risk threats to community intelligence
+      const highRiskResults = validResults.filter(r => 
+        r.riskLevel === 'high' || r.riskLevel === 'critical'
+      );
+      
+      if (highRiskResults.length > 0) {
+        // Extract URLs from text for domain reporting
+        const urlPattern = /https?:\/\/[^\s]+/gi;
+        const urls = text.match(urlPattern) || [];
+        const primaryDomain = urls.length > 0 ? extractDomain(urls[0]) : undefined;
+        
+        // Combine all threat categories
+        const allCategories = highRiskResults.flatMap(r => r.harmCategories || []);
+        const threatCategory = determineThreatCategory(text, allCategories);
+        
+        // Report the threat
+        await reportThreat({
+          threatType: `${threatCategory} Detected`,
+          threatCategory,
+          primaryDomain,
+          description: `High-risk content detected: ${allCategories.slice(0, 3).join(', ')}`,
+          severity: highRiskResults.some(r => r.riskLevel === 'critical') ? 'critical' : 'high',
+        });
+      }
       
       const fallbackCount = validResults.filter(r => r.explanation?.includes('Fallback analysis')).length;
       if (fallbackCount > 0) {
