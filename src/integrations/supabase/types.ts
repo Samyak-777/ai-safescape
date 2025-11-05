@@ -14,13 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      threat_intel: {
+        Row: {
+          created_at: string
+          description: string
+          detection_count: number
+          first_detected_at: string
+          id: string
+          last_seen_at: string
+          primary_domain: string | null
+          severity: string
+          threat_category: string
+          threat_type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          detection_count?: number
+          first_detected_at?: string
+          id?: string
+          last_seen_at?: string
+          primary_domain?: string | null
+          severity?: string
+          threat_category: string
+          threat_type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          detection_count?: number
+          first_detected_at?: string
+          id?: string
+          last_seen_at?: string
+          primary_domain?: string | null
+          severity?: string
+          threat_category?: string
+          threat_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_threat_intel: {
+        Args: {
+          p_description: string
+          p_primary_domain: string
+          p_severity: string
+          p_threat_category: string
+          p_threat_type: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
