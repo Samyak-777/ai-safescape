@@ -1,10 +1,10 @@
 project_id = "lrlexnirncdnygfsptfp"
 
 [functions.rag-ingest]
-verify_jwt = false
+verify_jwt = true
 
 [functions.rag-analysis]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-simulation]
-verify_jwt = false
+verify_jwt = true

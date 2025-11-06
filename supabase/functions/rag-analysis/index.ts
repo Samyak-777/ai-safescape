@@ -5,6 +5,75 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Input validation
+interface AnalysisRequest {
+  url?: string;
+  text?: string;
+}
+
+function validateUrl(url: string): { valid: boolean; error?: string } {
+  try {
+    const urlObj = new URL(url);
+    
+    // Only allow http and https protocols
+    if (!['http:', 'https:'].includes(urlObj.protocol)) {
+      return { valid: false, error: 'Only HTTP and HTTPS protocols are allowed' };
+    }
+    
+    // Block private IP ranges and localhost
+    const hostname = urlObj.hostname.toLowerCase();
+    const privatePatterns = [
+      /^localhost$/,
+      /^127\./,
+      /^10\./,
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./,
+      /^192\.168\./,
+      /^169\.254\./,
+      /^::1$/,
+      /^fc00:/,
+      /^fe80:/
+    ];
+    
+    if (privatePatterns.some(pattern => pattern.test(hostname))) {
+      return { valid: false, error: 'Private IP addresses and localhost are not allowed' };
+    }
+    
+    return { valid: true };
+  } catch {
+    return { valid: false, error: 'Invalid URL format' };
+  }
+}
+
+function validateInput(body: unknown): { valid: boolean; error?: string; data?: AnalysisRequest } {
+  if (!body || typeof body !== 'object') {
+    return { valid: false, error: 'Invalid request body' };
+  }
+  
+  const data = body as AnalysisRequest;
+  
+  if (!data.url && !data.text) {
+    return { valid: false, error: 'Either URL or text must be provided' };
+  }
+  
+  if (data.text && typeof data.text === 'string') {
+    if (data.text.length > 10000) {
+      return { valid: false, error: 'Text input exceeds maximum length of 10KB' };
+    }
+  }
+  
+  if (data.url) {
+    if (typeof data.url !== 'string') {
+      return { valid: false, error: 'URL must be a string' };
+    }
+    const urlValidation = validateUrl(data.url);
+    if (!urlValidation.valid) {
+      return urlValidation;
+    }
+  }
+  
+  return { valid: true, data };
+}
+
 // Simulated vector database (in production, this would be Vertex AI Vector Search)
 const knownMisinformationVectors = [
   {
@@ -66,17 +135,35 @@ async function detectPaywall(url: string, htmlContent: string): Promise<boolean>
 
 async function fetchUrlContent(url: string): Promise<{ content: string; title: string; isPaywalled: boolean }> {
   try {
+    // Set timeout for fetch
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; SafeScape/1.0; +https://safescape.app)'
-      }
+      },
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch URL: ${response.status}`);
     }
     
+    // Check content type
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('text/html') && !contentType.includes('text/plain')) {
+      throw new Error('URL does not point to text content');
+    }
+    
     const html = await response.text();
+    
+    // Enforce size limit (5MB)
+    if (html.length > 5 * 1024 * 1024) {
+      throw new Error('Content size exceeds maximum allowed (5MB)');
+    }
     
     // Extract title
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
@@ -96,6 +183,9 @@ async function fetchUrlContent(url: string): Promise<{ content: string; title: s
     
     return { content: textContent, title, isPaywalled };
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout - URL took too long to respond');
+    }
     console.error('Error fetching URL:', error);
     throw error;
   }
@@ -133,15 +223,27 @@ serve(async (req) => {
   }
 
   try {
-    const { url, text } = await req.json();
+    // Parse and validate input
+    const body = await req.json().catch(() => null);
+    const validation = validateInput(body);
+    
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error || 'Invalid input' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const { url, text } = validation.data!;
+    
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
-    }
-
-    if (!url && !text) {
-      throw new Error('Either URL or text must be provided');
+      console.error('LOVABLE_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'Service configuration error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log('Starting RAG-powered analysis...');
@@ -169,7 +271,7 @@ serve(async (req) => {
 
     // Step 1: RAG Check - Search for known misinformation
     console.log('Step 1: Checking against known misinformation database...');
-    const ragResult = await searchKnownMisinformation(analysisText);
+    const ragResult = await searchKnownMisinformation(analysisText || '');
 
     if (ragResult.match && ragResult.matchedDoc) {
       console.log(`✓ Match found: ${ragResult.matchedDoc.id} (${Math.round((ragResult.similarity || 0) * 100)}% similar)`);
@@ -232,10 +334,16 @@ Format your response as JSON with keys: credibility_score (0-100), verdict, anal
 
       if (!response.ok) {
         if (response.status === 429) {
-          throw new Error('Rate limit exceeded. Please try again later.');
+          return new Response(
+            JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+            { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
         if (response.status === 402) {
-          throw new Error('AI service payment required. Please add credits to your workspace.');
+          return new Response(
+            JSON.stringify({ error: 'AI service payment required. Please add credits to your workspace.' }),
+            { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
         throw new Error('AI analysis failed');
       }
@@ -266,7 +374,7 @@ Format your response as JSON with keys: credibility_score (0-100), verdict, anal
     
     const deepAnalysisPrompt = `Analyze the following content for misinformation, scams, or misleading information:
 
-Content: "${analysisText.substring(0, 2000)}"
+Content: "${(analysisText || '').substring(0, 2000)}"
 
 Provide a comprehensive analysis including:
 1. Credibility score (0-100)
@@ -294,10 +402,16 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
 
     if (!response.ok) {
       if (response.status === 429) {
-        throw new Error('Rate limit exceeded. Please try again later.');
+        return new Response(
+          JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
       if (response.status === 402) {
-        throw new Error('AI service payment required. Please add credits to your workspace.');
+        return new Response(
+          JSON.stringify({ error: 'AI service payment required. Please add credits to your workspace.' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
       throw new Error('AI analysis failed');
     }
@@ -324,8 +438,8 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
     console.error('RAG analysis error:', error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        details: 'RAG analysis failed'
+        error: 'Analysis service temporarily unavailable',
+        details: error instanceof Error ? error.message : 'Unknown error'
       }),
       {
         status: 500,

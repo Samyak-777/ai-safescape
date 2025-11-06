@@ -5,14 +5,50 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Input validation schema
+interface SimulationRequest {
+  // No input parameters needed for now, but structure is ready for future extensions
+}
+
+function validateInput(body: unknown): { valid: boolean; error?: string } {
+  if (!body || typeof body !== 'object') {
+    return { valid: false, error: 'Invalid request body' };
+  }
+  return { valid: true };
+}
+
+function sanitizeOutput(text: string): string {
+  // Remove any potential script injections or excessive content
+  return text.trim().substring(0, 2000);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const GEMINI_API_KEY = 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
+    // Use environment variable for API key (GEMINI_API_KEY should be set in Supabase secrets)
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    if (!GEMINI_API_KEY) {
+      console.error('GEMINI_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'Service configuration error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+    // Validate input
+    const body = await req.json().catch(() => ({}));
+    const validation = validateInput(body);
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const prompt = `Create a single, realistic but fake scam message that could appear on WhatsApp or SMS in India. 
 The message should be designed to trick users into:
@@ -60,20 +96,23 @@ JSON_OBJECT`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Gemini API error:', response.status, errorText);
-      throw new Error(`Gemini API error: ${response.status}`);
+      console.error('Gemini API error:', response.status);
+      return new Response(
+        JSON.stringify({ error: 'AI service temporarily unavailable' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!text) {
-      throw new Error('No response from Gemini API');
+      throw new Error('No response from AI service');
     }
 
-    // Parse the response
+    // Parse and sanitize the response
     const parts = text.split('---');
-    const messageText = parts[0].trim();
+    const messageText = sanitizeOutput(parts[0]);
     let redFlags = ["Suspicious link", "Sense of urgency", "Poor grammar"];
     let correctAnswer = "All of the above";
 
@@ -82,11 +121,11 @@ JSON_OBJECT`;
         const jsonMatch = parts[1].match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
-          if (parsed.redFlags && Array.isArray(parsed.redFlags)) {
-            redFlags = parsed.redFlags;
+          if (parsed.redFlags && Array.isArray(parsed.redFlags) && parsed.redFlags.length === 3) {
+            redFlags = parsed.redFlags.map((flag: string) => sanitizeOutput(flag));
           }
-          if (parsed.correctAnswer) {
-            correctAnswer = parsed.correctAnswer;
+          if (parsed.correctAnswer && typeof parsed.correctAnswer === 'string') {
+            correctAnswer = sanitizeOutput(parsed.correctAnswer);
           }
         }
       } catch (parseError) {
@@ -107,7 +146,7 @@ JSON_OBJECT`;
   } catch (error) {
     console.error('Error in generate-simulation function:', error);
     return new Response(
-      JSON.stringify({ error: error.message || 'Failed to generate simulation' }),
+      JSON.stringify({ error: 'Failed to generate simulation' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
