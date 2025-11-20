@@ -20,43 +20,38 @@ import AnimatedSection from '@/components/AnimatedSection';
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  rememberMe: z.boolean().optional(),
+  rememberMe: z.boolean().optional()
 });
-
 const registerSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+  password: z.string().min(8, 'Password must be at least 8 characters').regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
   confirmPassword: z.string(),
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  agreeToTerms: z.boolean().refine(val => val === true, 'You must agree to the terms and conditions'),
+  agreeToTerms: z.boolean().refine(val => val === true, 'You must agree to the terms and conditions')
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ["confirmPassword"],
+  path: ["confirmPassword"]
 });
-
 type LoginFormData = z.infer<typeof loginSchema>;
 type RegisterFormData = z.infer<typeof registerSchema>;
-
 const Auth: React.FC = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
-    },
+      rememberMe: false
+    }
   });
-
   const registerForm = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -65,45 +60,51 @@ const Auth: React.FC = () => {
       confirmPassword: '',
       firstName: '',
       lastName: '',
-      agreeToTerms: false,
-    },
+      agreeToTerms: false
+    }
   });
 
   // Check if user is already authenticated
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         navigate('/dashboard');
       }
     });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
       if (session?.user) {
         navigate('/dashboard');
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
-
   const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const {
+        error
+      } = await supabase.auth.signInWithPassword({
         email: data.email,
-        password: data.password,
+        password: data.password
       });
-
       if (error) {
         toast({
           variant: "destructive",
           title: "Login Failed",
-          description: error.message,
+          description: error.message
         });
       } else {
         toast({
           title: "Welcome back!",
-          description: "You have successfully logged in.",
+          description: "You have successfully logged in."
         });
         navigate('/dashboard');
       }
@@ -112,49 +113,48 @@ const Auth: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: "An unexpected error occurred. Please try again."
       });
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleRegister = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
       const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
+      const {
+        error
+      } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           emailRedirectTo: redirectUrl,
           data: {
             first_name: data.firstName,
-            last_name: data.lastName,
-          },
-        },
+            last_name: data.lastName
+          }
+        }
       });
-
       if (error) {
         if (error.message.includes('already registered')) {
           toast({
             variant: "destructive",
             title: "Registration Failed",
-            description: "An account with this email already exists. Please try logging in instead.",
+            description: "An account with this email already exists. Please try logging in instead."
           });
           setActiveTab('login');
         } else {
           toast({
             variant: "destructive",
             title: "Registration Failed",
-            description: error.message,
+            description: error.message
           });
         }
       } else {
         toast({
           title: "Registration Successful!",
-          description: "Logging you in...",
+          description: "Logging you in..."
         });
         navigate('/dashboard');
       }
@@ -163,13 +163,12 @@ const Auth: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Registration Failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: "An unexpected error occurred. Please try again."
       });
     } finally {
       setIsLoading(false);
     }
   };
-
   const getPasswordStrength = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++;
@@ -177,22 +176,17 @@ const Auth: React.FC = () => {
     if (/[A-Z]/.test(password)) strength++;
     if (/\d/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
-    
     const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
     const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
-    
     return {
       score: strength,
       label: strengthLabels[Math.min(strength, 4)],
-      color: strengthColors[Math.min(strength, 4)],
+      color: strengthColors[Math.min(strength, 4)]
     };
   };
-
   const password = registerForm.watch('password');
   const passwordStrength = password ? getPasswordStrength(password) : null;
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
@@ -231,10 +225,7 @@ const Auth: React.FC = () => {
                 {activeTab === 'login' ? 'Welcome Back' : 'Create Account'}
               </CardTitle>
               <CardDescription>
-                {activeTab === 'login' 
-                  ? 'Sign in to access your advanced AI safety tools'
-                  : 'Join us in building a safer digital world'
-                }
+                {activeTab === 'login' ? 'Sign in to access your advanced AI safety tools' : 'Join us in building a safer digital world'}
               </CardDescription>
             </CardHeader>
 
@@ -256,59 +247,31 @@ const Auth: React.FC = () => {
                   <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="login-email">Email Address</Label>
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                        {...loginForm.register('email')}
-                      />
-                      {loginForm.formState.errors.email && (
-                        <p className="text-destructive text-sm flex items-center gap-1">
+                      <Input id="login-email" type="email" placeholder="you@example.com" className="transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...loginForm.register('email')} />
+                      {loginForm.formState.errors.email && <p className="text-destructive text-sm flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {loginForm.formState.errors.email.message}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="login-password">Password</Label>
                       <div className="relative">
-                        <Input
-                          id="login-password"
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Enter your password"
-                          className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                          {...loginForm.register('password')}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
+                        <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...loginForm.register('password')} />
+                        <Button type="button" variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                      {loginForm.formState.errors.password && (
-                        <p className="text-destructive text-sm flex items-center gap-1">
+                      {loginForm.formState.errors.password && <p className="text-destructive text-sm flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {loginForm.formState.errors.password.message}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="remember-me"
-                          {...loginForm.register('rememberMe')}
-                        />
-                        <Label 
-                          htmlFor="remember-me" 
-                          className="text-sm font-normal cursor-pointer"
-                        >
+                        <Checkbox id="remember-me" {...loginForm.register('rememberMe')} />
+                        <Label htmlFor="remember-me" className="text-sm font-normal cursor-pointer">
                           Remember me
                         </Label>
                       </div>
@@ -317,22 +280,14 @@ const Auth: React.FC = () => {
                       </Button>
                     </div>
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
+                    <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl" disabled={isLoading}>
+                      {isLoading ? <div className="flex items-center gap-2">
                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Signing in...
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
+                        </div> : <div className="flex items-center gap-2">
                           <LogIn className="h-4 w-4" />
                           Sign In
-                        </div>
-                      )}
+                        </div>}
                     </Button>
                   </form>
                 </TabsContent>
@@ -343,136 +298,76 @@ const Auth: React.FC = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input
-                          id="firstName"
-                          placeholder=""
-                          className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                          {...registerForm.register('firstName')}
-                        />
-                        {registerForm.formState.errors.firstName && (
-                          <p className="text-destructive text-xs flex items-center gap-1">
+                        <Input id="firstName" placeholder="" className="transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...registerForm.register('firstName')} />
+                        {registerForm.formState.errors.firstName && <p className="text-destructive text-xs flex items-center gap-1">
                             <AlertTriangle className="h-3 w-3" />
                             {registerForm.formState.errors.firstName.message}
-                          </p>
-                        )}
+                          </p>}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          placeholder=""
-                          className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                          {...registerForm.register('lastName')}
-                        />
-                        {registerForm.formState.errors.lastName && (
-                          <p className="text-destructive text-xs flex items-center gap-1">
+                        <Input id="lastName" placeholder="" className="transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...registerForm.register('lastName')} />
+                        {registerForm.formState.errors.lastName && <p className="text-destructive text-xs flex items-center gap-1">
                             <AlertTriangle className="h-3 w-3" />
                             {registerForm.formState.errors.lastName.message}
-                          </p>
-                        )}
+                          </p>}
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="register-email">Email Address</Label>
-                      <Input
-                        id="register-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                        {...registerForm.register('email')}
-                      />
-                      {registerForm.formState.errors.email && (
-                        <p className="text-destructive text-sm flex items-center gap-1">
+                      <Input id="register-email" type="email" placeholder="you@example.com" className="transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...registerForm.register('email')} />
+                      {registerForm.formState.errors.email && <p className="text-destructive text-sm flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {registerForm.formState.errors.email.message}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="register-password">Password</Label>
                       <div className="relative">
-                        <Input
-                          id="register-password"
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Create a strong password"
-                          className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                          {...registerForm.register('password')}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
+                        <Input id="register-password" type={showPassword ? 'text' : 'password'} placeholder="Create a strong password" className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...registerForm.register('password')} />
+                        <Button type="button" variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
                       
-                      {passwordStrength && (
-                        <div className="space-y-2">
+                      {passwordStrength && <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <div className="flex-1 bg-muted rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
-                                style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
-                              />
+                              <div className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`} style={{
+                            width: `${passwordStrength.score / 5 * 100}%`
+                          }} />
                             </div>
                             <span className="text-xs text-muted-foreground">
                               {passwordStrength.label}
                             </span>
                           </div>
-                        </div>
-                      )}
+                        </div>}
                       
-                      {registerForm.formState.errors.password && (
-                        <p className="text-destructive text-sm flex items-center gap-1">
+                      {registerForm.formState.errors.password && <p className="text-destructive text-sm flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {registerForm.formState.errors.password.message}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword">Confirm Password</Label>
                       <div className="relative">
-                        <Input
-                          id="confirmPassword"
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          placeholder="Confirm your password"
-                          className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                          {...registerForm.register('confirmPassword')}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        >
+                        <Input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm your password" className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20" {...registerForm.register('confirmPassword')} />
+                        <Button type="button" variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                           {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                      {registerForm.formState.errors.confirmPassword && (
-                        <p className="text-destructive text-sm flex items-center gap-1">
+                      {registerForm.formState.errors.confirmPassword && <p className="text-destructive text-sm flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {registerForm.formState.errors.confirmPassword.message}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="agree-terms"
-                        className="mt-1"
-                        {...registerForm.register('agreeToTerms')}
-                      />
-                      <Label 
-                        htmlFor="agree-terms" 
-                        className="text-sm font-normal cursor-pointer leading-relaxed"
-                      >
+                      <Checkbox id="agree-terms" className="mt-1" {...registerForm.register('agreeToTerms')} />
+                      <Label htmlFor="agree-terms" className="text-sm font-normal cursor-pointer leading-relaxed">
                         I agree to the{' '}
                         <Button variant="link" className="p-0 h-auto text-sm underline">
                           Terms of Service
@@ -483,29 +378,19 @@ const Auth: React.FC = () => {
                         </Button>
                       </Label>
                     </div>
-                    {registerForm.formState.errors.agreeToTerms && (
-                      <p className="text-destructive text-sm flex items-center gap-1">
+                    {registerForm.formState.errors.agreeToTerms && <p className="text-destructive text-sm flex items-center gap-1">
                         <AlertTriangle className="h-3 w-3" />
                         {registerForm.formState.errors.agreeToTerms.message}
-                      </p>
-                    )}
+                      </p>}
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
+                    <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl" disabled={isLoading}>
+                      {isLoading ? <div className="flex items-center gap-2">
                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Creating account...
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
+                        </div> : <div className="flex items-center gap-2">
                           <UserPlus className="h-4 w-4" />
                           Create Account
-                        </div>
-                      )}
+                        </div>}
                     </Button>
                   </form>
                 </TabsContent>
@@ -525,15 +410,10 @@ const Auth: React.FC = () => {
 
           {/* Additional Information */}
           <div className="text-center mt-6 text-sm text-muted-foreground">
-            <p>
-              Protected by advanced security measures including rate limiting, 
-              CSRF protection, and secure session management.
-            </p>
+            
           </div>
         </AnimatedSection>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Auth;
