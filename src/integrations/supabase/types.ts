@@ -89,6 +89,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_analyses: {
+        Row: {
+          analysis_data: Json | null
+          content_preview: string | null
+          content_type: string
+          created_at: string
+          id: string
+          risk_level: string
+          user_id: string
+        }
+        Insert: {
+          analysis_data?: Json | null
+          content_preview?: string | null
+          content_type: string
+          created_at?: string
+          id?: string
+          risk_level: string
+          user_id: string
+        }
+        Update: {
+          analysis_data?: Json | null
+          content_preview?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          risk_level?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
