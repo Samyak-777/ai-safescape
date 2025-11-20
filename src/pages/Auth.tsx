@@ -270,7 +270,11 @@ const Auth: React.FC = () => {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="remember-me" {...loginForm.register('rememberMe')} />
+                        <Checkbox 
+                          id="remember-me" 
+                          checked={loginForm.watch('rememberMe')}
+                          onCheckedChange={(checked) => loginForm.setValue('rememberMe', checked as boolean)}
+                        />
                         <Label htmlFor="remember-me" className="text-sm font-normal cursor-pointer">
                           Remember me
                         </Label>
@@ -366,7 +370,12 @@ const Auth: React.FC = () => {
                     </div>
 
                     <div className="flex items-start space-x-2">
-                      <Checkbox id="agree-terms" className="mt-1" {...registerForm.register('agreeToTerms')} />
+                      <Checkbox 
+                        id="agree-terms" 
+                        className="mt-1" 
+                        checked={registerForm.watch('agreeToTerms')}
+                        onCheckedChange={(checked) => registerForm.setValue('agreeToTerms', checked as boolean)}
+                      />
                       <Label htmlFor="agree-terms" className="text-sm font-normal cursor-pointer leading-relaxed">
                         I agree to the{' '}
                         <Button variant="link" className="p-0 h-auto text-sm underline">
@@ -378,7 +387,12 @@ const Auth: React.FC = () => {
                         </Button>
                       </Label>
                     </div>
-                    {registerForm.formState.errors.agreeToTerms}
+                    {registerForm.formState.errors.agreeToTerms && (
+                      <p className="text-destructive text-sm flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {registerForm.formState.errors.agreeToTerms.message}
+                      </p>
+                    )}
 
                     <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl" disabled={isLoading}>
                       {isLoading ? <div className="flex items-center gap-2">
