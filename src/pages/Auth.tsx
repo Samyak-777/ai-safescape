@@ -73,13 +73,13 @@ const Auth: React.FC = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
-        navigate('/');
+        navigate('/dashboard');
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        navigate('/');
+        navigate('/dashboard');
       }
     });
 
@@ -105,7 +105,7 @@ const Auth: React.FC = () => {
           title: "Welcome back!",
           description: "You have successfully logged in.",
         });
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -154,9 +154,9 @@ const Auth: React.FC = () => {
       } else {
         toast({
           title: "Registration Successful!",
-          description: "Please check your email to verify your account before logging in.",
+          description: "Logging you in...",
         });
-        setActiveTab('login');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);

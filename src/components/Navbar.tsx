@@ -1,16 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
 import { Github } from 'lucide-react';
 import Button from './Button';
 import MissionModal from './MissionModal';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMissionModalOpen, setIsMissionModalOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +26,20 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Check auth state
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
 
@@ -29,10 +47,17 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success('Logged out successfully');
+    navigate('/');
+  };
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Features', path: '/features' },
     { name: 'Threat Intel', path: '/threat-intel' },
+    { name: 'Statistics', path: '/statistics' },
     { name: 'Simulator', path: '/simulator' },
     { name: 'Documentation', path: '/documentation' },
   ];
@@ -90,15 +115,39 @@ const Navbar: React.FC = () => {
               GitHub
             </a>
 
-            <Link to="/auth">
-              <Button 
-                variant="primary"
-                size="sm"
-                className="ml-4"
-              >
-                Sign In
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/dashboard">
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    className="ml-4 flex items-center gap-2"
+                  >
+                    <LayoutDashboard size={16} />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button 
+                  variant="primary"
+                  size="sm"
+                  className="ml-2 flex items-center gap-2"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={16} />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button 
+                  variant="primary"
+                  size="sm"
+                  className="ml-4"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </nav>
 
       <MissionModal open={isMissionModalOpen} onOpenChange={setIsMissionModalOpen} />
@@ -152,14 +201,36 @@ const Navbar: React.FC = () => {
                 GitHub
               </a>
 
-              <Link to="/auth">
-                <Button 
-                  variant="primary"
-                  className="mt-2 w-full"
-                >
-                  Sign In
-                </Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link to="/dashboard" className="w-full">
+                    <Button 
+                      variant="outline"
+                      className="mt-2 w-full flex items-center gap-2"
+                    >
+                      <LayoutDashboard size={16} />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="primary"
+                    className="mt-2 w-full flex items-center gap-2"
+                    onClick={handleLogout}
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth">
+                  <Button 
+                    variant="primary"
+                    className="mt-2 w-full"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              )}
             </nav>
           </div>
         </div>
