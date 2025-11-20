@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_stats: {
+        Row: {
+          created_at: string | null
+          id: string
+          most_common_threat: string | null
+          total_analyses: number | null
+          total_threats: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          most_common_threat?: string | null
+          total_analyses?: number | null
+          total_threats?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          most_common_threat?: string | null
+          total_analyses?: number | null
+          total_threats?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          created_at: string | null
+          feedback_text: string | null
+          id: string
+          rating: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          feedback_text?: string | null
+          id?: string
+          rating: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          feedback_text?: string | null
+          id?: string
+          rating?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar: string | null
@@ -58,9 +109,12 @@ export type Database = {
           first_detected_at: string
           id: string
           last_seen_at: string
+          platform: string | null
           primary_domain: string | null
           severity: string
+          status: string | null
           threat_category: string
+          threat_title: string | null
           threat_type: string
         }
         Insert: {
@@ -70,9 +124,12 @@ export type Database = {
           first_detected_at?: string
           id?: string
           last_seen_at?: string
+          platform?: string | null
           primary_domain?: string | null
           severity?: string
+          status?: string | null
           threat_category: string
+          threat_title?: string | null
           threat_type: string
         }
         Update: {
@@ -82,10 +139,43 @@ export type Database = {
           first_detected_at?: string
           id?: string
           last_seen_at?: string
+          platform?: string | null
           primary_domain?: string | null
           severity?: string
+          status?: string | null
           threat_category?: string
+          threat_title?: string | null
           threat_type?: string
+        }
+        Relationships: []
+      }
+      user_analyses: {
+        Row: {
+          analysis_data: Json | null
+          content_preview: string | null
+          content_type: string
+          created_at: string
+          id: string
+          risk_level: string
+          user_id: string
+        }
+        Insert: {
+          analysis_data?: Json | null
+          content_preview?: string | null
+          content_type: string
+          created_at?: string
+          id?: string
+          risk_level: string
+          user_id: string
+        }
+        Update: {
+          analysis_data?: Json | null
+          content_preview?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          risk_level?: string
+          user_id?: string
         }
         Relationships: []
       }
