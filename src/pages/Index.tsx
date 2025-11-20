@@ -13,7 +13,6 @@ import ServiceStatusIndicator from '@/components/ServiceStatusIndicator';
 import UNSDGAlignment from '@/components/UNSDGAlignment';
 import MisinformationRadar from '@/components/MisinformationRadar';
 import { LinkSentinel } from '@/components/LinkSentinel';
-import FeedbackButton from '@/components/FeedbackButton';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Shield, FileText, Image, Server, Search, Code, BarChart3 } from 'lucide-react';
@@ -50,7 +49,7 @@ const Index: React.FC = () => {
       </Dialog>
 
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-4 right-20 z-50 flex flex-col gap-2">
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
         <ServiceStatusIndicator />
         <Button
           onClick={() => setShowAnalytics(true)}
@@ -61,9 +60,6 @@ const Index: React.FC = () => {
           <BarChart3 className="h-5 w-5" />
         </Button>
       </div>
-
-      {/* Feedback Button */}
-      <FeedbackButton />
       
       <main className="flex-grow">
         <Hero />
