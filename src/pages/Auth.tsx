@@ -378,10 +378,7 @@ const Auth: React.FC = () => {
                         </Button>
                       </Label>
                     </div>
-                    {registerForm.formState.errors.agreeToTerms && <p className="text-destructive text-sm flex items-center gap-1">
-                        <AlertTriangle className="h-3 w-3" />
-                        {registerForm.formState.errors.agreeToTerms.message}
-                      </p>}
+                    {registerForm.formState.errors.agreeToTerms}
 
                     <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl" disabled={isLoading}>
                       {isLoading ? <div className="flex items-center gap-2">
