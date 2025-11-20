@@ -16,7 +16,8 @@ interface ThreatIntelData {
   category: string;
   platform: string;
   sourceDomain: string | null;
-  riskLevel: 'Critical' | 'High';
+  riskLevel: 'Critical' | 'High' | 'Low';
+  status: 'misinformation' | 'verified_true';
   timestamp: {
     seconds: number;
     nanoseconds: number;
@@ -32,7 +33,7 @@ const ThreatIntel = () => {
     const q = query(
       collection(db, 'threatIntel'),
       orderBy('timestamp', 'desc'),
-      limit(5)
+      limit(10)
     );
 
     const unsubscribe = onSnapshot(
@@ -56,21 +57,33 @@ const ThreatIntel = () => {
     return () => unsubscribe();
   }, []);
 
-  const getRiskLevelColor = (riskLevel: string) => {
-    switch (riskLevel) {
-      case 'Critical':
-        return 'bg-[#EA4335] text-white';
-      case 'High':
-        return 'bg-[#FBBC05] text-black';
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'misinformation':
+        return {
+          bg: 'bg-[#EA4335]',
+          text: 'text-white',
+          label: '⚠️ Misinformation Alert'
+        };
+      case 'verified_true':
+        return {
+          bg: 'bg-[#34A853]',
+          text: 'text-white',
+          label: '✅ Verified True'
+        };
       default:
-        return 'bg-blue-500 text-white';
+        return {
+          bg: 'bg-muted',
+          text: 'text-foreground',
+          label: status
+        };
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8 pt-24">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <Shield className="h-8 w-8 text-primary" />
@@ -87,62 +100,58 @@ const ThreatIntel = () => {
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
               <p className="mt-4 text-muted-foreground">Loading threat intelligence...</p>
             </div>
-          ) : threats.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Shield className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-lg font-medium">No threats detected yet</p>
-                <p className="text-muted-foreground mt-2">
-                  The community is safe! Threat intelligence will appear here as they're detected.
-                </p>
-              </CardContent>
-            </Card>
           ) : (
             <div className="space-y-4">
-              {threats.map((threat) => (
-                <Card key={threat.id} className="hover:shadow-lg transition-shadow border-l-4" style={{
-                  borderLeftColor: threat.riskLevel === 'Critical' ? '#EA4335' : '#FBBC05'
-                }}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start gap-3">
-                      <Badge className={`${getRiskLevelColor(threat.riskLevel)} px-3 py-1 text-xs font-semibold rounded-full`}>
-                        {threat.riskLevel.toUpperCase()}
-                      </Badge>
-                      <CardTitle className="text-xl font-bold leading-tight flex-1">
-                        {threat.threatTitle}
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-base leading-relaxed text-foreground">
-                      {threat.threatDescription}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-4 pt-2 border-t text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" />
-                        <span>{threat.platform}</span>
+              {threats.map((threat) => {
+                const statusStyle = getStatusStyle(threat.status);
+                return (
+                  <Card key={threat.id} className="hover:shadow-lg transition-shadow border border-border">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-3 flex-wrap">
+                        <Badge className={`${statusStyle.bg} ${statusStyle.text} px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap`}>
+                          {statusStyle.label}
+                        </Badge>
+                        <CardTitle className="text-xl font-bold leading-tight flex-1">
+                          {threat.threatTitle}
+                        </CardTitle>
                       </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-base leading-relaxed text-foreground">
+                        {threat.threatDescription}
+                      </p>
                       
-                      {threat.sourceDomain && (
+                      <div className="flex flex-wrap gap-4 pt-2 border-t text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
-                          <Link2 className="h-4 w-4" />
-                          <code className="bg-muted px-2 py-0.5 rounded text-xs">
-                            {threat.sourceDomain}
-                          </code>
+                          <span>🏷️</span>
+                          <span>{threat.category}</span>
                         </div>
-                      )}
-                      
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        <span>
-                          Seen {formatDistanceToNow(new Date(threat.timestamp.seconds * 1000), { addSuffix: true })}
-                        </span>
+                        
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="h-4 w-4" />
+                          <span>{threat.platform}</span>
+                        </div>
+                        
+                        {threat.sourceDomain && (
+                          <div className="flex items-center gap-2">
+                            <Link2 className="h-4 w-4" />
+                            <code className="bg-muted px-2 py-0.5 rounded text-xs">
+                              {threat.sourceDomain}
+                            </code>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          <span>
+                            Seen {formatDistanceToNow(new Date(threat.timestamp.seconds * 1000), { addSuffix: true })}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>
