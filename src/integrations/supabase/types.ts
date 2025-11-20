@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          avatar: string | null
+          bio: string | null
+          created_at: string
+          department: string
+          email: string
+          id: string
+          name: string
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          avatar?: string | null
+          bio?: string | null
+          created_at?: string
+          department: string
+          email: string
+          id: string
+          name: string
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          avatar?: string | null
+          bio?: string | null
+          created_at?: string
+          department?: string
+          email?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
       threat_intel: {
         Row: {
           created_at: string
@@ -53,11 +89,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       upsert_threat_intel: {
         Args: {
           p_description: string
@@ -70,7 +134,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "professor" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -197,6 +261,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "professor", "admin"],
+    },
   },
 } as const
