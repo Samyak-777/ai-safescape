@@ -13,6 +13,12 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { z } from 'zod';
+
+const feedbackSchema = z.object({
+  rating: z.number().min(1).max(5),
+  feedback_text: z.string().max(1000, 'Feedback must be 1000 characters or less').optional()
+});
 
 const FeedbackButton = () => {
   const location = useLocation();
@@ -33,22 +39,35 @@ const FeedbackButton = () => {
       return;
     }
 
+    // Validate input
+    try {
+      feedbackSchema.parse({ rating, feedback_text: feedback });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      }
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      // Get current user (if logged in)
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Insert feedback with user_id (null if not logged in)
+      if (!user) {
+        toast.error('Please sign in to submit feedback');
+        setSubmitting(false);
+        return;
+      }
+
       const { error } = await supabase.from('feedback').insert({
-        user_id: user?.id || null,
+        user_id: user.id,
         rating,
-        feedback_text: feedback,
+        feedback_text: feedback || null,
       });
 
       if (error) {
-        toast.error('Failed to submit feedback');
-        console.error('Feedback submission error:', error);
+        toast.error('Unable to submit feedback. Please try again.');
         setSubmitting(false);
         return;
       }
@@ -58,8 +77,7 @@ const FeedbackButton = () => {
       setRating(0);
       setFeedback('');
     } catch (error) {
-      console.error('Feedback submission error:', error);
-      toast.error('Failed to submit feedback');
+      toast.error('Unable to submit feedback. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -117,12 +135,16 @@ const FeedbackButton = () => {
             </label>
             <Textarea
               id="feedback"
-              placeholder="Please share your suggestions or report any issues..."
+              placeholder="Please share your suggestions or report any issues... (max 1000 characters)"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={5}
               className="resize-none"
+              maxLength={1000}
             />
+            <p className="text-xs text-muted-foreground text-right">
+              {feedback.length}/1000 characters
+            </p>
           </div>
 
           {/* Submit Button */}
