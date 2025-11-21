@@ -1,5 +1,5 @@
 
-// Advanced Gemini 2.5 Flash/Pro API integration with Google I/O 2025 features
+// Advanced Gemini 3 Flash/Pro API integration with Google I/O 2025 features
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 

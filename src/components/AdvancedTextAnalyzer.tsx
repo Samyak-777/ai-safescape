@@ -215,7 +215,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-purple-500" />
             Advanced AI Text Analysis
-            <Badge variant="outline" className="ml-2">Gemini 2.5</Badge>
+            <Badge variant="outline" className="ml-2">Gemini 3</Badge>
           </CardTitle>
           <CardDescription>
             Next-generation content analysis with structured outputs and advanced reasoning

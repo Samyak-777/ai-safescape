@@ -1,5 +1,5 @@
 
-// Personalized AI Assistant using Gemini 2.5 Pro for intelligent recommendations
+// Personalized AI Assistant using Gemini 3 Pro for intelligent recommendations
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 

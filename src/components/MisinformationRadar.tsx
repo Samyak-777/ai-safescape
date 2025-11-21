@@ -129,7 +129,7 @@ const MisinformationRadar: React.FC = () => {
                       ) : (
                         <>
                           <Brain className="w-3.5 h-3.5" />
-                          Analyzed by Gemini 2.5 Pro
+                          Analyzed by Gemini 3 Pro
                         </>
                       )}
                     </span>
@@ -138,7 +138,7 @@ const MisinformationRadar: React.FC = () => {
                     <p className="text-sm">
                       {result.source === 'REAL-TIME_DATABASE'
                         ? 'This result was instantly verified against our curated database of known misinformation for maximum speed and accuracy.'
-                        : "This novel content was analyzed using Google's advanced Gemini 2.5 Pro model for a deep, contextual understanding."}
+                        : "This novel content was analyzed using Google's advanced Gemini 3 Pro model for a deep, contextual understanding."}
                     </p>
                   </TooltipContent>
                 </Tooltip>
