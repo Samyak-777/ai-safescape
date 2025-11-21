@@ -103,7 +103,6 @@ export type Database = {
       }
       threat_intel: {
         Row: {
-          created_at: string
           description: string
           detection_count: number
           first_detected_at: string
@@ -118,7 +117,6 @@ export type Database = {
           threat_type: string
         }
         Insert: {
-          created_at?: string
           description: string
           detection_count?: number
           first_detected_at?: string
@@ -133,7 +131,6 @@ export type Database = {
           threat_type: string
         }
         Update: {
-          created_at?: string
           description?: string
           detection_count?: number
           first_detected_at?: string
