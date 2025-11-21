@@ -27,8 +27,7 @@ const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters').regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
   confirmPassword: z.string(),
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  agreeToTerms: z.boolean().refine(val => val === true, 'You must agree to the terms and conditions')
+  lastName: z.string().min(2, 'Last name must be at least 2 characters')
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"]
@@ -59,8 +58,7 @@ const Auth: React.FC = () => {
       password: '',
       confirmPassword: '',
       firstName: '',
-      lastName: '',
-      agreeToTerms: false
+      lastName: ''
     }
   });
 
@@ -122,8 +120,9 @@ const Auth: React.FC = () => {
   const handleRegister = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/dashboard`;
       const {
+        data: authData,
         error
       } = await supabase.auth.signUp({
         email: data.email,
@@ -152,11 +151,18 @@ const Auth: React.FC = () => {
           });
         }
       } else {
-        toast({
-          title: "Registration Successful!",
-          description: "Logging you in..."
-        });
-        navigate('/dashboard');
+        if (authData.user && !authData.user.confirmed_at) {
+          toast({
+            title: "Registration Successful!",
+            description: "Please check your email to verify your account before signing in."
+          });
+        } else {
+          toast({
+            title: "Registration Successful!",
+            description: "Logging you in..."
+          });
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
       console.error('Registration error:', error);
@@ -369,30 +375,6 @@ const Auth: React.FC = () => {
                         </p>}
                     </div>
 
-                    <div className="flex items-start space-x-2">
-                      <Checkbox 
-                        id="agree-terms" 
-                        className="mt-1" 
-                        checked={registerForm.watch('agreeToTerms')}
-                        onCheckedChange={(checked) => registerForm.setValue('agreeToTerms', checked as boolean)}
-                      />
-                      <Label htmlFor="agree-terms" className="text-sm font-normal cursor-pointer leading-relaxed">
-                        I agree to the{' '}
-                        <Button variant="link" className="p-0 h-auto text-sm underline">
-                          Terms of Service
-                        </Button>
-                        {' '}and{' '}
-                        <Button variant="link" className="p-0 h-auto text-sm underline">
-                          Privacy Policy
-                        </Button>
-                      </Label>
-                    </div>
-                    {registerForm.formState.errors.agreeToTerms && (
-                      <p className="text-destructive text-sm flex items-center gap-1">
-                        <AlertTriangle className="h-3 w-3" />
-                        {registerForm.formState.errors.agreeToTerms.message}
-                      </p>
-                    )}
 
                     <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-200 shadow-lg hover:shadow-xl" disabled={isLoading}>
                       {isLoading ? <div className="flex items-center gap-2">

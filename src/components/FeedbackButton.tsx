@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MessageSquare, Star } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,11 +15,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const FeedbackButton = () => {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [hoveredStar, setHoveredStar] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+
+  // Don't show on auth page
+  if (location.pathname === '/auth') {
+    return null;
+  }
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -54,7 +61,7 @@ const FeedbackButton = () => {
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="fixed bottom-6 right-6 rounded-full shadow-lg z-50"
+          className="fixed bottom-6 right-6 rounded-full shadow-lg z-40"
           aria-label="Provide feedback"
         >
           <MessageSquare className="mr-2 h-5 w-5" />

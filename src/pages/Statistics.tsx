@@ -14,12 +14,12 @@ const Statistics = () => {
   });
 
   const [categoryData, setCategoryData] = useState([
-    { category: 'Financial Scam', count: 145 },
-    { category: 'Health Misinformation', count: 89 },
-    { category: 'Social/Communal', count: 67 },
-    { category: 'Political Misinformation', count: 54 },
-    { category: 'E-commerce Scam', count: 43 },
-    { category: 'Social Media Rumor', count: 38 },
+    { category: 'Financial Scam', count: 145, fill: 'hsl(var(--chart-1))' },
+    { category: 'Health Misinformation', count: 89, fill: 'hsl(var(--chart-2))' },
+    { category: 'Social/Communal', count: 67, fill: 'hsl(var(--chart-3))' },
+    { category: 'Political Misinformation', count: 54, fill: 'hsl(var(--chart-4))' },
+    { category: 'E-commerce Scam', count: 43, fill: 'hsl(var(--chart-5))' },
+    { category: 'Social Media Rumor', count: 38, fill: 'hsl(var(--chart-1))' },
   ]);
 
   useEffect(() => {
@@ -58,39 +58,45 @@ const Statistics = () => {
 
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
+            <Card className="border-l-4 border-l-chart-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Community Analyses</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
+                <Activity className="h-4 w-4 text-chart-1" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{stats.totalAnalyses.toLocaleString()}</div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-chart-1 to-chart-2 bg-clip-text text-transparent">
+                  {stats.totalAnalyses.toLocaleString()}
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Content items analyzed by our community
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-l-4 border-l-chart-3">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Threats Identified</CardTitle>
-                <Shield className="h-4 w-4 text-muted-foreground" />
+                <Shield className="h-4 w-4 text-chart-3" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{stats.totalThreats.toLocaleString()}</div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-chart-3 to-chart-4 bg-clip-text text-transparent">
+                  {stats.totalThreats.toLocaleString()}
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   High-risk items detected and flagged
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-l-4 border-l-chart-5">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Most Common Threat</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                <AlertTriangle className="h-4 w-4 text-chart-5" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{stats.mostCommonThreat}</div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-chart-5 to-primary bg-clip-text text-transparent">
+                  {stats.mostCommonThreat}
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Leading category of threats detected
                 </p>
@@ -125,7 +131,6 @@ const Statistics = () => {
                   />
                   <Bar 
                     dataKey="count" 
-                    fill="hsl(var(--primary))" 
                     radius={[8, 8, 0, 0]}
                   />
                 </BarChart>
