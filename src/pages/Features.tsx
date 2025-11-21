@@ -551,7 +551,7 @@ const Features: React.FC = () => {
                     Gemini AI Analysis
                   </h4>
                   <p className="text-sm text-muted-foreground">
-                    Novel content analyzed using Google's Gemini 2.5 Pro for deep, contextual understanding
+                    Novel content analyzed using Google's Gemini 3 Pro for deep, contextual understanding
                   </p>
                 </div>
                 
@@ -676,7 +676,7 @@ const Features: React.FC = () => {
                 <div className="bg-muted/50 rounded-xl p-4">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <Brain size={18} className="text-purple-500" />
-                    Gemini 2.5 Pro Fallback
+                    Gemini 3 Pro Fallback
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     Novel content analyzed with deep contextual AI when database match isn't found

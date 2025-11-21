@@ -120,7 +120,6 @@ const Auth: React.FC = () => {
   const handleRegister = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      const redirectUrl = `${window.location.origin}/dashboard`;
       const {
         data: authData,
         error
@@ -128,7 +127,6 @@ const Auth: React.FC = () => {
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: {
             first_name: data.firstName,
             last_name: data.lastName
@@ -151,18 +149,11 @@ const Auth: React.FC = () => {
           });
         }
       } else {
-        if (authData.user && !authData.user.confirmed_at) {
-          toast({
-            title: "Registration Successful!",
-            description: "Please check your email to verify your account before signing in."
-          });
-        } else {
-          toast({
-            title: "Registration Successful!",
-            description: "Logging you in..."
-          });
-          navigate('/dashboard');
-        }
+        toast({
+          title: "Registration Successful!",
+          description: "Logging you in..."
+        });
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);

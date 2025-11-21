@@ -35,25 +35,34 @@ const FeedbackButton = () => {
 
     setSubmitting(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
+    try {
+      // Get current user (if logged in)
+      const { data: { user } } = await supabase.auth.getUser();
 
-    const { error } = await supabase.from('feedback').insert({
-      user_id: user?.id || null,
-      rating,
-      feedback_text: feedback,
-    });
+      // Insert feedback with user_id (null if not logged in)
+      const { error } = await supabase.from('feedback').insert({
+        user_id: user?.id || null,
+        rating,
+        feedback_text: feedback,
+      });
 
-    setSubmitting(false);
+      if (error) {
+        toast.error('Failed to submit feedback');
+        console.error('Feedback submission error:', error);
+        setSubmitting(false);
+        return;
+      }
 
-    if (error) {
+      toast.success('Thank you for your feedback!');
+      setOpen(false);
+      setRating(0);
+      setFeedback('');
+    } catch (error) {
+      console.error('Feedback submission error:', error);
       toast.error('Failed to submit feedback');
-      return;
+    } finally {
+      setSubmitting(false);
     }
-
-    toast.success('Thank you for your feedback!');
-    setOpen(false);
-    setRating(0);
-    setFeedback('');
   };
 
   return (
@@ -61,7 +70,7 @@ const FeedbackButton = () => {
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="fixed bottom-6 right-6 rounded-full shadow-lg z-40"
+          className="fixed bottom-6 left-6 rounded-full shadow-lg z-40"
           aria-label="Provide feedback"
         >
           <MessageSquare className="mr-2 h-5 w-5" />

@@ -161,14 +161,14 @@ const AnalysisToolsEnhanced: React.FC = () => {
                   <Sparkles className="h-5 w-5 text-purple-500" />
                   Gemini AI Advanced Analysis
                   <Badge variant="outline" className="ml-2">
-                    Gemini 2.5 Pro
+                    Gemini 3 Pro
                   </Badge>
                   <Badge variant="secondary" className="ml-1">
                     2025
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  State-of-the-art content analysis using Gemini 2.5 Pro with function calling, 
+                  State-of-the-art content analysis using Gemini 3 Pro with function calling, 
                   structured outputs, streaming capabilities, and advanced reasoning for 
                   context-aware safety detection and real-time threat assessment.
                 </CardDescription>
