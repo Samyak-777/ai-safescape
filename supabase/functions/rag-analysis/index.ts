@@ -324,11 +324,12 @@ Format your response as JSON with keys: credibility_score (0-100), verdict, anal
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-3-pro-preview',
           messages: [
             { role: 'system', content: 'You are a misinformation detection expert. Provide clear, concise analysis.' },
             { role: 'user', content: limitedPrompt }
           ],
+          temperature: 1.0,
         }),
       });
 
@@ -392,11 +393,20 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-3-pro-preview',
         messages: [
-          { role: 'system', content: 'You are an expert misinformation analyst. Provide detailed, evidence-based analysis.' },
+          { role: 'system', content: 'You are an expert misinformation analyst. Provide detailed, evidence-based analysis with step-by-step reasoning. Include a "reasoning_steps" field in your JSON response showing your thought process.' },
           { role: 'user', content: deepAnalysisPrompt }
         ],
+        temperature: 1.0,
+        tools: [{
+          googleSearchRetrieval: {
+            dynamicRetrievalConfig: {
+              mode: 'MODE_DYNAMIC',
+              dynamicThreshold: 0.7
+            }
+          }
+        }]
       }),
     });
 
@@ -418,6 +428,7 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
 
     const aiData = await response.json();
     const deepAnalysis = aiData.choices[0].message.content;
+    const groundingMetadata = aiData.choices[0].message.groundingMetadata;
 
     return new Response(
       JSON.stringify({
@@ -425,8 +436,9 @@ Format as JSON with keys: credibility_score, risk_level, red_flags (array), verd
         source: 'DEEP_AI_ANALYSIS',
         isKnownMisinformation: false,
         aiAnalysis: deepAnalysis,
+        groundingMetadata: groundingMetadata || null,
         urlMetadata,
-        message: 'Full AI analysis completed using Gemini 2.5 Pro'
+        message: 'Full AI analysis completed using Gemini 3 Pro with real-time search'
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
