@@ -9,7 +9,7 @@ import AsyncTextAnalyzer from './AsyncTextAnalyzer';
 import TextAnalyzer from './TextAnalyzer';
 import ImageAnalyzer from './ImageAnalyzer';
 import AdvancedTextAnalyzer from './AdvancedTextAnalyzer';
-import AdvancedSecurityAnalyzer from './AdvancedSecurityAnalyzer';
+import VideoAnalyzer from './VideoAnalyzer';
 import PersonalizedAssistant from './PersonalizedAssistant';
 import AdvancedAnalysisPanel from './AdvancedAnalysisPanel';
 import AnimatedSection from './AnimatedSection';
@@ -271,24 +271,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="security" className="mt-6">
-            <Card className="border-red-500/20 bg-gradient-to-br from-red-500/5 to-pink-500/5">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-red-500" />
-                  Security
-                  <Badge variant="destructive" className="ml-2">
-                    Advanced Security Analysis
-                  </Badge>
-                </CardTitle>
-                <CardDescription>
-                  Advanced security analysis with threat intelligence integration, 
-                  advanced pattern detection, social engineering identification, and comprehensive risk scoring.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <AdvancedSecurityAnalyzer />
-              </CardContent>
-            </Card>
+            <VideoAnalyzer />
           </TabsContent>
 
           <TabsContent value="assistant" className="mt-6">

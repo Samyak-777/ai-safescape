@@ -60,7 +60,7 @@ export const performComprehensiveImageAnalysis = async (imageData: string): Prom
     const base64Data = prepareImageData(imageData);
     
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -155,7 +155,7 @@ Return your analysis in this EXACT JSON format:
             ]
           }],
           generationConfig: {
-            temperature: 0.2,
+            temperature: 1.0,
             maxOutputTokens: 4000,
           },
           safetySettings: [

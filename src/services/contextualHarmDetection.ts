@@ -91,7 +91,7 @@ Provide urgent assessment in JSON format:
 IMPORTANT: This is for user safety. Be thorough but avoid false positives that could cause unnecessary alarm.`;
 
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -104,7 +104,7 @@ IMPORTANT: This is for user safety. Be thorough but avoid false positives that c
             }]
           }],
           generationConfig: {
-            temperature: 0.05, // Very low temperature for consistent safety analysis
+            temperature: 1.0,
             maxOutputTokens: 1500,
           },
           safetySettings: [

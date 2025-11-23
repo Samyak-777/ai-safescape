@@ -89,7 +89,7 @@ Format your response as valid JSON with this structure:
 }`;
 
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -102,7 +102,7 @@ Format your response as valid JSON with this structure:
             }]
           }],
           generationConfig: {
-            temperature: 0.3,
+            temperature: 1.0,
             maxOutputTokens: 2000,
             candidateCount: 1,
           },

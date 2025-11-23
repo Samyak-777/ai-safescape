@@ -78,7 +78,7 @@ Provide analysis in JSON format:
 }`;
 
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -91,7 +91,7 @@ Provide analysis in JSON format:
             }]
           }],
           generationConfig: {
-            temperature: 0.1,
+            temperature: 1.0,
             maxOutputTokens: 1500,
           },
           safetySettings: [
