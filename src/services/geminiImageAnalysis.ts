@@ -41,7 +41,7 @@ const analyzeImageManipulation = async (imageData: string): Promise<ImageAnalysi
     const base64Data = prepareImageData(imageData);
     
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -78,7 +78,7 @@ const analyzeImageManipulation = async (imageData: string): Promise<ImageAnalysi
             ]
           }],
           generationConfig: {
-            temperature: 1.0,
+            temperature: 0.1,
             maxOutputTokens: 1000,
           },
         }),
@@ -129,7 +129,7 @@ const analyzeImageContentSafety = async (imageData: string): Promise<ImageAnalys
     const base64Data = prepareImageData(imageData);
     
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -166,7 +166,7 @@ const analyzeImageContentSafety = async (imageData: string): Promise<ImageAnalys
             ]
           }],
           generationConfig: {
-            temperature: 1.0,
+            temperature: 0.1,
             maxOutputTokens: 1000,
           },
           safetySettings: [
@@ -236,7 +236,7 @@ const extractTextFromImage = async (imageData: string): Promise<ImageAnalysisRes
     const base64Data = prepareImageData(imageData);
     
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -272,7 +272,7 @@ const extractTextFromImage = async (imageData: string): Promise<ImageAnalysisRes
             ]
           }],
           generationConfig: {
-            temperature: 1.0,
+            temperature: 0.1,
             maxOutputTokens: 1500,
           },
         }),

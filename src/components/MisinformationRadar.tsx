@@ -28,27 +28,6 @@ interface AnalysisResult {
   message?: string;
   recommendation?: string;
   aiAnalysis?: string;
-  groundingMetadata?: {
-    webSearchQueries?: string[];
-    searchEntryPoint?: {
-      renderedContent: string;
-    };
-    groundingChunks?: Array<{
-      web?: {
-        uri: string;
-        title: string;
-      };
-    }>;
-    groundingSupports?: Array<{
-      segment?: {
-        startIndex?: number;
-        endIndex?: number;
-        text?: string;
-      };
-      groundingChunkIndices?: number[];
-      confidenceScores?: number[];
-    }>;
-  };
   urlMetadata?: {
     domain: string;
     title: string;
@@ -316,36 +295,13 @@ const MisinformationRadar: React.FC = () => {
                       </div>
                     )}
 
-                     {/* Recommendation */}
+                    {/* Recommendation */}
                     {parsed.recommendation && (
                       <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
                         <h3 className="font-semibold mb-2 text-primary">Recommendation</h3>
                         <p className="text-sm leading-relaxed whitespace-pre-wrap">
                           {typeof parsed.recommendation === 'object' ? JSON.stringify(parsed.recommendation, null, 2) : parsed.recommendation}
                         </p>
-                      </div>
-                    )}
-
-                    {/* Reasoning Steps - NEW FEATURE */}
-                    {parsed.reasoning_steps && Array.isArray(parsed.reasoning_steps) && parsed.reasoning_steps.length > 0 && (
-                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                        <details className="group">
-                          <summary className="cursor-pointer font-semibold mb-2 text-blue-700 dark:text-blue-300 flex items-center gap-2">
-                            <Brain className="w-4 h-4" />
-                            🕵️ View AI Investigation Log (Reasoning Process)
-                            <span className="text-xs opacity-70 ml-auto group-open:hidden">Click to expand</span>
-                          </summary>
-                          <div className="mt-3 space-y-2">
-                            {parsed.reasoning_steps.map((step: string, idx: number) => (
-                              <div key={idx} className="flex items-start gap-3 text-sm">
-                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">
-                                  {idx + 1}
-                                </span>
-                                <p className="flex-1 leading-relaxed">{step}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </details>
                       </div>
                     )}
                   </div>
@@ -366,43 +322,6 @@ const MisinformationRadar: React.FC = () => {
               </div>
             );
           })()}
-
-          {/* Grounding Metadata - Real-Time Search Sources - NEW FEATURE */}
-          {result.groundingMetadata && result.groundingMetadata.groundingChunks && result.groundingMetadata.groundingChunks.length > 0 && (
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2 text-green-700 dark:text-green-300">
-                <Database className="w-4 h-4" />
-                ✅ Verified Sources (Real-Time Web Search)
-              </h3>
-              <p className="text-xs text-muted-foreground mb-3">
-                This analysis was powered by real-time web search. The AI verified information from these sources:
-              </p>
-              <div className="space-y-2">
-                {result.groundingMetadata.groundingChunks.map((chunk, idx) => {
-                  if (chunk.web) {
-                    return (
-                      <a
-                        key={idx}
-                        href={chunk.web.uri}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block p-3 bg-background/50 hover:bg-background/80 rounded-lg border border-border/50 hover:border-primary/50 transition-colors"
-                      >
-                        <div className="flex items-start gap-2">
-                          <Zap className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">{chunk.web.title}</p>
-                            <p className="text-xs text-muted-foreground truncate">{chunk.web.uri}</p>
-                          </div>
-                        </div>
-                      </a>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-            </div>
-          )}
 
           {/* Clean Result */}
           {!result.isKnownMisinformation && !result.isPaywalled && result.message && (

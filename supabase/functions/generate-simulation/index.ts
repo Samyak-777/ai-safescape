@@ -76,7 +76,7 @@ MESSAGE_TEXT
 ---
 JSON_OBJECT`;
 
-    const response = await fetch(`${GEMINI_BASE_URL}/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(`${GEMINI_BASE_URL}/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ JSON_OBJECT`;
           }]
         }],
         generationConfig: {
-          temperature: 1.0,
+          temperature: 0.9,
           maxOutputTokens: 500,
         },
       }),

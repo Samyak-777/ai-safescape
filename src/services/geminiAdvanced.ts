@@ -98,7 +98,7 @@ export const analyzeContentWithGeminiAdvanced = async (
         }]
       }],
       generationConfig: {
-        temperature: 1.0,
+        temperature: 0.1,
         maxOutputTokens: 1000,
         candidateCount: 1,
       },
@@ -136,7 +136,7 @@ export const analyzeContentWithGeminiAdvanced = async (
     }
 
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {

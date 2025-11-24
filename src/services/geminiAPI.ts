@@ -24,7 +24,7 @@ Please provide:
 
 Respond in JSON format with fields: isHarmful, confidence, explanation, categories`;
 
-    const response = await fetch(`${GEMINI_BASE_URL}/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(`${GEMINI_BASE_URL}/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +40,9 @@ Respond in JSON format with fields: isHarmful, confidence, explanation, categori
           }
         ],
         generationConfig: {
-          temperature: 1.0,
+          temperature: 0.3,
+          topK: 40,
+          topP: 0.95,
           maxOutputTokens: 1024,
         },
         safetySettings: [
