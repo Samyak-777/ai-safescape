@@ -131,10 +131,19 @@ Create a safer digital environment through intelligent content moderation and re
 ---
 
 ## 📸 Screenshots
-![image](https://github.com/user-attachments/assets/82df2fee-32f1-4d2b-a8b0-cbbc68df82c0)
-![image](https://github.com/user-attachments/assets/7792945b-ad0d-4d14-b76d-b25300c8e93e)
-![image](https://github.com/user-attachments/assets/45c51e7b-b464-485e-86b6-bd0dce07105c)
-![image](https://github.com/user-attachments/assets/e9a63610-9b0b-42a9-998f-aa3d93595bbb)
+<img width="1846" height="891" alt="image" src="https://github.com/user-attachments/assets/d0b45c65-920b-4008-9b6a-b280e3884584" />
+
+---
+<img width="1849" height="883" alt="image" src="https://github.com/user-attachments/assets/15710139-79e6-4f16-b304-bc8cf4d9c04a" />
+
+---
+<img width="1856" height="889" alt="image" src="https://github.com/user-attachments/assets/061f9ffc-8e71-4bdb-b6a7-db76e3b0da60" />
+
+---
+<img width="1771" height="882" alt="image" src="https://github.com/user-attachments/assets/6dd236f4-f945-4275-ab80-7dde3f3f1880" />
+
+---
+
 ![image](https://github.com/user-attachments/assets/e0c00d9c-24a5-4dc4-9bd6-45bb186f1c3b)
 
 
