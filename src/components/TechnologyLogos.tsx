@@ -21,12 +21,12 @@ const azureCloudLogos: TechnologyLogo[] = [
   },
   {
     name: 'Azure AI Vision',
-    url: '/lovable-uploads/9c4a5859-27ed-4799-8d02-8b97676d6241.png',
+    url: '/lovable-uploads/azure-ai-vision.png',
     altText: 'Azure AI Vision'
   },
   {
     name: 'Azure AI Search',
-    url: '/lovable-uploads/9d20d5c9-edc7-432b-9b97-d462f6217cec.png',
+    url: '/lovable-uploads/azure-ai-search.png',
     altText: 'Azure AI Search'
   },
   {
