@@ -492,9 +492,6 @@ const AnalysisToolsEnhanced: React.FC = () => {
               for comprehensive digital safety and content verification.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Badge variant="outline" className="px-3 py-1">Azure AI Powered<Sparkles className="h-3 w-3 mr-1" />
-                Gemini AI Powered
-              </Badge>
               <Badge variant="outline" className="px-3 py-1">
                 <Brain className="h-3 w-3 mr-1" />
                 Advanced Pattern Detection
