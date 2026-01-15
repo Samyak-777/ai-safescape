@@ -132,27 +132,27 @@ const Documentation: React.FC = () => {
                   <h4 className="text-sm font-medium text-muted-foreground mb-3">Resources</h4>
                   <ul className="space-y-2">
                     <li>
-                      <a href="https://ai.google.dev/gemini/docs/model/gemini-pro" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
+                      <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
                         <ArrowRight size={12} />
-                        Gemini AI
+                        Azure OpenAI
                       </a>
                     </li>
                     <li>
-                      <a href="https://cloud.google.com/natural-language" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
+                      <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-language" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
                         <ArrowRight size={12} />
-                        Google Cloud NLP
+                        Azure AI Language
                       </a>
                     </li>
                     <li>
-                      <a href="https://cloud.google.com/vision" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
+                      <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-vision" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
                         <ArrowRight size={12} />
-                        Vision API
+                        Azure AI Vision
                       </a>
                     </li>
                     <li>
-                      <a href="https://developers.google.com/fact-check/tools/api" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
+                      <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1.5">
                         <ArrowRight size={12} />
-                        Fact Check API
+                        Azure AI Content Safety
                       </a>
                     </li>
                   </ul>
@@ -235,8 +235,8 @@ const Documentation: React.FC = () => {
                             </div>
                             <h3 className="font-semibold">Advanced Image Analysis</h3>
                           </div>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            Powered by Gemini AI for comprehensive image verification and content safety.
+                        <p className="text-sm text-muted-foreground mb-3">
+                            Powered by Azure AI Vision for comprehensive image verification and content safety.
                           </p>
                           <ul className="text-xs text-muted-foreground space-y-1">
                             <li>• Manipulation and deepfake detection</li>
@@ -291,7 +291,7 @@ const Documentation: React.FC = () => {
                     <div>
                       <h2 className="text-2xl font-bold mb-4">Advanced AI Detection Features</h2>
                       <p className="text-muted-foreground mb-6">
-                        Our platform includes cutting-edge AI detection capabilities powered by Gemini AI for sophisticated threat analysis.
+                        Our platform includes cutting-edge AI detection capabilities powered by Azure OpenAI for sophisticated threat analysis.
                       </p>
                       
                       <div className="space-y-6">
@@ -547,14 +547,14 @@ const Documentation: React.FC = () => {
   "image_url": "https://example.com/image.jpg",
   "options": ["manipulation", "safe-search", "text-extract"],
   "extract_text_language": "en", // Optional for OCR
-  "gemini_analysis": true // Use Gemini AI for enhanced analysis
+  "azure_analysis": true // Use Azure AI for enhanced analysis
 }`}</code>
                               <button onClick={() => copyCode(`{
   "image": "base64_encoded_image_data",
   "image_url": "https://example.com/image.jpg",
   "options": ["manipulation", "safe-search", "text-extract"],
   "extract_text_language": "en",
-  "gemini_analysis": true
+  "azure_analysis": true
 }`)} className="text-gray-400 hover:text-white">
                                 <Copy size={16} />
                               </button>
@@ -733,7 +733,7 @@ const Documentation: React.FC = () => {
                         <ul className="space-y-3 text-sm text-muted-foreground mb-4">
                           <li className="flex items-start gap-2">
                             <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
-                            <span><strong>Manipulation Check:</strong> Detects edited images, deepfakes, and other alterations using Gemini AI analysis</span>
+                            <span><strong>Manipulation Check:</strong> Detects edited images, deepfakes, and other alterations using Azure AI Vision analysis</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <Check size={16} className="mt-1 text-green-500 flex-shrink-0" />
@@ -790,10 +790,10 @@ const Documentation: React.FC = () => {
                     <div>
                       <h2 className="text-2xl font-bold mb-4">Our Technology Stack</h2>
                       <p className="text-muted-foreground mb-6">
-                        We use a combination of Google Cloud technologies, Gemini AI, and specialized partner services to provide comprehensive content analysis.
+                        We use a combination of Microsoft Azure technologies, Azure OpenAI, and specialized partner services to provide comprehensive content analysis.
                       </p>
                       
-                      <h3 className="text-xl font-medium mb-4">Google Cloud Technologies</h3>
+                      <h3 className="text-xl font-medium mb-4">Microsoft Azure Technologies</h3>
                       <div className="glass-card mb-8">
                         <TechnologyLogos variant="google" />
                       </div>
@@ -806,10 +806,10 @@ const Documentation: React.FC = () => {
                       <div className="mt-8 bg-gradient-to-r from-primary/10 to-blue-500/10 p-6 rounded-xl">
                         <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
                           <Sparkles className="text-primary" size={24} />
-                          Powered by Gemini AI
+                          Powered by Azure OpenAI
                         </h3>
                         <p className="text-muted-foreground mb-4">
-                          Our platform leverages Google's most advanced AI model for sophisticated content analysis and threat detection.
+                          Our platform leverages Microsoft's most advanced AI model (GPT-4o) for sophisticated content analysis and threat detection.
                         </p>
                         <ul className="space-y-2 text-sm text-muted-foreground">
                           <li className="flex items-center gap-2">

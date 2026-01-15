@@ -6,7 +6,7 @@ import { analyzeToxicityWithPerspective } from './perspectiveAPI';
 import { checkUrlWithWebRisk } from './webRiskAPI';
 import { checkUrlWithIPQS } from './ipqsAPI';
 import { checkPhishingWithArya } from './aryaAPI';
-import { analyzeContentWithGemini } from './geminiAPI';
+import { analyzeContentWithAzureOpenAI } from './geminiAPI';
 import { analyzeContentWithGeminiAdvanced } from './geminiAdvanced';
 import { detectASCIIPatterns } from './asciiDetection';
 
@@ -70,11 +70,11 @@ const resilientArya = async (url: string) => {
   });
 };
 
-// Resilient wrapper for Gemini API
-const resilientGemini = async (content: string, analysisType: string) => {
+// Resilient wrapper for Azure OpenAI API
+const resilientAzureOpenAI = async (content: string, analysisType: string) => {
   return await circuitBreakers.gemini.execute(async () => {
     return await retryService.execute(
-      () => analyzeContentWithGemini(content, analysisType),
+      () => analyzeContentWithAzureOpenAI(content, analysisType),
       isRetryableError
     );
   });

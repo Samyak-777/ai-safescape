@@ -1,6 +1,6 @@
 
-# `AI SafeSpace`
-**Next Generation content safety platform powered by advanced AI technologies**
+# `AI SafeScape`
+**Next Generation Cognitive Security Platform built on Microsoft Azure**
 ---
 
 ## 📋 Table of Contents
@@ -18,7 +18,7 @@
   - [Quick Setup](#quick-setup)
   - [Local Development](#local-development)
 - [🔧 Configuration](#-configuration)
-- [🙌 Contibutors of Code](#-contributors-of-code) 
+- [🙌 Contributors of Code](#-contributors-of-code) 
 
 ---
 
@@ -29,7 +29,9 @@ Misinformation spreads 6x faster than facts on social media, causing social unre
 
 ## 💡 **Our Solution**
 
-**AI SafeSpace** is a cutting-edge web application that ensures safer interactions with AI by proactively identifying and mitigating harmful or misleading content across multiple formats. Designed to protect users from risks such as profanity, misinformation, scams, and visual deception, the platform promotes trust, safety, and responsible AI use.
+**AI SafeScape** is a cutting-edge web application that ensures safer interactions with AI by proactively identifying and mitigating harmful or misleading content across multiple formats. Designed to protect users from risks such as profanity, misinformation, scams, and visual deception, the platform promotes trust, safety, and responsible AI use.
+
+Born from a vision to secure India's digital future, AI-SafeScape leverages the power of the Microsoft Cloud to provide enterprise-grade security to the common citizen.
 
 ### 🎯 Mission
 Create a safer digital environment through intelligent content moderation and real-time threat detection.
@@ -46,18 +48,18 @@ Create a safer digital environment through intelligent content moderation and re
 - **Multi-language support** for 75+ global languages and 15+ Indian dialects
 
 #### 🖼️ **Intelligent Image Analysis**
-- **Deepfake detection** using advanced computer vision
-- **Inappropriate content scanning** with SafeSearch integration
+- **Deepfake detection** using Azure AI Vision
+- **Inappropriate content scanning** with Azure AI Content Safety
 - **Text extraction from images** for comprehensive analysis
 - **Object recognition** for context-aware moderation
 
 #### 🔍 **Fact-Checking & Verification**
-- **Real-time claim validation** against trusted sources
+- **Real-time claim validation** against trusted sources via Azure AI Search
 - **Confidence scoring** with evidence links
 
 ### Advanced AI Analysis
 
-#### 🧠 **Gemini 2.5 Integration**
+#### 🧠 **Azure OpenAI GPT-4o Integration**
 - **Advanced reasoning capabilities** with step-by-step explanations
 - **Personalized recommendations** based on analysis results
 
@@ -90,15 +92,16 @@ Create a safer digital environment through intelligent content moderation and re
 - **Lucide React**
 
 ### 🔹`AI & Machine Learning`
-- **Google Gemini 2.5** 
-- **Google Cloud Vision API** 
-- **Google Cloud NLP** 
-- **Perspective API** 
+- **Azure OpenAI Service (GPT-4o)** 
+- **Azure AI Vision** 
+- **Azure AI Language** 
+- **Azure AI Content Safety** 
 
 ### 🔹`Backend & Infrastructure`
-- **Google Cloud Services** for authentication and database
-- **Google Cloud Platform** for scalable infrastructure
-- **Edge Functions** for serverless computing
+- **Azure Functions** for serverless computing
+- **Azure AI Search** for vector database and retrieval
+- **Azure Cosmos DB** for scalable database
+- **Edge Functions** for low-latency processing
 - **Real-time subscriptions** for live updates
 
 ---
@@ -142,7 +145,7 @@ Create a safer digital environment through intelligent content moderation and re
 
 1. **Access the Platform**
    ```
-   Visit: https://ai-safespace.lovable.app
+   Visit: https://ai-safescape.lovable.app
    ```
 
 2. **Start Analyzing**
@@ -160,10 +163,10 @@ Create a safer digital environment through intelligent content moderation and re
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ai-safespace.git
+git clone https://github.com/yourusername/ai-safescape.git
 
 # Navigate to project directory
-cd ai-safespace
+cd ai-safescape
 
 # Install dependencies
 npm install
@@ -195,14 +198,15 @@ npm run lint
 Set up the following in your env project file:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key
-GOOGLE_PERSPECTIVE_API_KEY=your_perspective_key
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
+AZURE_AI_SEARCH_KEY=your_azure_search_key
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### **API Configuration**
-- Enable Google Cloud APIs in your GCP project
+- Enable Azure AI Services in your Azure subscription
 - Set up rate limiting rules
 - Configure security headers
 
@@ -214,7 +218,10 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 - ### `Heet Sutariya`
 - ### `Daksh Rathore`
 - ### `Samyak Borkar`
-- ### `Jules (Google's Own Coding Agent) `
 - ### `lovable ai`  
 
+---
 
+## 🏆 Participating in Microsoft Imagine Cup 2026
+
+Built on Microsoft Azure

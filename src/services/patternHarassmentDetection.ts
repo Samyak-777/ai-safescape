@@ -1,7 +1,7 @@
 
-// Pattern-based Harassment/Cyberbullying Detection using Gemini AI
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
-const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+// Pattern-based Harassment/Cyberbullying Detection using Azure OpenAI
+const AZURE_OPENAI_API_KEY = import.meta.env.VITE_AZURE_OPENAI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
+const AZURE_OPENAI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
 export interface HarassmentPattern {
   patternType: 'repeated_targeting' | 'coordinated_attack' | 'escalating_harassment' | 'sustained_campaign';
@@ -78,7 +78,7 @@ Provide analysis in JSON format:
 }`;
 
     const response = await fetch(
-      `${GEMINI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `${AZURE_OPENAI_BASE_URL}/models/gemini-2.0-flash-exp:generateContent?key=${AZURE_OPENAI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -109,7 +109,7 @@ Provide analysis in JSON format:
     );
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status}`);
+      throw new Error(`Azure OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();
