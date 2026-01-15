@@ -8,31 +8,31 @@ interface TechnologyLogo {
   altText: string;
 }
 
-const googleCloudLogos: TechnologyLogo[] = [
+const azureCloudLogos: TechnologyLogo[] = [
   {
-    name: 'Google Cloud',
-    url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg',
-    altText: 'Google Cloud'
+    name: 'Microsoft Azure',
+    url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg',
+    altText: 'Microsoft Azure'
   },
   {
-    name: 'Cloud NLP',
-    url: '/lovable-uploads/16bb0c98-3d2d-40f4-b218-49261a87f20f.png',
-    altText: 'Cloud Natural Language Processing'
+    name: 'Azure OpenAI',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg',
+    altText: 'Azure OpenAI Service'
   },
   {
-    name: 'Vision API',
+    name: 'Azure AI Vision',
     url: '/lovable-uploads/9c4a5859-27ed-4799-8d02-8b97676d6241.png',
-    altText: 'Vision API'
+    altText: 'Azure AI Vision'
   },
   {
-    name: 'Gemini Pro',
-    url: 'https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png',
-    altText: 'Gemini Pro'
-  },
-  {
-    name: 'Vertex AI',
+    name: 'Azure AI Search',
     url: '/lovable-uploads/9d20d5c9-edc7-432b-9b97-d462f6217cec.png',
-    altText: 'Vertex AI'
+    altText: 'Azure AI Search'
+  },
+  {
+    name: 'Azure Cosmos DB',
+    url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cosmosdb/cosmosdb-original.svg',
+    altText: 'Azure Cosmos DB'
   }
 ];
 
@@ -65,15 +65,18 @@ const partnerLogos: TechnologyLogo[] = [
 ];
 
 interface TechnologyLogosProps {
-  variant?: 'google' | 'partners' | 'all';
+  variant?: 'azure' | 'partners' | 'all' | 'google';
 }
 
 const TechnologyLogos: React.FC<TechnologyLogosProps> = ({ variant = 'all' }) => {
-  const logosToShow = variant === 'google' 
-    ? googleCloudLogos 
-    : variant === 'partners' 
+  // Map 'google' to 'azure' for backward compatibility
+  const effectiveVariant = variant === 'google' ? 'azure' : variant;
+  
+  const logosToShow = effectiveVariant === 'azure' 
+    ? azureCloudLogos 
+    : effectiveVariant === 'partners' 
       ? partnerLogos 
-      : [...googleCloudLogos, ...partnerLogos];
+      : [...azureCloudLogos, ...partnerLogos];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -87,7 +90,7 @@ const TechnologyLogos: React.FC<TechnologyLogosProps> = ({ variant = 'all' }) =>
               onError={(e) => {
                 // Fallback to a placeholder if image fails to load
                 const target = e.target as HTMLImageElement;
-                target.src = `https://via.placeholder.com/64x64/6366f1/ffffff?text=${logo.name.charAt(0)}`;
+                target.src = `https://via.placeholder.com/64x64/0078d4/ffffff?text=${logo.name.charAt(0)}`;
               }}
             />
           </div>

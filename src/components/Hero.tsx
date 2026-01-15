@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
   const navigate = useNavigate();
 
   const scrollToAnalysisSection = () => {
-    // First try to find the Gemini AI advanced analysis section on the current page
+    // First try to find the Azure OpenAI advanced analysis section on the current page
     const advancedAITab = document.querySelector('[data-state="active"][value="advanced-ai"]');
     if (advancedAITab) {
       // If already on advanced-ai tab, just scroll to it
@@ -44,8 +44,8 @@ const Hero: React.FC = () => {
       {/* Background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl animate-float" />
-        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-blue-500/10 rounded-full filter blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-2/3 right-1/3 w-40 h-40 bg-purple-500/10 rounded-full filter blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-accent/10 rounded-full filter blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-40 h-40 bg-[hsl(262,83%,58%)]/10 rounded-full filter blur-3xl animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -53,13 +53,13 @@ const Hero: React.FC = () => {
           <div className="lg:w-1/2 space-y-6 mb-12 lg:mb-0 animate-fade-in">
             <div>
               <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
-                Gen AI Exchange Hackathon
+                Microsoft Imagine Cup 2026
               </span>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                Combat Online <span className="text-primary">Misinformation</span> with AI
+                Cognitive Security Shield built on <span className="text-primary">Azure AI</span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-xl">
-                An AI-powered platform that analyzes text, images, and metadata to detect and help prevent profanity, misinformation, and fraud in real-time.
+                Powered by Azure OpenAI Service and Azure AI Content Safety. An enterprise-grade platform that analyzes text, images, and metadata to detect and help prevent profanity, misinformation, and fraud in real-time.
               </p>
             </div>
 
@@ -75,7 +75,7 @@ const Hero: React.FC = () => {
                 size="lg"
                 onClick={scrollToAnalysisSection}
                 id="demo-button"
-                aria-label="Try the Gemini AI analysis demo"
+                aria-label="Try the Azure OpenAI analysis demo"
               >
                 Try Demo
               </Button>
@@ -83,23 +83,23 @@ const Hero: React.FC = () => {
 
             <div className="pt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-green-400" />
-                Google Cloud NLP
+                <div className="w-4 h-4 rounded-full bg-accent" />
+                Azure AI Search
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-blue-400" />
-                Vision API
+                <div className="w-4 h-4 rounded-full bg-primary" />
+                Azure AI Vision
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-purple-400" />
-                Gemini Pro
+                <div className="w-4 h-4 rounded-full bg-[hsl(262,83%,58%)]" />
+                Azure OpenAI GPT-4o
               </div>
             </div>
           </div>
 
           <div className="lg:w-1/2 lg:ml-12">
             <div className="relative glass-card rounded-2xl p-1 overflow-hidden shadow-xl animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-30" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-[hsl(262,83%,58%)]/20 opacity-30" />
               <div className="relative rounded-xl overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
@@ -107,8 +107,8 @@ const Hero: React.FC = () => {
                   className="w-full h-auto object-cover"
                 />
               </div>
-              <div className="absolute top-4 right-4 bg-primary text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                AI-Powered
+              <div className="absolute top-4 right-4 bg-primary text-primary-foreground text-xs font-medium px-2.5 py-1 rounded-full">
+                Built on Microsoft Azure
               </div>
             </div>
           </div>

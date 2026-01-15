@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="text-xl font-medium flex items-center gap-2 mb-4">
-              <span className="bg-primary text-white w-8 h-8 flex items-center justify-center rounded-lg">
+              <span className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-lg">
                 AI
               </span>
               <span>SafeScape</span>
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex gap-4 mt-4">
               <a 
-                href="https://github.com" 
+                href="https://github.com/Samyak-777/ai-safescape" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -73,18 +73,18 @@ const Footer: React.FC = () => {
             <h3 className="font-medium mb-4">Resources</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Gen AI Exchange Hackathon
+                <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  Azure OpenAI Service
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Google Cloud
+                <a href="https://azure.microsoft.com/en-us/products/ai-services" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  Microsoft Azure AI
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Vertex AI
+                <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-search" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  Azure AI Search
                 </a>
               </li>
             </ul>
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>© {currentYear} SafeScape. All rights reserved.</p>
-          <p className="mt-4 md:mt-0">Created for Gen AI Exchange Hackathon</p>
+          <p className="mt-4 md:mt-0">Participating in Microsoft Imagine Cup 2026</p>
         </div>
       </div>
     </footer>

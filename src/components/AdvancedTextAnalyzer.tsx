@@ -103,7 +103,7 @@ const AdvancedTextAnalyzer: React.FC = () => {
           
           // Check if this is a fallback result
           if (result.explanation?.includes('Fallback analysis') || result.explanation?.includes('API temporarily unavailable')) {
-            setApiWarning('Gemini API is not enabled. Please enable the Generative Language API in your Google Cloud project for full functionality.');
+            setApiWarning('Azure OpenAI API is not enabled. Please configure the Azure OpenAI Service in your Azure portal for full functionality.');
           }
           
           return { ...result, type: option.label } as AnalysisResultWithType;

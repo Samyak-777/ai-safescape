@@ -85,8 +85,8 @@ const Index: React.FC = () => {
               delay={0.1}
             />
             <FeatureCard 
-              title="Image Verification"
-              description="Analyze images for manipulation, inappropriate content, and extract text for further verification."
+              title="Azure AI Vision Integration"
+              description="Analyze images for manipulation, inappropriate content, and extract text for further verification using Azure AI Vision."
               icon={<Image size={24} />}
               delay={0.2}
             />
@@ -103,8 +103,8 @@ const Index: React.FC = () => {
               delay={0.4}
             />
             <FeatureCard 
-              title="Cloud Infrastructure"
-              description="Powered by Google Cloud technologies for reliable, scalable, and secure analysis."
+              title="Azure Cloud Infrastructure"
+              description="Powered by Microsoft Azure technologies for reliable, scalable, and secure analysis."
               icon={<Server size={24} />}
               delay={0.5}
             />
@@ -145,15 +145,15 @@ const Index: React.FC = () => {
               <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
                 Our Technology
               </span>
-              <h2 className="text-3xl font-bold mb-4">Powered by Google Technologies</h2>
+              <h2 className="text-3xl font-bold mb-4">Powered by Microsoft Azure</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                We leverage the latest Google Cloud technologies to provide accurate and efficient content analysis.
+                We leverage the latest Microsoft Azure technologies to provide accurate and efficient content analysis.
               </p>
             </div>
           </AnimatedSection>
           
           <div className="glass-card p-8 rounded-2xl">
-            <TechnologyLogos variant="google" />
+            <TechnologyLogos variant="azure" />
           </div>
           
           <AnimatedSection className="mt-16">
