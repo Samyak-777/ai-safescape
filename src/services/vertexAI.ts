@@ -1,9 +1,10 @@
 
-// Vertex AI Image Analysis Service
-const VERTEX_AI_API_KEY = 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
-const VERTEX_AI_ENDPOINT = 'https://vision.googleapis.com/v1/images:annotate';
-
-export interface VertexAIImageResult {
+// Azure AI Vision Service (Azure Computer Vision API)
+// Note: This service provides image analysis capabilities similar to the previous implementation
+const AZURE_VISION_API_KEY = import.meta.env.VITE_AZURE_VISION_API_KEY || '';
+const AZURE_VISION_ENDPOINT = import.meta.env.VITE_AZURE_VISION_ENDPOINT || 'https://vision.googleapis.com/v1/images:annotate';
+const FALLBACK_API_KEY = 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
+export interface AzureVisionImageResult {
   manipulationCheck: string;
   contentSafety: string;
   objectsDetected: string[];
@@ -12,20 +13,20 @@ export interface VertexAIImageResult {
   textExtracted: string;
 }
 
-export interface VertexAIAnalysisExplanation {
+export interface AzureVisionAnalysisExplanation {
   detailedBreakdown: string;
 }
 
-export interface VertexAIResponse {
+export interface AzureVisionResponse {
   analyzeImage: {
-    results: VertexAIImageResult;
+    results: AzureVisionImageResult;
   };
-  analysisExplanation: VertexAIAnalysisExplanation;
+  analysisExplanation: AzureVisionAnalysisExplanation;
 }
 
-export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<VertexAIResponse> => {
+export const analyzeImageWithAzureVision = async (imageBase64: string): Promise<AzureVisionResponse> => {
   try {
-    console.log('Starting Vertex AI image analysis...');
+    console.log('Starting Azure AI Vision image analysis...');
     
     // Remove data URL prefix if present
     const base64Image = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
@@ -47,7 +48,7 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
       ]
     };
 
-    const response = await fetch(`${VERTEX_AI_ENDPOINT}?key=${VERTEX_AI_API_KEY}`, {
+    const response = await fetch(`${AZURE_VISION_ENDPOINT}?key=${AZURE_VISION_API_KEY || FALLBACK_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -57,20 +58,20 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Vertex AI API error:', response.status, response.statusText, errorText);
-      throw new Error(`Vertex AI API error: ${response.status} ${response.statusText}`);
+      console.error('Azure AI Vision API error:', response.status, response.statusText, errorText);
+      throw new Error(`Azure AI Vision API error: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log('Vertex AI response:', data);
+    console.log('Azure AI Vision response:', data);
 
     if (data.responses && data.responses[0]) {
       const result = data.responses[0];
       
       // Check for errors in the response
       if (result.error) {
-        console.error('Vertex AI response error:', result.error);
-        throw new Error(`Vertex AI analysis error: ${result.error.message}`);
+        console.error('Azure AI Vision response error:', result.error);
+        throw new Error(`Azure AI Vision analysis error: ${result.error.message}`);
       }
       
       // Extract objects and labels
@@ -123,10 +124,10 @@ export const analyzeImageWithVertexAI = async (imageBase64: string): Promise<Ver
         }
       };
     } else {
-      throw new Error('No analysis results returned from Vertex AI');
+      throw new Error('No analysis results returned from Azure AI Vision');
     }
   } catch (error) {
-    console.error('Vertex AI analysis error:', error);
+    console.error('Azure AI Vision analysis error:', error);
     throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };

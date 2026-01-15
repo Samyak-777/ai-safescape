@@ -5,7 +5,7 @@ import { analyzeToxicityWithPerspective } from './perspectiveAPI';
 import { checkUrlWithWebRisk } from './webRiskAPI';
 import { checkUrlWithIPQS } from './ipqsAPI';
 import { checkPhishingWithArya } from './aryaAPI';
-import { analyzeContentWithGemini } from './geminiAPI';
+import { analyzeContentWithAzureOpenAI } from './geminiAPI';
 import { detectASCIIPatterns } from './asciiDetection';
 
 export interface AnalysisResult {
@@ -86,8 +86,8 @@ const analyzeProfanityReal = async (text: string): Promise<AnalysisResult> => {
 
 const analyzeFactCheckReal = async (text: string): Promise<AnalysisResult> => {
   try {
-    // Use Gemini for fact-checking with proper error handling
-    const result = await analyzeContentWithGemini(text, 'fact-checking, misinformation detection, and claim verification');
+    // Use Azure OpenAI for fact-checking with proper error handling
+    const result = await analyzeContentWithAzureOpenAI(text, 'fact-checking, misinformation detection, and claim verification');
 
     let status: 'clean' | 'warning' | 'danger' = 'clean';
     let message = 'No factual inaccuracies detected';
@@ -149,8 +149,8 @@ const analyzeScamReal = async (text: string): Promise<AnalysisResult> => {
       );
     }
 
-    // Analyze text content with Gemini
-    promises.push(analyzeContentWithGemini(text, 'scam, phishing, fraud detection, and financial manipulation').catch(() => null));
+    // Analyze text content with Azure OpenAI
+    promises.push(analyzeContentWithAzureOpenAI(text, 'scam, phishing, fraud detection, and financial manipulation').catch(() => null));
 
     const results = await Promise.allSettled(promises);
     let status: 'clean' | 'warning' | 'danger' = 'clean';
@@ -219,9 +219,9 @@ const analyzeScamReal = async (text: string): Promise<AnalysisResult> => {
 
 const analyzeEthicsReal = async (text: string): Promise<AnalysisResult> => {
   try {
-    const [perspectiveResult, geminiResult] = await Promise.allSettled([
+    const [perspectiveResult, azureResult] = await Promise.allSettled([
       analyzeToxicityWithPerspective(text).catch(() => null),
-      analyzeContentWithGemini(text, 'ethical violations, hate speech, and harmful content').catch(() => null),
+      analyzeContentWithAzureOpenAI(text, 'ethical violations, hate speech, and harmful content').catch(() => null),
     ]);
 
     let status: 'clean' | 'warning' | 'danger' = 'clean';
@@ -246,12 +246,12 @@ const analyzeEthicsReal = async (text: string): Promise<AnalysisResult> => {
       }
     }
 
-    if (geminiResult.status === 'fulfilled' && geminiResult.value && geminiResult.value.isHarmful) {
-      const newStatus = geminiResult.value.confidence > 0.7 ? 'danger' : 'warning';
+    if (azureResult.status === 'fulfilled' && azureResult.value && azureResult.value.isHarmful) {
+      const newStatus = azureResult.value.confidence > 0.7 ? 'danger' : 'warning';
       if (status === 'clean' || (status === 'warning' && newStatus === 'danger')) {
         status = newStatus;
-        message = geminiResult.value.explanation;
-        confidence = Math.max(confidence, geminiResult.value.confidence);
+        message = azureResult.value.explanation;
+        confidence = Math.max(confidence, azureResult.value.confidence);
       }
     }
 
@@ -262,7 +262,7 @@ const analyzeEthicsReal = async (text: string): Promise<AnalysisResult> => {
       confidence: confidence || 0.9,
       details: { 
         perspective: perspectiveResult.status === 'fulfilled' ? perspectiveResult.value : null, 
-        gemini: geminiResult.status === 'fulfilled' ? geminiResult.value : null 
+        azureOpenAI: azureResult.status === 'fulfilled' ? azureResult.value : null 
       },
     };
   } catch (error) {

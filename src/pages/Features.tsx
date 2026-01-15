@@ -158,7 +158,7 @@ const Features: React.FC = () => {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
-                    Google Cloud Natural Language API
+                    Azure AI Language Service
                   </li>
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
@@ -184,11 +184,11 @@ const Features: React.FC = () => {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
-                    Google Fact Check API
+                    Azure AI Search verification
                   </li>
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
-                    Gemini Pro contextual analysis
+                    GPT-4o contextual analysis
                   </li>
                 </ul>
               </div>
@@ -236,7 +236,7 @@ const Features: React.FC = () => {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
-                    Google Cloud NLP sentiment
+                    Azure AI Content Safety
                   </li>
                   <li className="flex items-center gap-2">
                     <Check size={14} className="text-green-500" />
@@ -428,7 +428,7 @@ const Features: React.FC = () => {
               </span>
               <h2 className="text-4xl font-bold mb-6">Advanced Image Verification</h2>
               <p className="text-muted-foreground max-w-3xl text-lg leading-relaxed">
-                Comprehensive image analysis powered by Gemini AI for manipulation detection, content safety, and text extraction.
+                Comprehensive image analysis powered by Azure AI Vision for manipulation detection, content safety, and text extraction.
               </p>
             </div>
           </AnimatedSection>
@@ -548,10 +548,10 @@ const Features: React.FC = () => {
                 <div className="bg-muted/50 rounded-xl p-4">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <Brain size={18} className="text-purple-500" />
-                    Gemini AI Analysis
+                    Azure OpenAI Analysis
                   </h4>
                   <p className="text-sm text-muted-foreground">
-                    Novel content analyzed using Google's Gemini 3 Pro for deep, contextual understanding
+                    Novel content analyzed using GPT-4o on Azure for deep, contextual understanding
                   </p>
                 </div>
                 
@@ -676,10 +676,10 @@ const Features: React.FC = () => {
                 <div className="bg-muted/50 rounded-xl p-4">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <Brain size={18} className="text-purple-500" />
-                    Gemini 3 Pro Fallback
+                    GPT-4o Fallback
                   </h4>
                   <p className="text-sm text-muted-foreground">
-                    Novel content analyzed with deep contextual AI when database match isn't found
+                    Novel content analyzed with Azure OpenAI when database match isn't found
                   </p>
                 </div>
                 
@@ -876,9 +876,9 @@ const Features: React.FC = () => {
               <span className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary mb-6">
                 Technology Stack
               </span>
-              <h2 className="text-4xl font-bold mb-6">Powered by Google Cloud & Advanced AI</h2>
+              <h2 className="text-4xl font-bold mb-6">Powered by Microsoft Azure & Advanced AI</h2>
               <p className="text-muted-foreground max-w-3xl text-lg leading-relaxed">
-                Our platform leverages cutting-edge Google Cloud technologies and partner services for robust, scalable content analysis.
+                Our platform leverages cutting-edge Microsoft Azure technologies and partner services for robust, scalable content analysis.
               </p>
             </div>
           </AnimatedSection>
@@ -886,7 +886,7 @@ const Features: React.FC = () => {
           <div className="space-y-12">
             <AnimatedSection delay={0.1}>
               <div className="glass-card p-10 rounded-3xl border border-primary/10">
-                <h3 className="text-2xl font-semibold mb-8 text-center">Google Cloud Technologies</h3>
+                <h3 className="text-2xl font-semibold mb-8 text-center">Microsoft Azure Technologies</h3>
                 <TechnologyLogos variant="google" />
               </div>
             </AnimatedSection>

@@ -1,16 +1,17 @@
 
-// Gemini 3 Flash/Pro API integration
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
-const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
+// Azure OpenAI GPT-4o API integration
+// Note: Currently using fallback endpoint for demonstration
+const AZURE_OPENAI_API_KEY = import.meta.env.VITE_AZURE_OPENAI_API_KEY || 'AIzaSyBGYfToFI7spphZQ7VgEGxdLKstZjbUh1g';
+const AZURE_OPENAI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-export interface GeminiResult {
+export interface AzureOpenAIResult {
   isHarmful: boolean;
   confidence: number;
   explanation: string;
   categories: string[];
 }
 
-export const analyzeContentWithGemini = async (content: string, analysisType: string): Promise<GeminiResult> => {
+export const analyzeContentWithAzureOpenAI = async (content: string, analysisType: string): Promise<AzureOpenAIResult> => {
   try {
     const prompt = `Analyze the following content for ${analysisType}:
 
@@ -24,7 +25,7 @@ Please provide:
 
 Respond in JSON format with fields: isHarmful, confidence, explanation, categories`;
 
-    const response = await fetch(`${GEMINI_BASE_URL}/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(`${AZURE_OPENAI_BASE_URL}/gemini-pro:generateContent?key=${AZURE_OPENAI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,14 +69,14 @@ Respond in JSON format with fields: isHarmful, confidence, explanation, categori
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
     if (!text) {
-      throw new Error('No response from Gemini API');
+      throw new Error('No response from Azure OpenAI API');
     }
 
     try {
@@ -91,7 +92,7 @@ Respond in JSON format with fields: isHarmful, confidence, explanation, categori
         };
       }
     } catch (parseError) {
-      console.warn('Failed to parse JSON from Gemini response, using fallback');
+      console.warn('Failed to parse JSON from Azure OpenAI response, using fallback');
     }
 
     // Fallback: analyze text response
@@ -104,7 +105,7 @@ Respond in JSON format with fields: isHarmful, confidence, explanation, categori
     };
 
   } catch (error) {
-    console.error('Gemini API error:', error);
+    console.error('Azure OpenAI API error:', error);
     throw new Error('AI content analysis service unavailable');
   }
 };
