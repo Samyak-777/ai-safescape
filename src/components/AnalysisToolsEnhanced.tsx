@@ -105,11 +105,11 @@ const AnalysisToolsEnhanced: React.FC = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-7 lg:grid-cols-7 mb-8">
             <TabsTrigger value="advanced-ai" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
+              <span className="inline-flex"><Sparkles className="h-4 w-4" /></span>
               <span className="hidden sm:inline">Azure AI</span>
               <span className="sm:hidden">AI</span>
               <Badge variant="secondary" className="ml-1 text-xs">
-                GPT-4o
+                <span>GPT-4o</span>
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="advanced-analysis" className="flex items-center gap-2">
@@ -150,14 +150,14 @@ const AnalysisToolsEnhanced: React.FC = () => {
           <TabsContent value="advanced-ai" className="mt-6">
             <Card className="border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-primary/5">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-purple-500" />
-                  Azure OpenAI Advanced Analysis
+              <CardTitle className="flex items-center gap-2">
+                  <span className="inline-flex"><Sparkles className="h-5 w-5 text-purple-500" /></span>
+                  <span>Azure OpenAI Advanced Analysis</span>
                   <Badge variant="outline" className="ml-2">
-                    GPT-4o
+                    <span>GPT-4o</span>
                   </Badge>
                   <Badge variant="secondary" className="ml-1">
-                    Azure
+                    <span>Azure</span>
                   </Badge>
                 </CardTitle>
                 <CardDescription>
