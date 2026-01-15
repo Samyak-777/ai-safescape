@@ -102,7 +102,7 @@ const AnalysisToolsEnhanced: React.FC = () => {
             Advanced Content Verification & Threat Detection
           </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">
-            Experience cutting-edge AI analysis with Google I/O 2025 technologies, featuring Gemini AI, 
+            Experience cutting-edge AI analysis with Azure OpenAI technologies, featuring GPT-4o, 
             advanced behavioral pattern detection, coordinated threat analysis, and personalized AI assistance.
           </p>
         </div>
@@ -113,10 +113,10 @@ const AnalysisToolsEnhanced: React.FC = () => {
           <TabsList className="grid w-full grid-cols-7 lg:grid-cols-7 mb-8">
             <TabsTrigger value="advanced-ai" className="flex items-center gap-2">
               <Sparkles className="h-4 w-4" />
-              <span className="hidden sm:inline">Gemini AI</span>
+              <span className="hidden sm:inline">Azure AI</span>
               <span className="sm:hidden">AI</span>
               <Badge variant="secondary" className="ml-1 text-xs">
-                2025
+                GPT-4o
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="advanced-analysis" className="flex items-center gap-2">
@@ -159,16 +159,16 @@ const AnalysisToolsEnhanced: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-purple-500" />
-                  Gemini AI Advanced Analysis
+                  Azure OpenAI Advanced Analysis
                   <Badge variant="outline" className="ml-2">
-                    Gemini 3 Pro
+                    GPT-4o
                   </Badge>
                   <Badge variant="secondary" className="ml-1">
-                    2025
+                    Azure
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  State-of-the-art content analysis using Gemini 3 Pro with function calling, 
+                  State-of-the-art content analysis using Azure OpenAI GPT-4o with function calling, 
                   structured outputs, streaming capabilities, and advanced reasoning for 
                   context-aware safety detection and real-time threat assessment.
                 </CardDescription>

@@ -66,9 +66,9 @@ const ThreatIntel = () => {
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Community Threat Intelligence Hub</h1>
+            <h1 className="text-4xl font-bold">Azure Cognitive Threat Intelligence</h1>
             <p className="text-muted-foreground">
-              Real-time alerts on misinformation trends, powered by our community.
+              Real-time alerts on misinformation trends, powered by Azure AI Search and our community.
             </p>
           </div>
 
@@ -87,7 +87,7 @@ const ThreatIntel = () => {
                         className={
                           threat.status === 'misinformation'
                             ? 'bg-red-500 text-white hover:bg-red-600'
-                            : 'bg-green-500 text-white hover:bg-green-600'
+                            : 'bg-accent text-accent-foreground hover:bg-accent/90'
                         }
                       >
                         {threat.status === 'misinformation' 

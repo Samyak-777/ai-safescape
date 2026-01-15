@@ -75,9 +75,9 @@ const MissionModal: React.FC<MissionModalProps> = ({ open, onOpenChange }) => {
           </div>
 
           {/* Section 3: Our Solution */}
-          <div className="glass-card rounded-xl p-6 border border-green-500/10">
+          <div className="glass-card rounded-xl p-6 border border-accent/10">
             <div className="flex items-start gap-4">
-              <div className="bg-green-500/10 text-green-600 dark:text-green-400 w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+              <div className="bg-accent/10 text-accent w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
                 <Shield size={24} />
               </div>
               <div>
@@ -87,21 +87,21 @@ const MissionModal: React.FC<MissionModalProps> = ({ open, onOpenChange }) => {
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
-                    <CheckCircle size={18} className="text-green-500 shrink-0 mt-1" />
+                    <CheckCircle size={18} className="text-accent shrink-0 mt-1" />
                     <div>
                       <span className="font-medium">Proactive & In-Context:</span>
                       <span className="text-muted-foreground"> Our planned browser extension brings verification directly into the user's workflow, removing friction.</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle size={18} className="text-green-500 shrink-0 mt-1" />
+                    <CheckCircle size={18} className="text-accent shrink-0 mt-1" />
                     <div>
                       <span className="font-medium">Transparent by Design:</span>
                       <span className="text-muted-foreground"> We provide a detailed "Reasoning Process" for every analysis, teaching users the "why" behind the verdict.</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle size={18} className="text-green-500 shrink-0 mt-1" />
+                    <CheckCircle size={18} className="text-accent shrink-0 mt-1" />
                     <div>
                       <span className="font-medium">Dynamic & Scalable:</span>
                       <span className="text-muted-foreground"> Our Hybrid AI architecture (RAG + LLM) is built to adapt to new threats and scale to millions of users, ensuring long-term effectiveness.</span>
@@ -113,18 +113,18 @@ const MissionModal: React.FC<MissionModalProps> = ({ open, onOpenChange }) => {
           </div>
 
           {/* Section 4: Hackathon Alignment */}
-          <div className="glass-card rounded-xl p-6 border border-blue-500/10">
+          <div className="glass-card rounded-xl p-6 border border-primary/10">
             <div className="flex items-start gap-4">
-              <div className="bg-blue-500/10 text-blue-600 dark:text-blue-400 w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+              <div className="bg-primary/10 text-primary w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
                 <Settings size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-3">Direct Alignment with the Hackathon's Objective</h3>
+                <h3 className="text-xl font-semibold mb-3">Built on Microsoft Azure</h3>
                 <p className="text-muted-foreground mb-3 leading-relaxed">
-                  The problem statement calls for a solution that goes "beyond simple fact-checking, fostering a more critical and informed digital citizenry."
+                  Born from a vision to secure India's digital future, AI-SafeScape leverages the power of the Microsoft Cloud to provide enterprise-grade security to the common citizen.
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
-                  AI SafeScape is our direct answer to this call. Our focus on detailed reasoning, empathetic support via our AI Assistant, and a transparent, scalable architecture is designed to build the digital resilience India needs.
+                  Our focus on detailed reasoning, empathetic support via our AI Assistant, and a transparent, scalable architecture is designed to build the digital resilience India needs. We use Azure OpenAI Service for advanced content analysis and Azure AI Search for real-time threat verification.
                 </p>
               </div>
             </div>
